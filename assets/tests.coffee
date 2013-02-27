@@ -1,7 +1,6 @@
 
 User = require "./user"
 _ = require "lodash"
-# expect = require "./jasmine-ext"
 
 describe "User class suite", ->
 	beforeEach ->
