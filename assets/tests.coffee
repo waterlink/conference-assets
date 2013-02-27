@@ -1,8 +1,8 @@
-
 User = require "./user"
 _ = require "lodash"
 
 describe "User class suite", ->
+
 	beforeEach ->
 		@addMatchers
 			toBeFunction: ->
