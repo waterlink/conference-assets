@@ -29,8 +29,25 @@ class Backend
 			withId.apply @, [entity, id, data]
 
 	# List the URIs and perhaps other details of the collection's members.
+	# filters by data
+	# skip and limit keys are reserved
 	getWithoutId: (entity, data) ->
-		@mockDB[entity]
+		# @mockDB[entity][..].reverse()
+		skip = data.skip
+		delete data.skip
+		limit = data.limit
+		delete data.limit
+		skiplimitsum = skip + limit
+		if not skiplimitsum
+			skiplimitsum = undefined
+		res = @mockDB[entity].filter (obj) ->
+			flag = true
+			for k, v of data
+				if obj[k] isnt v
+					flag = false
+					break
+			flag
+		res[skip...skiplimitsum].reverse()
 
 	# Retrieve a representation of the addressed member of the collection, expressed in an appropriate Internet media type.
 	getWithId: (entity, id, data) ->

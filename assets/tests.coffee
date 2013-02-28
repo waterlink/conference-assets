@@ -87,14 +87,14 @@ describe "User", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		user.backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		res = user.getById 331
 		expect(res).toBeJson
 			id: 331
@@ -102,7 +102,159 @@ describe "User", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
+
+	it "should be possible to get list of users in reverse chronological order", ->
+		user = new User
+		user.setup new Backend
+		user.backend.delete "user"
+		user.backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			status: "emailsent"
+		res = user.list()
+		expect(res.length).toBe 2
+		expect(res[0].id).toBe 332
+		expect(res[1].id).toBe 331
+
+	it "should be possible to use skip/limit filters", ->
+		user = new User
+		user.setup new Backend
+		user.backend.delete "user"
+		user.backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			status: "emailsent"
+		user.backend.mockDB.user.push
+			id: 333
+			name: "Ivan"
+			surname: "Ivanov"
+			patronymic: "Ivanovich"
+			participant: false
+			status: "emailsent"
+		user.backend.mockDB.user.push
+			id: 334
+			name: "Vasya"
+			surname: "Pupkin"
+			patronymic: "Emailovich"
+			participant: false
+			status: "emailsent"
+		user.backend.mockDB.user.push
+			id: 335
+			name: "Petya"
+			surname: "Petrov"
+			patronymic: "Petrovich"
+			participant: false
+			status: "emailsent"
+		user.backend.mockDB.user.push
+			id: 336
+			name: "Ekaterina"
+			surname: "Новгородская"
+			patronymic: "Ивановна"
+			participant: false
+			status: "emailsent"
+		user.status = undefined
+		user.participant = undefined
+		res = user.listFiltered 2, 3
+		expect(res.length).toBe 3
+		expect(res[0].id).toBe 335
+		expect(res[1].id).toBe 334
+		expect(res[2].id).toBe 333
+
+	it "should be possible to use participant and status filters", ->
+		user = new User
+		user.setup new Backend
+		user.backend.delete "user"
+		user.backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: true
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 333
+			name: "Ivan"
+			surname: "Ivanov"
+			patronymic: "Ivanovich"
+			participant: true
+			status: "paid"
+		user.backend.mockDB.user.push
+			id: 334
+			name: "Vasya"
+			surname: "Pupkin"
+			patronymic: "Emailovich"
+			participant: true
+			status: "paid"
+		user.backend.mockDB.user.push
+			id: 335
+			name: "Petya"
+			surname: "Petrov"
+			patronymic: "Petrovich"
+			participant: false
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 336
+			name: "Ekaterina"
+			surname: "Новгородская"
+			patronymic: "Ивановна"
+			participant: false
+			status: "emailsent"
+		user.status = "new"
+		user.participant = false
+		res = user.listFiltered()
+		expect(res.length).toBe 2
+		expect(res[0].id).toBe 335
+		expect(res[1].id).toBe 331
+
+	it "should be possible to update object", ->
+		user = new User
+		user.setup new Backend
+		user.backend.delete "user"
+		user.backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			status: "new"
+		user.backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			status: "emailsent"
+		user.update 331, "emailsent"
+		res = user.getById 331
+		expect(res.status).toBe "emailsent"
 
 describe "Backend", ->
 
@@ -149,7 +301,7 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		expect(backend.lastRequest).toBeJson
 			method: "post"
 			url: "#{ backend.prefix }/user"
@@ -158,7 +310,7 @@ describe "Backend", ->
 				surname: "Fedorov"
 				patronymic: "Konstantinovich"
 				participant: false
-				state: "new"
+				status: "new"
 		backend.delete ["user", "37"]
 		expect(backend.lastRequest).toBeJson
 			method: "delete"
@@ -174,14 +326,14 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		obj = backend.get ["user", "331"]
 		expect(obj).toBeJson()
 		expect(obj.id).toBe(331)
@@ -195,16 +347,44 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		obj = backend.get "user"
 		expect(obj.length).toBe(2)
+		expect(obj[0].id).toBe 332
+		expect(obj[1].id).toBe 331
+
+	it "shouldnt reverse inner data when get without id but only result", ->
+		backend = new Backend
+		backend.mockDB.user = []
+		backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			status: "new"
+		backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			status: "emailsent"
+		obj = backend.get "user"
+		expect(obj.length).toBe(2)
+		expect(obj[0].id).toBe 332
+		expect(obj[1].id).toBe 331
+		obj = backend.get "user"
+		expect(obj.length).toBe(2)
+		expect(obj[0].id).toBe 332
+		expect(obj[1].id).toBe 331
 
 	it "should modify when put with id", ->
 		backend = new Backend
@@ -215,20 +395,20 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		res = backend.put ["user", "332"],
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "paid"
+			status: "paid"
 		expect(res).toBeTruthy()
 		obj = backend.get ["user", "332"]
 		expect(obj).toBeJson
@@ -237,7 +417,7 @@ describe "Backend", ->
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "paid"
+			status: "paid"
 
 	it "should return false when put without id", ->
 		backend = new Backend
@@ -257,7 +437,7 @@ describe "Backend", ->
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		expect(res).toBeArray()
 		expect(res.length).toBe 2
 		found = backend.get res
@@ -266,7 +446,7 @@ describe "Backend", ->
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 			id: parseInt res[1]
 
 	it "should wipe entire collection when delete without id", ->
@@ -278,14 +458,14 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		expect(backend.delete "user").toBeTruthy()
 		expect(backend.mockDB.user.length).toBe 0
 
@@ -298,14 +478,14 @@ describe "Backend", ->
 			surname: "Fedorov"
 			patronymic: "Konstantinovich"
 			participant: false
-			state: "new"
+			status: "new"
 		backend.mockDB.user.push
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"
 		expect(backend.delete ["user", "331"]).toBeTruthy()
 		expect(backend.mockDB.user.length).toBe(1)
 		expect(backend.mockDB.user[0]).toBeJson
@@ -314,4 +494,4 @@ describe "Backend", ->
 			surname: "Baz"
 			patronymic: "Viktorovich"
 			participant: false
-			state: "emailsent"
+			status: "emailsent"

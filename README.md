@@ -21,3 +21,12 @@ this mockup object must be passed to constructor of User (as a real backend clas
       3. get list of users (using skip and limit for paging)
       4. get list of users filtered (listener/participant; new/emailsent/paid)
       5. update status
+
+### Dependencies for developer
+
+- node.js
+- npm
+- coffeescript
+- jasmine-node
+- lodash
+- browserify

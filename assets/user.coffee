@@ -17,10 +17,19 @@ class User
 		@backend.get ["user", "#{ id }"]
 
 	list: ->
+		@backend.get "user"
 
-	listFiltered: ->
+	listFiltered: (skip = undefined, limit = undefined) ->
+		data = {}
+		data.participant = @participant if @participant isnt undefined
+		data.status = @status if @status isnt undefined
+		data.skip = skip
+		data.limit = limit
+		@backend.get "user", data
 
-	update: ->
+	update: (id, status) ->
+		@backend.put ["user", String(id)],
+			status: status
 
 	setup: (@backend) ->
 
