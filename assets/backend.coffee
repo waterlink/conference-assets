@@ -79,7 +79,7 @@ class Backend
 	# Delete the addressed member of the collection.
 	deleteWithId: (entity, id, data) ->
 		if @mockDB[entity]
-			@mockDB[entity].filter (obj) ->
+			@mockDB[entity] = @mockDB[entity].filter (obj) ->
 				String(obj.id) != id
 			true
 

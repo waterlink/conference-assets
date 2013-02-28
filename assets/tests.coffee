@@ -1,14 +1,26 @@
-User = require "./user"
-Backend = require "./backend"
+global.Backend = require "./backend"
+global.Restfull = require "./restfull"
+global.User = require "./user"
 _ = require "lodash"
+
+global.beforeEachTest = ->
+	@addMatchers
+		toBeFunction: ->
+			_.isFunction @actual
+		toBeJson: (obj) ->
+			if obj
+				JSON.stringify(@actual) is JSON.stringify(obj)
+			else
+				{}.toString.call(@actual) is "[object Object]"
+		toBeArray: ->
+			@actual.length isnt undefined
+		toBeInstanceOf: (obj) ->
+				@actual instanceof obj
 
 # why the hell "User class suite", we describe just "User" entity
 describe "User", ->
 
-	beforeEach ->
-		@addMatchers
-			toBeFunction: ->
-				_.isFunction @actual
+	beforeEach -> beforeEachTest.apply(@)
 
 	it "should exists", ->
 		user = new User
@@ -41,22 +53,60 @@ describe "User", ->
 		expect(user.listFiltered).toBeFunction()
 		expect(user.update).toBeFunction()
 
+	it "should be possible to setup custom backend", ->
+		user = new User
+		user.setup new Backend
+		expect(user.backend).toBeInstanceOf Backend
+
+	it "should have restfull backend by default", ->
+		user = new User
+		expect(user.backend).toBeInstanceOf Backend
+		expect(user.backend).toBeInstanceOf Restfull
+
 	it "should be possible to create new user", ->
 		user = new User 'Alex', 'Fedorov', 'Konstantinovich', false
+		user.setup new Backend
+		user.backend.delete "user"
 		expect(user.create()).toBeTruthy()
+		expect(user.backend.mockDB.user.length).toBe 1
 
+	it "should store id when creating new user", ->
+		user = new User 'Alex', 'Fedorov', 'Konstantinovich', false
+		user.setup new Backend
+		user.backend.delete "user"
+		user.create()
+		expect(user.id).toBeDefined()
+
+	it "should be possible to get user by id", ->
+		user = new User
+		user.setup new Backend
+		user.backend.delete "user"
+		user.backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			state: "new"
+		user.backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
+		res = user.getById 331
+		expect(res).toBeJson
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			state: "new"
 
 describe "Backend", ->
 
-	beforeEach ->
-		@addMatchers
-			toBeFunction: ->
-				_.isFunction @actual
-			toBeJson: (obj) ->
-				if obj
-					JSON.stringify(@actual) is JSON.stringify(obj)
-				else
-					{}.toString.call(@actual) is "[object Object]"
+	beforeEach -> beforeEachTest.apply(@)
 
 	it "should exists", ->
 		backend = new Backend
@@ -195,4 +245,73 @@ describe "Backend", ->
 		res = backend.put "user", ["hello", "world"]
 		expect(res).toBeFalsy()
 
-	# it "should "
+	it "should return false when post with id", ->
+		backend = new Backend
+		expect(backend.post ["user", "123"]).toBeFalsy()
+
+	it "should create new entry when post without id", ->
+		backend = new Backend
+		backend.mockDB.user = []
+		res = backend.post "user",
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
+		expect(res).toBeArray()
+		expect(res.length).toBe 2
+		found = backend.get res
+		expect(found).toBeJson
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
+			id: parseInt res[1]
+
+	it "should wipe entire collection when delete without id", ->
+		backend = new Backend
+		backend.mockDB.user = []
+		backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			state: "new"
+		backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
+		expect(backend.delete "user").toBeTruthy()
+		expect(backend.mockDB.user.length).toBe 0
+
+	it "should remove one object when delete with id", ->
+		backend = new Backend
+		backend.mockDB.user = []
+		backend.mockDB.user.push
+			id: 331
+			name: "Alex"
+			surname: "Fedorov"
+			patronymic: "Konstantinovich"
+			participant: false
+			state: "new"
+		backend.mockDB.user.push
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
+		expect(backend.delete ["user", "331"]).toBeTruthy()
+		expect(backend.mockDB.user.length).toBe(1)
+		expect(backend.mockDB.user[0]).toBeJson
+			id: 332
+			name: "Maxim"
+			surname: "Baz"
+			patronymic: "Viktorovich"
+			participant: false
+			state: "emailsent"
