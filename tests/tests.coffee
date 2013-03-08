@@ -1,5 +1,3 @@
-require('./globals')
-require('./user')
-require('./backend')
-
-
+require "./globals.coffee"
+require "./user.coffee"
+require "./backend.coffee"
