@@ -256,6 +256,85 @@ describe "User", ->
 		res = user.getById 331
 		expect(res.status).toBe "emailsent"
 
+	it "should have academicDegree", ->
+		user = new User
+		expect(user.academicDegree).toBeDefined()
+
+	it "should have academicTitle", ->
+		user = new User
+		expect(user.academicTitle).toBeDefined()
+
+	it "should have jobPosition", ->
+		user = new User
+		expect(user.jobPosition).toBeDefined()
+
+	it "should have jobPlace", ->
+		user = new User
+		expect(user.jobPlace).toBeDefined()
+
+	it "should have city", ->
+		user = new User
+		expect(user.city).toBeDefined()
+
+	it "should have country", ->
+		user = new User
+		expect(user.country).toBeDefined()
+
+	it "should have postalAddress", ->
+		user = new User
+		expect(user.postalAddress).toBeDefined()
+
+	it "should have email", ->
+		user = new User
+		expect(user.email).toBeDefined()
+
+	it "should have phone", ->
+		user = new User
+		expect(user.phone).toBeDefined()
+
+	it "should have participantType", ->
+		user = new User
+		expect(user.participantType).toBeDefined()
+
+	it "should have lectureTitle", ->
+		user = new User
+		expect(user.lectureTitle).toBeDefined()
+
+	it "should have sectionNumber", ->
+		user = new User
+		expect(user.sectionNumber).toBeDefined()
+
+	it "should have monographyParticipant", ->
+		user = new User
+		expect(user.monographyParticipant).toBeDefined()
+
+	it "should have setMonographyParticipant method", ->
+		user = new User
+		expect(user.setMonographyParticipant).toBeFunction()
+
+	it "should have monographyTitle if monographyParticipant is true", ->
+		user = new User
+		expect(user.monographyTitle).toBeUndefined()
+		user.setMonographyParticipant true
+		expect(user.monographyTitle).toBeDefined()
+
+	it "should have stayDemand", ->
+		user = new User
+		expect(user.stayDemand).toBeDefined()
+
+	it "should have setStayDemand method", ->
+		user = new User
+		expect(user.setStayDemand).toBeFunction()
+
+	it "should have stayStart and stayEnd if stayDemand is true", ->
+		user = new User
+		expect(user.stayStart).toBeUndefined()
+		expect(user.stayEnd).toBeUndefined()
+		user.setStayDemand true
+		expect(user.stayStart).toBeDefined()
+		expect(user.stayEnd).toBeDefined()
+
+
 describe "Backend", ->
 
 	beforeEach -> beforeEachTest.apply(@)
@@ -495,3 +574,5 @@ describe "Backend", ->
 			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
+
+

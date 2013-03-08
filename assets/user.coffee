@@ -2,6 +2,20 @@ class User
 	
 	constructor: (@name = "", @surname = "", @patronymic = "", @participant = "", @status = "new") ->
 		@backend = new Restfull
+		@academicDegree = ""
+		@academicTitle = ""
+		@jobPosition = ""
+		@jobPlace = ""
+		@city = ""
+		@country = ""
+		@postalAddress = ""
+		@email = ""
+		@phone = ""
+		@participantType = ""
+		@lectureTitle = ""
+		@sectionNumber = ""
+		@monographyParticipant = false
+		@stayDemand = false
 
 	create: ->
 		url = @backend.post "user",
@@ -32,6 +46,10 @@ class User
 			status: status
 
 	setup: (@backend) ->
+
+	setMonographyParticipant: (@monographyParticipant = true, @monographyTitle = "") ->
+
+	setStayDemand: (@stayDemand = true, @stayStart = "", @stayEnd = "") ->
 
 
 module.exports = User
