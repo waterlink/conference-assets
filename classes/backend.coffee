@@ -1,11 +1,97 @@
 
 isArray = Array.isArray || ( value ) -> return {}.toString.call( value ) is '[object Array]'
 
+auth = (restMethod) -> (method) -> ->
+	[entity, id] = @_urlPartify arguments[0]
+	data = arguments[1]
+	if @authenticatedAs is 'guest'
+		if entity not in ['user', 'index']
+			throw new Error 'Access denied'
+
+	strategy =
+		get: =>
+			if @authenticatedAs is 'guest'
+				throw new Error 'Access denied'
+			if entity in ["index"]
+				if not id
+					group = ["operator"]
+					if @authenticatedAs isnt "operator"
+						group.push @authenticatedAs
+					if @whois
+						res =
+							whois: @whois
+							group: group
+		post: =>
+			if @authenticatedAs is 'guest'
+				if entity in ['user']
+					throw new Error('Access denied') if id
+				if entity in ['index']
+					if not id
+						throw new Error 'Access denied'
+			if @authenticatedAs is "operator"
+				if entity in ["index"]
+					if not id
+						throw new Error 'Access denied'
+			if entity in ["index"]
+				if id
+					if @mockDB.operator
+						found = @mockDB.operator.filter (obj) -> 
+							obj.password is data.password and obj.login is id
+						if found.length
+							operator = found[0]
+							@whois = operator.login
+							@authenticatedAs = 'operator'
+							@authenticatedAs = 'admin' if operator.isAdmin
+						else throw new Error "Access denied"
+				else
+					if @authenticatedAs is "admin"
+						if not @mockDB.operator
+							@mockDB.operator = []
+						data.isAdmin = false
+						@mockDB.operator.push data
+		put: =>
+			if @authenticatedAs is 'guest'
+				throw new Error 'Access denied'
+			if @authenticatedAs is "operator"
+				if entity in ["index"]
+					if id
+						throw new Error "Access denied"
+					if @mockDB.operator
+						found = @mockDB.operator.filter (obj) => 
+							obj.password is data.old_password and obj.login is @whois
+						if found.length
+							operator = found[0]
+							operator.password = data.new_password
+						else throw new Error "Access denied"
+			if @authenticatedAs is "admin"
+				if entity in ["index"]
+					if id
+						if @mockDB.operator
+							found = @mockDB.operator.filter (obj) => 
+								obj.login is id
+							if found.length
+								operator = found[0]
+								operator.password = data.new_password
+		delete: =>
+			if @authenticatedAs is 'guest'
+				throw new Error 'Access denied'
+			if entity in ["index"]
+				@authenticatedAs = "guest"
+				@whois = undefined
+
+	result = strategy[restMethod]()
+	if result
+		return result
+
+	method.apply @, arguments
+
+
 class Backend
 	
 	constructor: (@prefix = "/api")->
 		@authenticatedAs = 'guest'
 		@mockDB = {}
+
 
 	_saveLastRequest: (method, url, data) ->
 		if isArray url
@@ -27,6 +113,7 @@ class Backend
 			withoutId.apply @, [entity, data]
 		else
 			withId.apply @, [entity, id, data]
+		
 
 	# List the URIs and perhaps other details of the collection's members.
 	# filters by data
@@ -100,22 +187,22 @@ class Backend
 				String(obj.id) != id
 			true
 
-	get: (url = "", data = {}) ->
+	get: auth('get') (url = "", data = {}) ->
 		@_saveLastRequest "get", url, data
 		[entity, id] = @_urlPartify url
 		@_withId id, entity, data, @getWithId, @getWithoutId
 
-	put: (url = "", data = {}) ->
+	put: auth('put') (url = "", data = {}) ->
 		@_saveLastRequest "put", url, data
 		[entity, id] = @_urlPartify url
 		@_withId id, entity, data, @putWithId, @putWithoutId
 
-	post: (url = "", data = {}) ->
+	post: auth('post') (url = "", data = {}) ->
 		@_saveLastRequest "post", url, data
 		[entity, id] = @_urlPartify url
 		@_withId id, entity, data, @postWithId, @postWithoutId
 
-	delete: (url = "", data = {}) ->
+	delete: auth('delete') (url = "", data = {}) ->
 		@_saveLastRequest "delete", url, data
 		[entity, id] = @_urlPartify url
 		@_withId id, entity, data, @deleteWithId, @deleteWithoutId

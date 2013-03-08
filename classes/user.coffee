@@ -1,6 +1,6 @@
 class User
 	
-	constructor: (@name = "", @surname = "", @patronymic = "", @participant = "", @status = "new") ->
+	constructor: (@name = "", @surname = "", @patronymic = "", @_deprecated_participant = "", @status = "new") ->
 		@backend = new Restfull
 		@academicDegree = ""
 		@academicTitle = ""

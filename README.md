@@ -23,18 +23,25 @@ this mockup object must be passed to constructor of User (as a real backend clas
       5. update status
 
 
-- describe backend
-   * it should return acccess denied error when guest trying to access not user collection
-   * it should return acccess denied error when guest trying to access not index collection
-   * it should be allowed for [guest, operator] to [post with id, get, put without id, delete] to index
-   * it should change authenticatedAs when post to index/#{operator.login}
-   * it should return group of current operator: one of [guest, operator, admin] when get index
-   * it should change password when put without id to index
-   * it should logoff when delete index
-   * it should be allowed for guest to [post without id] to user
-   * it should be allowed for [admin] to [*all methods*] to *
-   * it should reset password to new when put with id = operator.login to index
-   * it should register new operator when post without id to index
+- [ __DONE__ ] describe backend (authentication)
+   * xit should return acccess denied error when guest trying to access not user collection
+   * [ __WRONG__ ] it should not return acccess denied error when guest trying to access index collection
+   * xit should be allowed for [guest] to [post with id] to index
+   * xit should be allowed for [operator] to [post with id, get, put without id, delete] to index
+   * xit should be allowed for [guest] to [post without id] to user
+   * xit should be disallowed for [guest] to [post with id] to user
+   * xit should be disallowed for [guest] to [get, post with id, put, delete] to user
+   * xit should change authenticatedAs when post to index/#{operator.login}
+   * xit should return group of current operator: one of [guest, operator, admin] when get index
+      - will return json: {whois: "{operator.login}", group: "{list of [guest, operator, admin]}"}
+   * xit should change password when put without id to index
+      - data would be json: {old_password: "{old_password}", new_password: "{new_password}"}
+   * xit should logoff when delete index
+   * xit should be allowed for [admin] to [*all methods*] to *
+   * xit should reset password to new when put with id = operator.login to index
+   * xit should register new operator when post without id to index
+
+- [ __DONE__ ] remove "participant" field from user class
 
 ### Dependencies for developer
 

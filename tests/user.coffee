@@ -5,12 +5,12 @@ describe "User", ->
 	it "should exists", ->
 		user = new User
 
-	it "should have name, surname, patronymic, participant, status", ->
+	it "should have name, surname, patronymic, status", ->
 		user = new User
 		expect(user.name).toBeDefined()
 		expect(user.surname).toBeDefined()
 		expect(user.patronymic).toBeDefined()
-		expect(user.participant).toBeDefined()
+		# expect(user.participant).toBeDefined()
 		expect(user.status).toBeDefined()
 
 	it "should have default status 'new'", ->
@@ -46,6 +46,7 @@ describe "User", ->
 	it "should be possible to create new user", ->
 		user = new User 'Alex', 'Fedorov', 'Konstantinovich', false
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		expect(user.create()).toBeTruthy()
 		expect(user.backend.mockDB.user.length).toBe 1
@@ -53,6 +54,7 @@ describe "User", ->
 	it "should store id when creating new user", ->
 		user = new User 'Alex', 'Fedorov', 'Konstantinovich', false
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.create()
 		expect(user.id).toBeDefined()
@@ -60,6 +62,7 @@ describe "User", ->
 	it "should be possible to get user by id", ->
 		user = new User
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.backend.mockDB.user.push
 			id: 331
@@ -87,6 +90,7 @@ describe "User", ->
 	it "should be possible to get list of users in reverse chronological order", ->
 		user = new User
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.backend.mockDB.user.push
 			id: 331
@@ -110,6 +114,7 @@ describe "User", ->
 	it "should be possible to use skip/limit filters", ->
 		user = new User
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.backend.mockDB.user.push
 			id: 331
@@ -164,6 +169,7 @@ describe "User", ->
 	it "should be possible to use participant and status filters", ->
 		user = new User
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.backend.mockDB.user.push
 			id: 331
@@ -217,6 +223,7 @@ describe "User", ->
 	it "should be possible to update object", ->
 		user = new User
 		user.setup new Backend
+		user.backend.authenticatedAs = 'admin'
 		user.backend.delete "user"
 		user.backend.mockDB.user.push
 			id: 331
@@ -313,4 +320,8 @@ describe "User", ->
 		user.setStayDemand true
 		expect(user.stayStart).toBeDefined()
 		expect(user.stayEnd).toBeDefined()
+
+	it "shouldnt have participant", ->
+		user = new User
+		expect(user.participant).toBeUndefined()
 
