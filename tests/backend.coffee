@@ -238,4 +238,21 @@ describe "Backend", ->
 			participant: false
 			status: "emailsent"
 
+	it "should return access denied error when guest trying to access not user collection", ->
+		backend = new Backend
+		backend.mockDB.operator = []
+		backend.mockDB.operator.push
+			id: 1
+			login: 'admin'
+			password: 'admin'
+			isAdmin: true
+		backend.mockDB.operator.push
+			id: 2
+			login: 'operator'
+			password: 'operator'
+			isAdmin: false
+		expect(backend.authenticatedAs).toBe('guest')
+		# expect( ->
+			
+		# ).toThrow()
 
