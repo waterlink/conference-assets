@@ -92,7 +92,7 @@ describe "User", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		res = user.getById 331
@@ -119,7 +119,7 @@ describe "User", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		res = user.list()
@@ -142,7 +142,7 @@ describe "User", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		user.backend.mockDB.user.push
@@ -196,7 +196,7 @@ describe "User", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: true
 			status: "new"
 		user.backend.mockDB.user.push
@@ -249,7 +249,7 @@ describe "User", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		user.update 331, "emailsent"
@@ -289,7 +289,7 @@ describe "Backend", ->
 			method: "get"
 			url: "#{ backend.prefix }/user/127",
 			data: {}
-		backend.put ["user", "33"], 
+		backend.put ["user", "33"],
 			name: "Illya"
 		expect(backend.lastRequest).toBeJson
 			method: "put"
@@ -305,7 +305,7 @@ describe "Backend", ->
 		expect(backend.lastRequest).toBeJson
 			method: "post"
 			url: "#{ backend.prefix }/user"
-			data: 
+			data:
 				name: "Alex"
 				surname: "Fedorov"
 				patronymic: "Konstantinovich"
@@ -331,7 +331,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		obj = backend.get ["user", "331"]
@@ -352,7 +352,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		obj = backend.get "user"
@@ -374,7 +374,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		obj = backend.get "user"
@@ -400,13 +400,13 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		res = backend.put ["user", "332"],
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "paid"
 		expect(res).toBeTruthy()
@@ -415,7 +415,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "paid"
 
@@ -435,7 +435,7 @@ describe "Backend", ->
 		res = backend.post "user",
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		expect(res).toBeArray()
@@ -444,7 +444,7 @@ describe "Backend", ->
 		expect(found).toBeJson
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 			id: parseInt res[1]
@@ -463,7 +463,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		expect(backend.delete "user").toBeTruthy()
@@ -483,7 +483,7 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
 		expect(backend.delete ["user", "331"]).toBeTruthy()
@@ -492,6 +492,6 @@ describe "Backend", ->
 			id: 332
 			name: "Maxim"
 			surname: "Baz"
-			patronymic: "Viktorovich"
+			patronymic: "Vitalievich"
 			participant: false
 			status: "emailsent"
