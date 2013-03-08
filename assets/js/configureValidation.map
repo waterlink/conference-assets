@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "configureValidation.js",
+  "sourceRoot": "",
+  "sources": [
+    "configureValidation.coffee"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAA;CAAA,CAAA,OAAA,CAAa;CACV,CAAuB,EAAtB,WAAA;CAAD,CACuB,EAAtB,gBAAA;CAFJ,GAAA;;CAAA,CAIA,CAAoC,EAAjB,EAAnB,GAAa,gBAJb;;CAAA,CAKA,CAAuC,EAApB,EAAnB,CAA4B,EAAf,mBALb;CAAA"
+}

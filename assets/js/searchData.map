@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "searchData.js",
+  "sourceRoot": "",
+  "sources": [
+    "searchData.coffee"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAA;CAAA,CAAA,CACG,GADG,IAAN;CACG,CAAY,EAAX,EAAW,CAAA,CAAA,CAAX,CAAW,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA;CAAZ,CAuDS,EAAR,EAAA,EAAQ;CAvDT,CA6DkB,EAAjB,IAAiB,GAAA,IAAjB;CA7DD,CAmEiB,EAAhB,IAAgB,EAAA,IAAhB;CAnED,CAyEiB,EAAhB,MAAgB,IAAhB;CAzED,CA+EmB,EAAlB,UAAkB,EAAlB;CAhFJ,GAAA;CAAA"
+}

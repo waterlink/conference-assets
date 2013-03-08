@@ -14,7 +14,7 @@
       this.end = new Date;
       this.start.setDate(this.start.getDate() - 7);
       this.end.setDate(this.end.getDate() + 7);
-      this.user = this.addValidation({
+      this.user = {
         name: ko.observable(""),
         surname: ko.observable(""),
         patronymic: ko.observable(""),
@@ -33,14 +33,18 @@
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
         stayDemand: ko.observable(false),
-        stayStart: ko.observable(new Date),
-        stayEnd: ko.observable(new Date)
-      });
+        stayStart: ko.observable(""),
+        stayEnd: ko.observable("")
+      };
+      this.searchData = window.searchData;
       this.errors = ko.validation.group(this.user);
       this.errorAlert = new Alert("#needFixErrors");
     }
 
     UserRegistrationViewModel.prototype.doRegister = function() {
+      if (!this.hasValidation) {
+        this.addValidation();
+      }
       if (this.errors().length === 0) {
         return console.log(ko.mapping.toJS(this.user));
       } else {
@@ -54,42 +58,52 @@
       return true;
     };
 
-    UserRegistrationViewModel.prototype.addValidation = function(user) {
-      this.makeFieldsRequired(user);
-      user.email.extend({
-        email: true
+    UserRegistrationViewModel.prototype.addValidation = function() {
+      this.makeFieldsRequired();
+      this.user.email.extend({
+        email: {
+          message: "Введите корректный email",
+          params: true
+        }
       });
-      return user;
+      return this.hasValidation = true;
     };
 
-    UserRegistrationViewModel.prototype.makeFieldsRequired = function(user) {
-      var isRequired, key, value;
-      for (key in user) {
-        value = user[key];
+    UserRegistrationViewModel.prototype.makeFieldsRequired = function() {
+      var isRequired, key, value, _ref,
+        _this = this;
+      _ref = this.user;
+      for (key in _ref) {
+        value = _ref[key];
+        if (!(value.extend != null)) {
+          continue;
+        }
         isRequired = true;
         if (key === "stayStart" || key === "stayEnd") {
           isRequired = {
-            onlyIf: user.stayDemand
+            onlyIf: this.user.stayDemand
           };
         }
         if (key === "monographyTitle") {
           isRequired = {
-            onlyIf: user.monographyParticipant
+            onlyIf: this.user.monographyParticipant
           };
         }
         if (key === "monographyParticipant" || key === "stayDemand") {
           isRequired = false;
         }
-        value.extend({
-          required: isRequired
-        });
+        if (value != null) {
+          value.extend({
+            required: isRequired
+          });
+        }
       }
-      user.stayDemand.subscribe(function(value) {
-        ko.validation.validateObservable(user.stayStart);
-        return ko.validation.validateObservable(user.stayEnd);
+      this.user.stayDemand.subscribe(function(value) {
+        ko.validation.validateObservable(_this.user.stayStart);
+        return ko.validation.validateObservable(_this.user.stayEnd);
       });
-      return user.monographyParticipant.subscribe(function(value) {
-        return ko.validation.validateObservable(user.monographyTitle);
+      return this.user.monographyParticipant.subscribe(function(value) {
+        return ko.validation.validateObservable(_this.user.monographyTitle);
       });
     };
 
