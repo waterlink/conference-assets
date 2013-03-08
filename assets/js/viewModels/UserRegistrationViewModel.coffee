@@ -1,5 +1,10 @@
 class window.UserRegistrationViewModel
     constructor: ->
+        @start = new Date
+        @end   = new Date
+        @start.setDate @start.getDate() - 7
+        @end.setDate   @end.getDate()   + 7
+
         @user = @addValidation
             name                  : ko.observable ""
             surname               : ko.observable ""
@@ -19,11 +24,10 @@ class window.UserRegistrationViewModel
             monographyParticipant : ko.observable no
             monographyTitle       : ko.observable ""
             stayDemand            : ko.observable no
-            stayStart             : ko.observable ""
-            stayEnd               : ko.observable ""
+            stayStart             : ko.observable new Date
+            stayEnd               : ko.observable new Date
 
         @errors = ko.validation.group(@user)
-
         @errorAlert = new Alert "#needFixErrors"
 
     doRegister: ->
@@ -32,6 +36,10 @@ class window.UserRegistrationViewModel
         else
             @errorAlert.show()
             @errors.showAllMessages()
+
+    isAvailableDateToStay: (date) =>
+        console.log date
+        true
 
     addValidation: (user) ->
         @makeFieldsRequired user
