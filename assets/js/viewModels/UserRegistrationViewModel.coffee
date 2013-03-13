@@ -18,7 +18,8 @@ class window.UserRegistrationViewModel
             postalAddress         : ko.observable ""
             email                 : ko.observable ""
             phone                 : ko.observable ""
-            participantType       : ko.observable ""
+            # тут мы еще вообще не понимаем? и кстати, где поле ? =)
+            # participantType       : ko.observable ""
             lectureTitle          : ko.observable ""
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no
@@ -37,6 +38,17 @@ class window.UserRegistrationViewModel
 
         if @errors().length is 0
             console.log ko.mapping.toJS @user
+            creating = new User
+            creating.fromData ko.mapping.toJS(@user)
+            p = creating.create()
+            p.done (data) ->
+                if data
+                    if data.error
+                        # ::TODO::
+                        # тут хотелось бы парсануть ошибку и вывести ее
+                        # вроде должна возникать коллизия только по email
+                        # если такой уже зареган
+                        alert data.error
         else
             @errorAlert.show()
             @errors.showAllMessages()

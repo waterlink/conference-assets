@@ -17,6 +17,26 @@ class User
 		@monographyParticipant = false
 		@stayDemand = false
 
+	fromData: (data) ->
+		@name = data.name
+		@surname = data.surname
+		@patronymic = data.patronymic
+		@participant = data.participant
+		@academicDegree = data.academicDegree
+		@academicTitle = data.academicTitle
+		@jobPosition = data.jobPosition
+		@jobPlace = data.jobPlace
+		@city = data.city
+		@country = data.country
+		@postalAddress = data.postalAddress
+		@email = data.email
+		@phone = data.phone
+		@participantType = data.participantType
+		@lectureTitle = data.lectureTitle
+		@sectionNumber = data.sectionNumber
+		@monographyParticipant = data.monographyParticipant
+		@stayDemand = data.stayDemand
+
 	create: ->
 		url = @backend.post "user",
 			name: @name

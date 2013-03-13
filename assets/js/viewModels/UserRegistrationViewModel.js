@@ -26,7 +26,6 @@
         postalAddress: ko.observable(""),
         email: ko.observable(""),
         phone: ko.observable(""),
-        participantType: ko.observable(""),
         lectureTitle: ko.observable(""),
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
@@ -41,11 +40,22 @@
     }
 
     UserRegistrationViewModel.prototype.doRegister = function() {
+      var creating, p;
       if (!this.hasValidation) {
         this.addValidation();
       }
       if (this.errors().length === 0) {
-        return console.log(ko.mapping.toJS(this.user));
+        console.log(ko.mapping.toJS(this.user));
+        creating = new User;
+        creating.fromData(ko.mapping.toJS(this.user));
+        p = creating.create();
+        return p.done(function(data) {
+          if (data) {
+            if (data.error) {
+              return alert(data.error);
+            }
+          }
+        });
       } else {
         this.errorAlert.show();
         return this.errors.showAllMessages();

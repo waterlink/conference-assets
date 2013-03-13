@@ -27,6 +27,27 @@
       this.stayDemand = false;
     }
 
+    User.prototype.fromData = function(data) {
+      this.name = data.name;
+      this.surname = data.surname;
+      this.patronymic = data.patronymic;
+      this.participant = data.participant;
+      this.academicDegree = data.academicDegree;
+      this.academicTitle = data.academicTitle;
+      this.jobPosition = data.jobPosition;
+      this.jobPlace = data.jobPlace;
+      this.city = data.city;
+      this.country = data.country;
+      this.postalAddress = data.postalAddress;
+      this.email = data.email;
+      this.phone = data.phone;
+      this.participantType = data.participantType;
+      this.lectureTitle = data.lectureTitle;
+      this.sectionNumber = data.sectionNumber;
+      this.monographyParticipant = data.monographyParticipant;
+      return this.stayDemand = data.stayDemand;
+    };
+
     User.prototype.create = function() {
       var url;
       return url = this.backend.post("user", {

@@ -16,8 +16,7 @@ global.require = (path) ->
 		module = global.modules[path]
 		eval data
 		console.log "evaled"
-	p.error ->
-		console.warn "problem loading '#{path}' module: ", arguments
+	p.error -> console.warn "problem loading '#{path}' module: ", arguments
 	console.log "returning"
 	global.modules[path].exports
 
