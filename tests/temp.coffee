@@ -3,11 +3,14 @@ require "./globals"
 rest = new Restfull
 
 for i in [1..10]
+	console.log i
 	user = new User "User_#{i}"
 	p = user.create()
-	k = i - 1;
-	p.done (data) -> console.log "#{k} added"
-	p.error -> console.log "error", arguments
+	# k = i - 1;
+	r = (k) ->
+		p.done (data) -> console.log "#{k} added"
+		p.error -> console.log "error", arguments
+	r i
 
 
 p = rest.get ["operator"]

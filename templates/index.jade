@@ -74,5 +74,11 @@ html
         script(src="../assets/js/Alert.js")
         script(src="../assets/js/viewModels/UserRegistrationViewModel.js")
 
+        script(src="../classes/require.js")
+
+        :coffeescript
+            global.application = require "../main"
+            application.run()
+
         :coffeescript
             ko.applyBindings new UserRegistrationViewModel
