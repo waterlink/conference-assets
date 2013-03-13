@@ -24,8 +24,22 @@ class User
 			patronymic: @patronymic
 			participant: @participant
 			status: @status
-		@id = parseInt(url[1])
-		true
+			academicDegree: @academicDegree
+			academicTitle: @academicTitle
+			jobPosition: @jobPosition
+			jobPlace: @jobPlace
+			city: @city
+			country: @country
+			postalAddress: @postalAddress
+			email: @email
+			phone: @phone
+			participantType: @participantType
+			lectureTitle: @lectureTitle
+			sectionNumber: @sectionNumber
+			monographyParticipant: @monographyParticipant
+			stayDemand: @stayDemand
+		# @id = parseInt(url[1])
+		# true
 
 	getById: (id) ->
 		@backend.get ["user", "#{ id }"]
