@@ -1,0 +1,66 @@
+!!! 5
+html
+    head
+        meta(charset='utf-8')
+        title Админка - Научная конференция 2013
+        link(rel='stylesheet', href='../assets/css/bootstrap.css')
+        link(rel='stylesheet', href='../assets/css/bootstrap-responsive.css')
+        link(rel='stylesheet', href='../assets/css/custom.css')
+    body
+
+        .navbar.navbar-inverse.navbar-fixed-top
+            .navbar-inner
+                .container-fluid
+                    button.btn.btn-navbar(type='button', data-toggle='collapse', data-target='.nav-collapse')
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.brand(href='javascript:;') Научная конференция 2013
+                    .nav-collapse.collapse
+                        p.navbar-text.pull-right
+                            | Сейчас работает: &nbsp;
+                            b(data-bind='text: name')
+                            button.btn.pull-right.sign-out(data-bind='click: doSignOut') Выйти
+
+        .container-fluid
+            table.table.table-bordered.span9
+                thead
+                    tr
+                        th ФИО
+                        th Место работы
+                        th Тема
+                        th Монография
+                        th Файлы
+                        th Статус
+
+                tbody(data-bind="foreach: users")
+                    tr(data-bind="visible: $root.isFiltered(status)")
+                        td(data-bind="text: fullName")
+                        td(data-bind="text: job")
+                        td(data-bind="text: lectureTitle")
+                        td(data-bind="text: monography")
+                        td
+                            a.btn(data-bind="attr: {href: downloadLink}") Скачать
+                        td(data-bind="text: $root.readableStatus(status)")
+
+            .filter.btn-group.btn-group-vertical.hidden-phone
+                // ko foreach: statuses
+                button.span3.btn.btn-large(data-bind="checkboxGroup: {array: $root.statuses, index: $index}, text: $root.readableStatus(text)")
+                // /ko
+
+
+
+        script(src="../assets/js/libs/jquery-1.9.1.min.js")
+        script(src="../assets/js/libs/lodash.min.js")
+        script(src="../assets/js/libs/bootstrap.min.js")
+        script(src="../assets/js/libs/bootstrap-datepicker.js")
+        script(src="../assets/js/libs/knockout-2.2.1.js")
+        script(src="../assets/js/libs/knockout.mapping.js")
+        script(src="../assets/js/libs/knockout.validation.js")
+        script(src="../assets/js/customBindings/checkboxGroup.js")
+
+        script(src="../assets/js/viewModels/UserViewModel.js")
+        script(src="../assets/js/viewModels/AdminViewModel.js")
+
+        :coffeescript
+            ko.applyBindings new AdminViewModel

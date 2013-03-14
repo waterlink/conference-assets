@@ -1,4 +1,4 @@
-class window.UserRegistrationViewModel
+class window.RegistrationViewModel
     constructor: ->
         @start = new Date
         @end   = new Date

@@ -2,17 +2,25 @@
   body {
     padding-top: 60px;
     padding-bottom: 40px; } }
+@media (min-width: 980px) and (max-width: 1199px) {
+  .table {
+    width: 700px; } }
 .form-signin input[class*="span"] {
   min-height: 30px;
   float: left; }
 
 .select2-container {
   margin-left: 0;
-  margin-bottom: 10px;
-  width: 656px; }
+  margin-bottom: 10px; }
 
 .validationMessage {
   display: block;
   color: red;
   float: left;
   margin: 3px 0px 0 5px; }
+
+.sign-out.btn {
+  margin-left: 20px; }
+
+.filter {
+  margin-left: 20px; }
