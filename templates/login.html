@@ -1,10 +1,8 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>Вход оператора - Научная конференция 2013</title><link rel="stylesheet" href="../assets/css/bootstrap.css"><link rel="stylesheet" href="../assets/css/bootstrap-responsive.css"></head><body><div class="container"><div class="row"><div class="span4"></div><div class="span4"><h4>Научная Конференция 2013</h4><div class="well"><div><p>Вход в панель оператора</p></div><form id="loginform"><div class="control-group"><input name="login" type="text" placeholder="логин оператора" class="input-block-level"></div><div class="control-group"><input name="password" type="password" placeholder="пароль" class="input-block-level"></div><a href="#" submit="#loginform" class="btn btn-success btn-large input-block-level">Войти</a></form></div><div id="needFixErrors" class="alert alert-error fade in hide"><button type="button" class="close">×</button><p> 
-Неверный логин или пароль :(</p></div></div><div class="span4"></div></div></div><script src="../assets/js/libs/jquery-1.9.1.min.js"></script><script src="../classes/require.js"></script><script type="text/javascript">
+Неверный логин или пароль :(</p></div></div><div class="span4"></div></div></div><script src="../assets/js/libs/jquery-1.9.1.min.js"></script><script src="../classes/require.js"></script><script src="../assets/js/libs/bootstrap.min.js"></script><script type="text/javascript">
 (function() {
   var Alert, errors,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-  require("../assets/js/libs/bootstrap.min");
 
   global.Backend = require("../classes/backend");
 
