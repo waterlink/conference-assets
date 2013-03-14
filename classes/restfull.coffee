@@ -7,6 +7,8 @@ if not global.XMLHttpRequest
 	global.XMLHttpRequest = xmlhttprequest.XMLHttpRequest
 
 global.domain = "http://conference.lan"
+if window
+	global.domain = ""
 
 Function::property = (prop, desc) ->
 	Object.defineProperty @prototype, prop, desc

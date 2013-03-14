@@ -9,3 +9,5 @@ class window.Alert
 
     hide: =>
         @div.fadeTo(500, 0).slideUp 500
+
+module.exports = window.Alert

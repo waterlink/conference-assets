@@ -15,6 +15,10 @@
 
   global.domain = "http://conference.lan";
 
+  if (window) {
+    global.domain = "";
+  }
+
   Function.prototype.property = function(prop, desc) {
     return Object.defineProperty(this.prototype, prop, desc);
   };
