@@ -42,6 +42,19 @@ class window.RegistrationViewModel
             @errorAlert.show()
             @errors.showAllMessages()
 
+    formatSize: (bytes) ->
+        [KB, MB, GB] = [1024, 1024*1024, 1024*1024*1024]
+        if typeof bytes isnt 'number'
+            ""
+        else if bytes >= GB
+            "#{(bytes / GB).toFixed 2} GB"
+        else if bytes >= MB
+            "#{(bytes / MB).toFixed 2} MB"
+        else if bytes >= KB
+            "#{(bytes / KB).toFixed 2} KB"
+        else
+            "#{bytes} B"
+
     isAvailableDateToStay: (date) =>
         console.log date
         true

@@ -32,6 +32,7 @@
         stayStart: ko.observable(""),
         stayEnd: ko.observable("")
       };
+      this.files = ko.observableArray();
       this.searchData = window.searchData;
       this.errors = ko.validation.group(this.user);
       this.errorAlert = new Alert("#needFixErrors");
@@ -49,6 +50,22 @@
       }
     };
 
+    RegistrationViewModel.prototype.formatSize = function(bytes) {
+      var GB, KB, MB, _ref;
+      _ref = [1024, 1024 * 1024, 1024 * 1024 * 1024], KB = _ref[0], MB = _ref[1], GB = _ref[2];
+      if (typeof bytes !== 'number') {
+        return "";
+      } else if (bytes >= GB) {
+        return "" + ((bytes / GB).toFixed(2)) + " GB";
+      } else if (bytes >= MB) {
+        return "" + ((bytes / MB).toFixed(2)) + " MB";
+      } else if (bytes >= KB) {
+        return "" + ((bytes / KB).toFixed(2)) + " KB";
+      } else {
+        return "" + bytes + " B";
+      }
+    };
+
     RegistrationViewModel.prototype.isAvailableDateToStay = function(date) {
       console.log(date);
       return true;
@@ -56,12 +73,6 @@
 
     RegistrationViewModel.prototype.addValidation = function() {
       this.makeFieldsRequired();
-      this.user.email.extend({
-        email: {
-          message: "Введите корректный email",
-          params: true
-        }
-      });
       return this.hasValidation = true;
     };
 
