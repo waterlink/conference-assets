@@ -1,8 +1,18 @@
+global.Backend = require "../classes/backend"
 
-global.$ = require "jquery"
-global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
+if not global.$
+	global.$ = require "jquery"
+
+if not global.XMLHttpRequest
+	xmlhttprequest = require("xmlhttprequest").XMLHttpRequest
+	global.XMLHttpRequest = xmlhttprequest.XMLHttpRequest
 
 global.domain = "http://conference.lan"
+if window
+	global.domain = ""
+
+Function::property = (prop, desc) ->
+	Object.defineProperty @prototype, prop, desc
 
 class Restfull extends Backend
 	# List the URIs and perhaps other details of the collection's members.

@@ -2,6 +2,8 @@
 (function() {
   var User;
 
+  global.Restfull = require("../classes/restfull");
+
   User = (function() {
 
     function User(name, surname, patronymic, _deprecated_participant, status) {
@@ -27,9 +29,31 @@
       this.stayDemand = false;
     }
 
-    User.prototype.create = function() {
-      var url;
-      return url = this.backend.post("user", {
+    User.prototype.fromData = function(data) {
+      this.id = data.id;
+      this.name = data.name;
+      this.surname = data.surname;
+      this.patronymic = data.patronymic;
+      this.participant = data.participant;
+      this.academicDegree = data.academicDegree;
+      this.academicTitle = data.academicTitle;
+      this.jobPosition = data.jobPosition;
+      this.jobPlace = data.jobPlace;
+      this.city = data.city;
+      this.country = data.country;
+      this.postalAddress = data.postalAddress;
+      this.email = data.email;
+      this.phone = data.phone;
+      this.participantType = data.participantType;
+      this.lectureTitle = data.lectureTitle;
+      this.sectionNumber = data.sectionNumber;
+      this.monographyParticipant = data.monographyParticipant;
+      return this.stayDemand = data.stayDemand;
+    };
+
+    User.prototype.getData = function() {
+      var res;
+      return res = {
         name: this.name,
         surname: this.surname,
         patronymic: this.patronymic,
@@ -49,7 +73,11 @@
         sectionNumber: this.sectionNumber,
         monographyParticipant: this.monographyParticipant,
         stayDemand: this.stayDemand
-      });
+      };
+    };
+
+    User.prototype.create = function() {
+      return this.backend.post("user", this.getData());
     };
 
     User.prototype.getById = function(id) {
@@ -81,9 +109,9 @@
     };
 
     User.prototype.update = function(id, status) {
-      return this.backend.put(["user", String(id)], {
-        status: status
-      });
+      console.log("updating user to status " + status);
+      this.status = status;
+      return this.backend.put(["user", "" + id], this.getData());
     };
 
     User.prototype.setup = function(backend) {

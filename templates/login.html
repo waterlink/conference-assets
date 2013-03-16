@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Вход оператора - Научная конференция 2013</title><link rel="stylesheet" href="../assets/css/bootstrap.css"><link rel="stylesheet" href="../assets/css/bootstrap-responsive.css"></head><body><div class="container"><div class="row"><div class="span4"></div><div class="span4"><h4>Научная Конференция 2013</h4><div class="well"><div><p>Вход в панель оператора</p></div><form id="loginform"><div class="control-group"><input name="login" type="text" placeholder="логин оператора" class="input-block-level"></div><div class="control-group"><input name="password" type="password" placeholder="пароль" class="input-block-level"></div><a href="#" submit="#loginform" class="btn btn-success btn-large input-block-level">Войти</a></form></div><div id="needFixErrors" class="alert alert-error fade in hide"><button type="button" class="close">×</button><p> 
+Неверный логин или пароль :(</p></div></div><div class="span4"></div></div></div><script src="../assets/js/libs/jquery-1.9.1.min.js"></script><script src="../classes/require.js"></script><script src="../assets/js/libs/bootstrap.min.js"></script><script type="text/javascript">
+(function() {
+  var Alert, errors,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  global.Backend = require("../classes/backend");
+
+  global.Restfull = require("../classes/restfull");
+
+  Alert = require("../assets/js/Alert");
+
+  errors = new Alert("#needFixErrors");
+
+  console.log($("a[submit]"));
+
+  $("a[submit]").click(function() {
+    var data, field, form, k, login, me, p, rest, _i, _len, _ref;
+    me = $(this);
+    form = me.attr("submit");
+    form = $(form);
+    form = form.serializeArray();
+    data = {};
+    for (_i = 0, _len = form.length; _i < _len; _i++) {
+      field = form[_i];
+      if (_ref = field.name, __indexOf.call(data, _ref) < 0) {
+        data[field.name] = [];
+      }
+      data[field.name].push(field.value);
+    }
+    for (k in data) {
+      if (data[k].length === 1) {
+        data[k] = data[k][0];
+      }
+    }
+    rest = new Restfull;
+    login = data.login;
+    p = rest.post(["index", data.login], data);
+    p.error(function() {
+      return console.log(arguments);
+    });
+    return p.done(function(data) {
+      if (data) {
+        if (data.error) {
+          alert(data.error);
+        }
+        p = rest.get(["index"]);
+        p.error(function() {
+          return console.log(arguments);
+        });
+        return p.done(function(data) {
+          if (data) {
+            if (data.error) {
+              return alert(data.error);
+            } else {
+              if (data.whois === login) {
+                return global.location = "cpanel.html";
+              }
+            }
+          }
+        });
+      } else {
+        return errors.show();
+      }
+    });
+  });
+
+}).call(this);
+</script></body></html>

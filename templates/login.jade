@@ -1,0 +1,74 @@
+!!! 5
+html
+    head
+        meta(charset='utf-8')
+        title Вход оператора - Научная конференция 2013
+        link(rel='stylesheet', href='../assets/css/bootstrap.css')
+        link(rel='stylesheet', href='../assets/css/bootstrap-responsive.css')
+    body
+        div.container
+            div.row
+                div.span4
+                div.span4
+                    h4
+                        | Научная Конференция 2013
+                    div.well
+                        div
+                            p
+                                | Вход в панель оператора
+                        form#loginform
+                            div.control-group
+                                input.input-block-level(name='login',type='text',placeholder='логин оператора')
+                            div.control-group
+                                input.input-block-level(name='password',type='password',placeholder='пароль')
+                            a.btn.btn-success.btn-large.input-block-level(href='#', submit='#loginform')
+                                | Войти
+                    #needFixErrors.alert.alert-error.fade.in.hide
+                        button(type="button", class="close") ×
+                        p 
+                            | Неверный логин или пароль :(
+                div.span4
+
+        script(src="../assets/js/libs/jquery-1.9.1.min.js")
+        script(src="../classes/require.js")
+        script(src="../assets/js/libs/bootstrap.min.js")
+
+        :coffeescript
+            global.Backend = require "../classes/backend"
+            global.Restfull = require "../classes/restfull"
+            Alert = require "../assets/js/Alert"
+            errors = new Alert "#needFixErrors"
+            console.log $("a[submit]")
+            $("a[submit]").click ->
+                me = $ @
+                form = me.attr "submit"
+                form = $ form
+                form = form.serializeArray()
+                data = {}
+                for field in form
+                    if field.name not in data
+                        data[field.name] = []
+                    data[field.name].push field.value
+                for k of data
+                    if data[k].length is 1
+                        data[k] = data[k][0]
+                rest = new Restfull
+                login = data.login
+                # delete data.login
+                p = rest.post ["index", data.login], data
+                p.error -> console.log arguments
+                p.done (data) ->
+                    if data
+                        if data.error
+                            alert data.error
+                        p = rest.get ["index"]
+                        p.error -> console.log arguments
+                        p.done (data) ->
+                            if data
+                                if data.error
+                                    alert data.error
+                                else
+                                    if data.whois is login
+                                        global.location = "cpanel.html"
+                    else
+                        errors.show()
