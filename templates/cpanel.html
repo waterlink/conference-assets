@@ -26,7 +26,7 @@
             .navbar-search-query { height: 12px !important; }
             .user-table-too-long div { overflow: hidden; white-space: nowrap; }
             .user-table-row:hover .user-table-too-long div { overflow: hidden; white-space: normal; word-wrap: break-word; }
-            .user-table-row:nth-child(even) { background-color: #f5f5f5; border-radius: 5px; }
+            .user-table-row:nth-child(odd) { background-color: #f5f5f5; border-radius: 5px; }
             .user-table-row { padding: 5px; }
             .user-table-row p { vertical-align: middle; }
             .faded-text { 
@@ -44,7 +44,7 @@
                 z-index: 100;
                 position: absolute;
             }
-            .user-table-row:nth-child(even) .faded-text {
+            .user-table-row:nth-child(odd) .faded-text {
                 background: -moz-linear-gradient(left, rgba(245,245,245,0) 0%, rgba(245,245,245,0) 85%, rgba(245,245,245,1) 100%); /* FF3.6+ */
                 background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(245,245,245,0)), color-stop(85%,rgba(245,245,245,0)), color-stop(100%,rgba(245,245,245,1))); /* Chrome,Safari4+ */
                 background: -webkit-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,0) 85%,rgba(245,245,245,1) 100%); /* Chrome10+,Safari5.1+ */
@@ -95,10 +95,10 @@
                                 placeholder="Поиск" type="text">
                             </a>
                         </li>
-                        <li>
+                        <li class="dropdown">
                             <a href="#" id="operator_login" class="dropdown-toggle" data-toggle="dropdown">
                                 <span id="operator_login_content">@root</span>
-                                <span class="caret"></span>
+                                <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
@@ -112,9 +112,9 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="container" id="user_page">
             <div class="row">
-                <div class="span9">
+                <div class="span9" id="user_view">
                     <div>
                         <h3>
                             Перечень пользователей
@@ -176,10 +176,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row-fluid user-table-row">
+                    <div class="row-fluid user-table-row repo-user hide">
                         <div class="span1">
                             <div>
-                                <p>
+                                <p class="user-id">
                                     22
                                 </p>
                             </div>
@@ -187,7 +187,7 @@
                         <div class="span3 user-table-too-long">
                             <div>
                                 <span class="faded-text"></span>
-                                <p>
+                                <p class="user-fio">
                                     Федоров Алексей Константинович
                                 </p>
                             </div>
@@ -195,34 +195,48 @@
                         <div class="span3 user-table-too-long">
                             <div>
                                 <span class="faded-text"></span>
-                                <a href="mailto:waterlink000+scientificConference@gmail.com">
+                                <a class="user-email" href="mailto:waterlink000+scientificConference@gmail.com">
                                     waterlink000+scientificConference@gmail.com
                                 </a>
                             </div>
                         </div>
                         <div class="span2">
                             <div>
-                                <p>
+                                <p class="user-phone">
                                     (099) 303 95 36
                                 </p>
                             </div>
                         </div>
                         <div class="span1">
                             <div>
-                                <p>
+                                <p class="user-status">
                                     Новый
                                 </p>
                             </div>
                         </div>
                         <div class="span2">
-                            <a class="btn input-block-level" href="#">
-                                <span style="font-size: 13px;">
-                                    Действия
-                                </span>
-                            </a>
+                            <div class="btn-group user-actions">
+                                <a class="btn input-block-level dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span style="font-size: 13px;">
+                                        Действия
+                                    </span>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" class="user-action-details">Подробно</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="user-action-nextstate">#{next_state}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="user-action-prevstate">#{prev_state}</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="row-fluid user-table-row">
+                    <!-- <div class="row-fluid user-table-row">
                         <div class="span1">
                             <div>
                                 <p>
@@ -635,7 +649,7 @@
                                 </span>
                             </a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="span3">
                     <div class="well">
@@ -644,21 +658,15 @@
                                 Фильтр по статусу
                             </p>
                         </div>
-                        <a class="btn input-block-level" href="#">
+                        <a class="btn input-block-level status-filter" href="#" rel="new">
                             Новые
                         </a>
-                        <a class="btn input-block-level" href="#">
+                        <a class="btn input-block-level status-filter" href="#" rel="emailsent">
                             Письмо отослано
                         </a>
-                        <a class="btn input-block-level" href="#">
+                        <a class="btn input-block-level status-filter" href="#" rel="paid">
                             Оплачено
                         </a>
-                    </div>
-                    <div class="btn-group">
-                    </div>
-                    <div class="btn-group">
-                    </div>
-                    <div class="btn-group">
                     </div>
                 </div>
             </div>

@@ -20,6 +20,7 @@ class User
 		@stayDemand = false
 
 	fromData: (data) ->
+		@id = data.id
 		@name = data.name
 		@surname = data.surname
 		@patronymic = data.patronymic
@@ -39,8 +40,8 @@ class User
 		@monographyParticipant = data.monographyParticipant
 		@stayDemand = data.stayDemand
 
-	create: ->
-		url = @backend.post "user",
+	getData: ->
+		res =
 			name: @name
 			surname: @surname
 			patronymic: @patronymic
@@ -60,14 +61,12 @@ class User
 			sectionNumber: @sectionNumber
 			monographyParticipant: @monographyParticipant
 			stayDemand: @stayDemand
-		# @id = parseInt(url[1])
-		# true
 
-	getById: (id) ->
-		@backend.get ["user", "#{ id }"]
+	create: -> @backend.post "user", @getData()
 
-	list: ->
-		@backend.get "user"
+	getById: (id) -> @backend.get ["user", "#{ id }"]
+
+	list: -> @backend.get "user"
 
 	listFiltered: (skip = undefined, limit = undefined) ->
 		data = {}
@@ -77,9 +76,10 @@ class User
 		data.limit = limit
 		@backend.get "user", data
 
-	update: (id, status) ->
-		@backend.put ["user", String(id)],
-			status: status
+	update: (id, status) -> 
+		console.log "updating user to status #{status}"
+		@status = status
+		@backend.put ["user", "#{id}"], @getData()
 
 	setup: (@backend) ->
 

@@ -30,6 +30,7 @@
     }
 
     User.prototype.fromData = function(data) {
+      this.id = data.id;
       this.name = data.name;
       this.surname = data.surname;
       this.patronymic = data.patronymic;
@@ -50,9 +51,9 @@
       return this.stayDemand = data.stayDemand;
     };
 
-    User.prototype.create = function() {
-      var url;
-      return url = this.backend.post("user", {
+    User.prototype.getData = function() {
+      var res;
+      return res = {
         name: this.name,
         surname: this.surname,
         patronymic: this.patronymic,
@@ -72,7 +73,11 @@
         sectionNumber: this.sectionNumber,
         monographyParticipant: this.monographyParticipant,
         stayDemand: this.stayDemand
-      });
+      };
+    };
+
+    User.prototype.create = function() {
+      return this.backend.post("user", this.getData());
     };
 
     User.prototype.getById = function(id) {
@@ -104,9 +109,9 @@
     };
 
     User.prototype.update = function(id, status) {
-      return this.backend.put(["user", String(id)], {
-        status: status
-      });
+      console.log("updating user to status " + status);
+      this.status = status;
+      return this.backend.put(["user", "" + id], this.getData());
     };
 
     User.prototype.setup = function(backend) {
