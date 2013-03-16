@@ -56,6 +56,12 @@
             .user-table-row:hover .user-table-too-long .faded-text { display: none; }
             .user-table-too-long > div { position: relative; }
         </style>
+        <script src="../assets/js/libs/jquery-1.9.1.min.js"></script>
+        <script src="../classes/require.js"></script>
+        <script>
+            global.Cpanel = require("../classes/cpanel");
+            global.cpanel = new Cpanel;
+        </script>
     </head>
     
     <body>
@@ -90,9 +96,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
-                                @root
+                            <a href="#" id="operator_login" class="dropdown-toggle" data-toggle="dropdown">
+                                <span id="operator_login_content">@root</span>
+                                <span class="caret"></span>
                             </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" id="operator_logoff">
+                                        Выход
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -649,8 +663,6 @@
                 </div>
             </div>
         </div>
-        <script src="../assets/js/libs/jquery-1.9.1.min.js">
-        </script>
         <script src="../assets/js/libs/bootstrap.min.js">
         </script>
     </body>

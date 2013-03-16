@@ -2,6 +2,8 @@
 (function() {
   var User;
 
+  global.Restfull = require("../classes/restfull");
+
   User = (function() {
 
     function User(name, surname, patronymic, _deprecated_participant, status) {

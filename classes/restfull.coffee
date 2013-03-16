@@ -1,3 +1,4 @@
+global.Backend = require "../classes/backend"
 
 if not global.$
 	global.$ = require "jquery"

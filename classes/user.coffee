@@ -1,3 +1,5 @@
+global.Restfull = require "../classes/restfull"
+
 class User
 	
 	constructor: (@name = "", @surname = "", @patronymic = "", @_deprecated_participant = "", @status = "new") ->
