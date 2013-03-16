@@ -53,6 +53,7 @@ html
                     | Есть потребность в проживании?
                 input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
                 input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd', type='text', placeholder='До')
+                input.input-block-level(data-bind='attachFiles: files', type="file", name="files[]", multiple)
                 br
                 .clearfix
                 button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово

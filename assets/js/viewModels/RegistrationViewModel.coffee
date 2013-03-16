@@ -27,6 +27,7 @@ class window.RegistrationViewModel
             stayStart             : ko.observable ""
             stayEnd               : ko.observable ""
 
+        @files = ko.observableArray()
         @searchData = window.searchData
 
         @errors = ko.validation.group(@user)
@@ -47,7 +48,6 @@ class window.RegistrationViewModel
 
     addValidation: ->
         @makeFieldsRequired()
-        @user.email.extend email: message: "Введите корректный email", params: yes
         @hasValidation = yes
 
     makeFieldsRequired: ->
