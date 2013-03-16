@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "select2.js",
+  "sourceRoot": "",
+  "sources": [
+    "select2.coffee"
+  ],
+  "names": [],
+  "mappings": ";;AAAA;CAAA;CAAA,CAAA,CACG,IADH,QAAkB;CACf,CAAO,CAAA,CAAN,GAAM,EAAC,IAAD;CACF,KAAA,CAAA,MAAmB;CAEhB,CAAD,CAAmD,EAA7C,EAAR,EAAqD,IAArD,EAAwB,GAAxB;CACI,MAAA,EAAA,MAAA;CADJ,MAAqD;CAH1D,IAAO;CAAP,CAMS,CAAA,CAAR,EAAA,CAAQ,EAAC;CACL,MAAA,CAAA,KAAA;CAPL,IAMS;CAPZ,GAAA;CAAA"
+}

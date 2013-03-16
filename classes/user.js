@@ -4,26 +4,52 @@
 
   User = (function() {
 
-    function User(name, surname, patronymic, participant, status) {
+    function User(name, surname, patronymic, _deprecated_participant, status) {
       this.name = name != null ? name : "";
       this.surname = surname != null ? surname : "";
       this.patronymic = patronymic != null ? patronymic : "";
-      this.participant = participant != null ? participant : "";
+      this._deprecated_participant = _deprecated_participant != null ? _deprecated_participant : "";
       this.status = status != null ? status : "new";
       this.backend = new Restfull;
+      this.academicDegree = "";
+      this.academicTitle = "";
+      this.jobPosition = "";
+      this.jobPlace = "";
+      this.city = "";
+      this.country = "";
+      this.postalAddress = "";
+      this.email = "";
+      this.phone = "";
+      this.participantType = "";
+      this.lectureTitle = "";
+      this.sectionNumber = "";
+      this.monographyParticipant = false;
+      this.stayDemand = false;
     }
 
     User.prototype.create = function() {
       var url;
-      url = this.backend.post("user", {
+      return url = this.backend.post("user", {
         name: this.name,
         surname: this.surname,
         patronymic: this.patronymic,
         participant: this.participant,
-        status: this.status
+        status: this.status,
+        academicDegree: this.academicDegree,
+        academicTitle: this.academicTitle,
+        jobPosition: this.jobPosition,
+        jobPlace: this.jobPlace,
+        city: this.city,
+        country: this.country,
+        postalAddress: this.postalAddress,
+        email: this.email,
+        phone: this.phone,
+        participantType: this.participantType,
+        lectureTitle: this.lectureTitle,
+        sectionNumber: this.sectionNumber,
+        monographyParticipant: this.monographyParticipant,
+        stayDemand: this.stayDemand
       });
-      this.id = parseInt(url[1]);
-      return true;
     };
 
     User.prototype.getById = function(id) {
@@ -62,6 +88,17 @@
 
     User.prototype.setup = function(backend) {
       this.backend = backend;
+    };
+
+    User.prototype.setMonographyParticipant = function(monographyParticipant, monographyTitle) {
+      this.monographyParticipant = monographyParticipant != null ? monographyParticipant : true;
+      this.monographyTitle = monographyTitle != null ? monographyTitle : "";
+    };
+
+    User.prototype.setStayDemand = function(stayDemand, stayStart, stayEnd) {
+      this.stayDemand = stayDemand != null ? stayDemand : true;
+      this.stayStart = stayStart != null ? stayStart : "";
+      this.stayEnd = stayEnd != null ? stayEnd : "";
     };
 
     return User;

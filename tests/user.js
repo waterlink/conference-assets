@@ -9,13 +9,12 @@
       var user;
       return user = new User;
     });
-    it("should have name, surname, patronymic, participant, status", function() {
+    it("should have name, surname, patronymic, status", function() {
       var user;
       user = new User;
       expect(user.name).toBeDefined();
       expect(user.surname).toBeDefined();
       expect(user.patronymic).toBeDefined();
-      expect(user.participant).toBeDefined();
       return expect(user.status).toBeDefined();
     });
     it("should have default status 'new'", function() {
@@ -57,6 +56,7 @@
       var user;
       user = new User('Alex', 'Fedorov', 'Konstantinovich', false);
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       expect(user.create()).toBeTruthy();
       return expect(user.backend.mockDB.user.length).toBe(1);
@@ -65,6 +65,7 @@
       var user;
       user = new User('Alex', 'Fedorov', 'Konstantinovich', false);
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.create();
       return expect(user.id).toBeDefined();
@@ -73,6 +74,7 @@
       var res, user;
       user = new User;
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.backend.mockDB.user.push({
         id: 331,
@@ -104,6 +106,7 @@
       var res, user;
       user = new User;
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.backend.mockDB.user.push({
         id: 331,
@@ -130,6 +133,7 @@
       var res, user;
       user = new User;
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.backend.mockDB.user.push({
         id: 331,
@@ -191,6 +195,7 @@
       var res, user;
       user = new User;
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.backend.mockDB.user.push({
         id: 331,
@@ -251,6 +256,7 @@
       var res, user;
       user = new User;
       user.setup(new Backend);
+      user.backend.authenticatedAs = 'admin';
       user.backend["delete"]("user");
       user.backend.mockDB.user.push({
         id: 331,
@@ -359,7 +365,7 @@
       user = new User;
       return expect(user.setStayDemand).toBeFunction();
     });
-    return it("should have stayStart and stayEnd if stayDemand is true", function() {
+    it("should have stayStart and stayEnd if stayDemand is true", function() {
       var user;
       user = new User;
       expect(user.stayStart).toBeUndefined();
@@ -367,6 +373,11 @@
       user.setStayDemand(true);
       expect(user.stayStart).toBeDefined();
       return expect(user.stayEnd).toBeDefined();
+    });
+    return it("shouldnt have participant", function() {
+      var user;
+      user = new User;
+      return expect(user.participant).toBeUndefined();
     });
   });
 

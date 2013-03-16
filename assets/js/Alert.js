@@ -17,7 +17,8 @@
     }
 
     Alert.prototype.show = function() {
-      return this.div.slideDown(500).fadeTo(500, 1);
+      this.div.slideDown(500).fadeTo(500, 1);
+      return window.scrollTo(0, 0);
     };
 
     Alert.prototype.hide = function() {

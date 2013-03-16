@@ -1,7 +1,21 @@
 class User
 	
-	constructor: (@name = "", @surname = "", @patronymic = "", @participant = "", @status = "new") ->
+	constructor: (@name = "", @surname = "", @patronymic = "", @_deprecated_participant = "", @status = "new") ->
 		@backend = new Restfull
+		@academicDegree = ""
+		@academicTitle = ""
+		@jobPosition = ""
+		@jobPlace = ""
+		@city = ""
+		@country = ""
+		@postalAddress = ""
+		@email = ""
+		@phone = ""
+		@participantType = ""
+		@lectureTitle = ""
+		@sectionNumber = ""
+		@monographyParticipant = false
+		@stayDemand = false
 
 	create: ->
 		url = @backend.post "user",
@@ -10,8 +24,22 @@ class User
 			patronymic: @patronymic
 			participant: @participant
 			status: @status
-		@id = parseInt(url[1])
-		true
+			academicDegree: @academicDegree
+			academicTitle: @academicTitle
+			jobPosition: @jobPosition
+			jobPlace: @jobPlace
+			city: @city
+			country: @country
+			postalAddress: @postalAddress
+			email: @email
+			phone: @phone
+			participantType: @participantType
+			lectureTitle: @lectureTitle
+			sectionNumber: @sectionNumber
+			monographyParticipant: @monographyParticipant
+			stayDemand: @stayDemand
+		# @id = parseInt(url[1])
+		# true
 
 	getById: (id) ->
 		@backend.get ["user", "#{ id }"]
@@ -32,6 +60,10 @@ class User
 			status: status
 
 	setup: (@backend) ->
+
+	setMonographyParticipant: (@monographyParticipant = true, @monographyTitle = "") ->
+
+	setStayDemand: (@stayDemand = true, @stayStart = "", @stayEnd = "") ->
 
 
 module.exports = User

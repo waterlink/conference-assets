@@ -35,6 +35,7 @@
     it("should save last request info: method, url, data", function() {
       var backend;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.get(["user", "127"]);
       expect(backend.lastRequest).toBeJson({
         method: "get",
@@ -79,6 +80,7 @@
     it("should return object when get with id and with exactly that id", function() {
       var backend, obj;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -103,6 +105,7 @@
     it("should return list when get without id", function() {
       var backend, obj;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -128,6 +131,7 @@
     it("shouldnt reverse inner data when get without id but only result", function() {
       var backend, obj;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -157,6 +161,7 @@
     it("should modify when put with id", function() {
       var backend, obj, res;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -195,6 +200,7 @@
     it("should return false when put without id", function() {
       var backend, res;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       res = backend.put("user", ["hello", "world"]);
       return expect(res).toBeFalsy();
@@ -202,11 +208,13 @@
     it("should return false when post with id", function() {
       var backend;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       return expect(backend.post(["user", "123"])).toBeFalsy();
     });
     it("should create new entry when post without id", function() {
       var backend, found, res;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       res = backend.post("user", {
         name: "Maxim",
@@ -230,6 +238,7 @@
     it("should wipe entire collection when delete without id", function() {
       var backend;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -250,9 +259,10 @@
       expect(backend["delete"]("user")).toBeTruthy();
       return expect(backend.mockDB.user.length).toBe(0);
     });
-    return it("should remove one object when delete with id", function() {
+    it("should remove one object when delete with id", function() {
       var backend;
       backend = new Backend;
+      backend.authenticatedAs = 'admin';
       backend.mockDB.user = [];
       backend.mockDB.user.push({
         id: 331,
@@ -280,6 +290,459 @@
         participant: false,
         status: "emailsent"
       });
+    });
+    it("should return access denied error when guest trying to access not user collection", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        id: 1,
+        login: 'admin',
+        password: 'admin',
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        id: 2,
+        login: 'operator',
+        password: 'operator',
+        isAdmin: false
+      });
+      expect(backend.authenticatedAs).toBe('guest');
+      return expect(function() {
+        var res;
+        return res = backend.get("operator");
+      }).toThrow("Access denied");
+    });
+    xit("should not return acccess denied error when guest trying to access index collection", function() {
+      var backend, res;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      res = backend.get("index");
+      expect(res.length).toBe(1);
+      return expect(res[0]).toBeJson({
+        id: 1,
+        bga: 'test'
+      });
+    });
+    it("should be allowed for [guest] to [post with id] to index", function() {
+      var backend, res;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      return res = backend.post(["index", "operator"], {
+        password: "operator"
+      });
+    });
+    it("should be disallowed for [guest] to [get] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      expect(function() {
+        return backend.get("index");
+      }).toThrow("Access denied");
+      return expect(function() {
+        return backend.get(["index", "1"]);
+      }).toThrow("Access denied");
+    });
+    it("should be disallowed for [guest] to [put] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      expect(function() {
+        return backend.put("index");
+      }).toThrow("Access denied");
+      return expect(function() {
+        return backend.put(["index", "1"]);
+      }).toThrow("Access denied");
+    });
+    it("should be disallowed for [guest] to [delete] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      expect(function() {
+        return backend["delete"]("index");
+      }).toThrow("Access denied");
+      return expect(function() {
+        return backend["delete"](["index", "1"]);
+      }).toThrow("Access denied");
+    });
+    it("should be disallowed for [guest] to [post without id] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.index.push({
+        id: 1,
+        bga: 'test'
+      });
+      return expect(function() {
+        return backend.post("index");
+      }).toThrow("Access denied");
+    });
+    it("should be allowed for [guest] to [post without id] to user", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.user = [];
+      backend.post("user", {
+        name: "Alex"
+      });
+      expect(backend.mockDB.user.length).toBe(1);
+      return expect(backend.mockDB.user[0]).toBeJson({
+        name: "Alex",
+        id: 1
+      });
+    });
+    it("should be disallowed for [guest] to [post with id] to user", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.user = [];
+      return expect(function() {
+        return backend.post(["user", "332"], {
+          name: "Alex"
+        });
+      }).toThrow("Access denied");
+    });
+    it("should be allowed for [operator] to [post with id] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      return backend.post(["index", "operator"], {
+        password: "operator"
+      });
+    });
+    it("should be allowed for [operator] to [get] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      backend.get("index");
+      return backend.get(["index", "operator"]);
+    });
+    it("should be allowed for [operator] to [put without id] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      return backend.put("index", {
+        hello: "world"
+      });
+    });
+    it("should be allowed for [operator] to [delete] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      backend["delete"]("index");
+      backend.authenticatedAs = "operator";
+      return backend["delete"](["index", "557"]);
+    });
+    it("should be disallowed for [operator] to [post without id] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      return expect(function() {
+        return backend.post("index");
+      }).toThrow("Access denied");
+    });
+    it("should be disallowed for [operator] to [put with id] to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.authenticatedAs = "operator";
+      return expect(function() {
+        return backend.put(["index", "557"]);
+      }).toThrow("Access denied");
+    });
+    it("should change authenticatedAs when post to index/{operator.login}", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      expect(backend.authenticatedAs).toBe("guest");
+      backend.post(["index", "fedorov"], {
+        password: "password"
+      });
+      expect(backend.authenticatedAs).toBe("operator");
+      backend.post(["index", "waterlink"], {
+        password: "helloworld"
+      });
+      return expect(backend.authenticatedAs).toBe("admin");
+    });
+    it("should be disallowed to authenticate as non-existant operator", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      expect(function() {
+        return backend.post(["index", "bgatest"], {
+          password: "bgatest"
+        });
+      }).toThrow("Access denied");
+      return expect(backend.authenticatedAs).toBe("guest");
+    });
+    it("should be disallowed to authenticated with wrong password", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      expect(function() {
+        return backend.post(["index", "waterlink"], {
+          password: "bgatest"
+        });
+      }).toThrow("Access denied");
+      expect(function() {
+        return backend.post(["index", "fedorov"], {
+          password: "bgatest"
+        });
+      }).toThrow("Access denied");
+      return expect(backend.authenticatedAs).toBe("guest");
+    });
+    it("should return group of current operator: one of [operator, admin] when get index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "fedorov"], {
+        password: "password"
+      });
+      expect(backend.get("index")).toBeJson({
+        whois: "fedorov",
+        group: ["operator"]
+      });
+      backend.post(["index", "waterlink"], {
+        password: "helloworld"
+      });
+      return expect(backend.get("index")).toBeJson({
+        whois: "waterlink",
+        group: ["operator", "admin"]
+      });
+    });
+    it("should change password when put without id to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "fedorov"], {
+        password: "password"
+      });
+      backend.put("index", {
+        old_password: "password",
+        new_password: "bgatest"
+      });
+      expect(backend.mockDB.operator[1]).toBeJson({
+        login: "fedorov",
+        password: "bgatest",
+        isAdmin: false
+      });
+      this.authenticatedAs = "guest";
+      expect(function() {
+        return backend.post(["index", "fedorov"], {
+          password: "password"
+        });
+      }).toThrow("Access denied");
+      backend.post(["index", "fedorov"], {
+        password: "bgatest"
+      });
+      expect(backend.authenticatedAs).toBe("operator");
+      return expect(backend.get("index")).toBeJson({
+        whois: "fedorov",
+        group: ["operator"]
+      });
+    });
+    it("should logoff when delete index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "fedorov"], {
+        password: "password"
+      });
+      backend["delete"]("index");
+      return expect(backend.authenticatedAs).toBe("guest");
+    });
+    it("should be allowed for [admin] to [*all methods*] to *", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.user = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "waterlink"], {
+        password: "helloworld"
+      });
+      backend.get("user");
+      backend.get(["user", "331"]);
+      backend.get("operator");
+      backend.get(["operator", "331"]);
+      backend.post("user");
+      backend.post(["user", "331"]);
+      backend.post("operator");
+      backend.post(["operator", "331"]);
+      backend.put("user");
+      backend.put(["user", "331"]);
+      backend.put("operator");
+      backend.put(["operator", "331"]);
+      backend["delete"]("user");
+      backend["delete"](["user", "331"]);
+      backend["delete"]("operator");
+      return backend["delete"](["operator", "331"]);
+    });
+    it("should reset password to new when put with id = operator.login to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "waterlink"], {
+        password: "helloworld"
+      });
+      backend.put(["index", "fedorov"], {
+        new_password: "bgatest"
+      });
+      expect(function() {
+        return backend.post(["index", "fedorov"], {
+          password: "password"
+        });
+      }).toThrow("Access denied");
+      backend.post(["index", "fedorov"], {
+        password: "bgatest"
+      });
+      return expect(backend.whois).toBe("fedorov");
+    });
+    return it("should register new operator when post without id to index", function() {
+      var backend;
+      backend = new Backend;
+      backend.mockDB.index = [];
+      backend.mockDB.operator = [];
+      backend.mockDB.operator.push({
+        login: "waterlink",
+        password: "helloworld",
+        isAdmin: true
+      });
+      backend.mockDB.operator.push({
+        login: "fedorov",
+        password: "password",
+        isAdmin: false
+      });
+      backend.post(["index", "waterlink"], {
+        password: "helloworld"
+      });
+      backend.post("index", {
+        login: "alex",
+        password: "bgatest"
+      });
+      expect(backend.mockDB.operator.length).toBe(3);
+      expect(backend.mockDB.operator[2]).toBeJson({
+        login: "alex",
+        password: "bgatest",
+        isAdmin: false
+      });
+      backend.post(["index", "alex"], {
+        password: "bgatest"
+      });
+      expect(backend.whois).toBe("alex");
+      expect(backend.authenticatedAs).toBe("operator");
+      backend["delete"]("index");
+      expect(backend.whois).toBeUndefined;
+      return expect(backend.authenticatedAs).toBe("guest");
     });
   });
 

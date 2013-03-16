@@ -1,6 +1,11 @@
-class window.UserRegistrationViewModel
+class window.RegistrationViewModel
     constructor: ->
-        @user = @addValidation
+        @start = new Date
+        @end   = new Date
+        @start.setDate @start.getDate() - 7
+        @end.setDate   @end.getDate()   + 7
+
+        @user =
             name                  : ko.observable ""
             surname               : ko.observable ""
             patronymic            : ko.observable ""
@@ -22,40 +27,48 @@ class window.UserRegistrationViewModel
             stayStart             : ko.observable ""
             stayEnd               : ko.observable ""
 
-        @errors = ko.validation.group(@user)
+        @searchData = window.searchData
 
+        @errors = ko.validation.group(@user)
         @errorAlert = new Alert "#needFixErrors"
 
     doRegister: ->
+        @addValidation() unless @hasValidation
+
         if @errors().length is 0
             console.log ko.mapping.toJS @user
         else
             @errorAlert.show()
             @errors.showAllMessages()
 
-    addValidation: (user) ->
-        @makeFieldsRequired user
-        user.email.extend email: yes
-        user
+    isAvailableDateToStay: (date) =>
+        console.log date
+        true
 
-    makeFieldsRequired: (user) ->
-        for key, value of user
+    addValidation: ->
+        @makeFieldsRequired()
+        @user.email.extend email: message: "Введите корректный email", params: yes
+        @hasValidation = yes
+
+    makeFieldsRequired: ->
+        for key, value of @user when value.extend?
             isRequired = yes
 
             if key in ["stayStart", "stayEnd"]
-                isRequired = onlyIf: user.stayDemand
+                isRequired = onlyIf: @user.stayDemand
 
             if key is "monographyTitle"
-                isRequired = onlyIf: user.monographyParticipant
+                isRequired = onlyIf: @user.monographyParticipant
 
             isRequired = no if key in ["monographyParticipant", "stayDemand"]
 
-            value.extend required: isRequired
+            value?.extend required: isRequired
 
-        user.stayDemand.subscribe (value) ->
-            ko.validation.validateObservable user.stayStart
-            ko.validation.validateObservable user.stayEnd
+        @user.stayDemand.subscribe (value) =>
+            ko.validation.validateObservable @user.stayStart
+            ko.validation.validateObservable @user.stayEnd
 
-        user.monographyParticipant.subscribe (value) ->
-            ko.validation.validateObservable user.monographyTitle
+        @user.monographyParticipant.subscribe (value) =>
+            ko.validation.validateObservable @user.monographyTitle
+
 
