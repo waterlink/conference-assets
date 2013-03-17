@@ -37,7 +37,7 @@ html
 								| Contact
 					ul.nav.pull-right
 						li
-							a(href='#')
+							a(href='#', data-toggle="tooltip", data-original-title="Поиск по ФИО или по Номеру", data-placement="bottom")
 								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text', data-bind="value: search, event: {keypress: doSearch}")
 							li.dropdown
 								a#operator_login.dropdown-toggle(href='#', data-toggle='dropdown')
@@ -150,10 +150,10 @@ html
 									p.user-status(data-bind="text: locStatus")
 										//- | Новый
 							.span2
-								.btn-group.user-actions
+								.btn-group.user-actions.input-block-level
 									a.btn.input-block-level.dropdown-toggle(data-toggle='dropdown', href='#', data-loading-text="Подождите...", data-error-text="Ошибка!")
 										span(style='font-size: 13px;')
-											| Действия
+											| Действия&nbsp;
 										b.caret
 									ul.dropdown-menu
 										li
@@ -192,6 +192,6 @@ html
 	//- script(src="../assets/js/viewModels/UserViewModel.js")
 	//- script(src="../assets/js/viewModels/AdminViewModel.js")
 
-	//- :coffeescript
-	//- 	ko.applyBindings new AdminViewModel
+	:coffeescript
+		$('#search_query').parent().tooltip()
 
