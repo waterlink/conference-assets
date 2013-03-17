@@ -20,7 +20,12 @@
               _results.push(files.push(f));
             }
             return _results;
-          }
+          },
+          process: [
+            {
+              action: "load"
+            }
+          ]
         }));
         return initialized = true;
       };
