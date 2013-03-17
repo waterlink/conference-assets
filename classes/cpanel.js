@@ -25,6 +25,8 @@
     }
   };
 
+  global.cpanelPageLimit = 5;
+
   Cpanel = (function() {
 
     function Cpanel() {
@@ -87,13 +89,18 @@
       var me,
         _this = this;
       me = this;
-      this.filter = {};
+      this.filter = {
+        skip: 0,
+        limit: global.cpanelPageLimit
+      };
+      this.page = 0;
       $('#operator_logoff').click(function() {
         return _this.logoff();
       });
-      return $('.status-filter').click(function() {
+      $('.status-filter').click(function() {
         return me.statusFilterChanged($(this).attr("rel"));
       });
+      return $('.status-filter[rel="new"]').click();
     };
 
     Cpanel.prototype.statusFilterChanged = function(status) {
@@ -146,7 +153,8 @@
           console.log(user);
           if (user) {
             _this.users[user.id] = user;
-            return _this.adminViewModel.users.push(new UserViewModel(user));
+            _this.adminViewModel.users.push(new UserViewModel(user));
+            return _this.adminViewModel.userCount(1);
           }
         });
       } else {
@@ -155,11 +163,13 @@
           var _i, _len, _results;
           _this.users = {};
           _this.adminViewModel.users.removeAll();
+          _this.adminViewModel.userCount(0);
           _results = [];
           for (_i = 0, _len = users.length; _i < _len; _i++) {
             user = users[_i];
             _this.users[user.id] = user;
-            _results.push(_this.adminViewModel.users.push(new UserViewModel(user)));
+            _this.adminViewModel.users.push(new UserViewModel(user));
+            _results.push(_this.adminViewModel.userCount(_this.adminViewModel.userCount() + 1));
           }
           return _results;
         });

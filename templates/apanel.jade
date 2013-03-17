@@ -91,9 +91,17 @@ html
 			.row
 				.span9
 					#user_head
-						div
-							h3
-								| Перечень пользователей
+						.row-fluid
+							.span6.pull-left
+								h3
+									| Перечень пользователей
+							.btn-group.pull-right
+								a.btn(href="#", data-bind="attr: {class: prevPageClass}, click: prevPage")
+									i.icon-arrow-left
+									| &nbsp; Предыдущие
+								a.btn(href="#", data-bind="attr: {class: nextPageClass}, click: nextPage")
+									| Следующие &nbsp;
+									i.icon-arrow-right
 						.row-fluid.user-table-row
 							.span1
 								div

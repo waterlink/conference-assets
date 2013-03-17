@@ -10,8 +10,18 @@ class window.AdminViewModel
         ,
             text: "paid", checked: no
         ]
+        @page = ko.observable 0
+        @userCount = ko.observable 0
         @users = ko.observableArray []
         @search = ko.observable ""
+
+        @prevPageClass = ko.computed =>
+            return "btn disabled" if @page() is 0
+            return "btn"
+
+        @nextPageClass = ko.computed =>
+            return "btn disabled" if @userCount() < global.cpanelPageLimit
+            return "btn"
 
     doSignOut: ->
         window.location.href = "registration.html"
@@ -41,6 +51,20 @@ class window.AdminViewModel
             event.preventDefault();
             false
         true
+
+    nextPage: =>
+        if @userCount() is global.cpanelPageLimit
+            cpanel.page++
+            @page cpanel.page
+            cpanel.filter.skip += global.cpanelPageLimit
+            cpanel.loadUsers()
+
+    prevPage: =>
+        if @page() > 0
+            cpanel.page--
+            @page cpanel.page
+            cpanel.filter.skip -= global.cpanelPageLimit
+            cpanel.loadUsers()
 
 
 module.exports = window.AdminViewModel

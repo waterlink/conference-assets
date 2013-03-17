@@ -8,6 +8,12 @@
 
     function AdminViewModel() {
       var _this = this;
+      this.prevPage = function() {
+        return AdminViewModel.prototype.prevPage.apply(_this, arguments);
+      };
+      this.nextPage = function() {
+        return AdminViewModel.prototype.nextPage.apply(_this, arguments);
+      };
       this.doSearch = function(data, event) {
         return AdminViewModel.prototype.doSearch.apply(_this, arguments);
       };
@@ -27,8 +33,22 @@
           checked: false
         }
       ]);
+      this.page = ko.observable(0);
+      this.userCount = ko.observable(0);
       this.users = ko.observableArray([]);
       this.search = ko.observable("");
+      this.prevPageClass = ko.computed(function() {
+        if (_this.page() === 0) {
+          return "btn disabled";
+        }
+        return "btn";
+      });
+      this.nextPageClass = ko.computed(function() {
+        if (_this.userCount() < global.cpanelPageLimit) {
+          return "btn disabled";
+        }
+        return "btn";
+      });
     }
 
     AdminViewModel.prototype.doSignOut = function() {
@@ -73,6 +93,24 @@
         false;
       }
       return true;
+    };
+
+    AdminViewModel.prototype.nextPage = function() {
+      if (this.userCount() === global.cpanelPageLimit) {
+        cpanel.page++;
+        this.page(cpanel.page);
+        cpanel.filter.skip += global.cpanelPageLimit;
+        return cpanel.loadUsers();
+      }
+    };
+
+    AdminViewModel.prototype.prevPage = function() {
+      if (this.page() > 0) {
+        cpanel.page--;
+        this.page(cpanel.page);
+        cpanel.filter.skip -= global.cpanelPageLimit;
+        return cpanel.loadUsers();
+      }
     };
 
     return AdminViewModel;

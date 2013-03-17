@@ -15,6 +15,8 @@ global.statusGraph =
 		"emailsent": "new"
 		"paid": "emailsent"
 
+global.cpanelPageLimit = 5
+
 class Cpanel
 	constructor: ->
 		@rest = new Restfull
@@ -44,9 +46,11 @@ class Cpanel
 		p.done () => @redirectToLogin()
 	setup: ->
 		me = @
-		@filter = {}
+		@filter = {skip: 0, limit: global.cpanelPageLimit}
+		@page = 0
 		$('#operator_logoff').click () => @logoff()
 		$('.status-filter').click -> me.statusFilterChanged $(@).attr("rel")
+		$('.status-filter[rel="new"]').click()
 	statusFilterChanged: (status) ->
 		if @filter.status
 			if @filter.status is status
@@ -85,14 +89,17 @@ class Cpanel
 				if user
 					@users[user.id] = user
 					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.userCount 1
 		else
 			p = @rest.get "user", @filter
 			p.done (users) => 
 				@users = {}
 				@adminViewModel.users.removeAll()
+				@adminViewModel.userCount 0
 				for user in users
 					@users[user.id] = user 
 					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.userCount @adminViewModel.userCount() + 1
 	userSetup: (user, userMarkup) ->
 		@users[user.id] = user
 		unless userMarkup
