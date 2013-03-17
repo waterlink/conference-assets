@@ -11,6 +11,7 @@ class window.AdminViewModel
             text: "paid", checked: no
         ]
         @users = ko.observableArray []
+        @search = ko.observable ""
 
     doSignOut: ->
         window.location.href = "registration.html"
@@ -30,6 +31,17 @@ class window.AdminViewModel
                 "Ожидаем оплаты"
             when "paid"
                 "Оплачен"
+
+    doSearch: (data, event) =>
+        if event.which is 13
+            $("#search_query").blur()
+            setTimeout( => 
+                cpanel.loadUsers()
+            , 30)
+            event.preventDefault();
+            false
+        true
+
 
 module.exports = window.AdminViewModel
 

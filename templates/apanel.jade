@@ -38,7 +38,7 @@ html
 					ul.nav.pull-right
 						li
 							a(href='#')
-								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text')
+								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text', data-bind="value: search, event: {keypress: doSearch}")
 							li.dropdown
 								a#operator_login.dropdown-toggle(href='#', data-toggle='dropdown')
 									span#operator_login_content @root

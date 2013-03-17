@@ -8,6 +8,9 @@
 
     function AdminViewModel() {
       var _this = this;
+      this.doSearch = function(data, event) {
+        return AdminViewModel.prototype.doSearch.apply(_this, arguments);
+      };
       this.readableStatus = function(status) {
         return AdminViewModel.prototype.readableStatus.apply(_this, arguments);
       };
@@ -25,6 +28,7 @@
         }
       ]);
       this.users = ko.observableArray([]);
+      this.search = ko.observable("");
     }
 
     AdminViewModel.prototype.doSignOut = function() {
@@ -56,6 +60,19 @@
         case "paid":
           return "Оплачен";
       }
+    };
+
+    AdminViewModel.prototype.doSearch = function(data, event) {
+      var _this = this;
+      if (event.which === 13) {
+        $("#search_query").blur();
+        setTimeout(function() {
+          return cpanel.loadUsers();
+        }, 30);
+        event.preventDefault();
+        false;
+      }
+      return true;
     };
 
     return AdminViewModel;

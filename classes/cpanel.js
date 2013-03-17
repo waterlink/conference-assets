@@ -114,8 +114,25 @@
     };
 
     Cpanel.prototype.loadUsers = function() {
-      var p, realUsers, userView,
+      var p, realUsers, search, userView, words,
         _this = this;
+      search = this.adminViewModel.search();
+      if (search) {
+        words = search.split(" ").filter(function(x) {
+          return x;
+        });
+        words = _.map(words, function(x) {
+          return x.toLowerCase();
+        });
+        if (words) {
+          this.filter.words = words;
+        } else {
+          delete this.filter.words;
+        }
+      } else if (this.filter.words) {
+        delete this.filter.words;
+      }
+      console.log(this.filter.words);
       p = this.rest.get("user", this.filter);
       userView = $("#user_view");
       realUsers = userView.find(".user-real");

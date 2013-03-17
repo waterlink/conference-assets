@@ -61,6 +61,17 @@ class Cpanel
 			$(".status-filter[rel=\"#{status}\"]").addClass "active"
 		@loadUsers()
 	loadUsers: ->
+		search = @adminViewModel.search()
+		if search
+			words = search.split(" ").filter (x) -> x
+			words = _.map words, (x) -> x.toLowerCase()
+			if words
+				@filter.words = words
+			else
+				delete @filter.words
+		else if @filter.words
+			delete @filter.words
+		console.log @filter.words
 		p = @rest.get "user", @filter
 		userView = $ "#user_view"
 		realUsers = userView.find ".user-real"
