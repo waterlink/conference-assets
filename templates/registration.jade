@@ -61,7 +61,7 @@ html
                     span.btn.btn-success.fileinput-button
                         i.icon-plus.icon-white
                         | &nbsp; Добавить документы
-                        input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone") }) }', type="file", name="files[]", multiple)
+                        input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone"), autoUpload: true }) }', type="file", name="files[]", data-url="/uploads", multiple)
 
                     .clearfix
                     br
@@ -88,8 +88,8 @@ html
                     | &nbsp;
                     span(data-bind="text: $root.files.localize(error)")
                     {{else}}
-                    .progress.progress-success.progress-striped.active(role="progressbar", aria-valuemin="0", aria-valuemax="100", aria-valuenow="0")
-                        .bar(style="width:0%;")
+                    .progress.progress-success.progress-striped.active(role="progressbar", aria-valuemin="0", aria-valuemax="100")
+                        .bar(style="width:0%;", data-bind="style: {width: loaded}")
                     {{/if}}
                 td
                     button.btn.btn-danger(data-bind="click: function() { $root.files.remove($value) }")

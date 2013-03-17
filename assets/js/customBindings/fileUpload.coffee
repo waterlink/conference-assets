@@ -8,10 +8,16 @@ ko.bindingHandlers.fileUpload =
         initialize = ->
             $element.fileupload _.extend options,
                 maxNumberOfFiles: (if max? then max - files().length + !!initialized else undefined)
-                added: (e, data) -> files.push f for f in data.files
+                added: (e, data) -> 
+                    for f in data.files
+                        f.loaded = ko.observable "0%"
+                        files.push f
                 process: [
                     action: "load"
                 ]
+                progress: (e, data) =>
+                    for f in data.files
+                        f.loaded parseInt(data.loaded * 100 / data.total, 10) + "%"
             initialized = yes
 
         initialize()
