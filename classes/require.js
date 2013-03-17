@@ -5,6 +5,8 @@
 
   global.modules = {};
 
+  global.module = {};
+
   global.require = function(path) {
     var p;
     if (!global.modules[path]) {

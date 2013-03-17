@@ -22,6 +22,24 @@
       this.prevStatus = ko.computed(function() {
         return statuses[statusGraph.prev[_this.status()]];
       });
+      this.fullJob = ko.computed(function() {
+        return "" + _this.jobPosition + " в " + _this.jobPlace + " г. " + _this.city + ", " + _this.country;
+      });
+      this.z_monographyTitle = ko.computed(function() {
+        return _this.monographyTitle || "";
+      });
+      this.z_stayStart = ko.computed(function() {
+        return (_this.stayStart || "").replace(/T.*/, "");
+      });
+      this.z_stayEnd = ko.computed(function() {
+        return (_this.stayEnd || "").replace(/T.*/, "");
+      });
+      this.isMonographyParticipant = ko.computed(function() {
+        return _this.monographyParticipant && _this.monographyParticipant !== "0";
+      });
+      this.isStayDemand = ko.computed(function() {
+        return _this.stayDemand && _this.stayDemand !== "0";
+      });
     }
 
     UserViewModel.prototype.details = function() {

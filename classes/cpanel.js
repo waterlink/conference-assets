@@ -191,7 +191,51 @@
       return userMarkup;
     };
 
-    Cpanel.prototype.userDetails = function(id) {};
+    Cpanel.prototype.userDetails = function(id) {
+      var initialOffset, p,
+        _this = this;
+      initialOffset = $("#user_page").offset();
+      $("#user_page").addClass("cpanel-navigation-goaway-left");
+      p = $("<div>").addClass("hidden-page");
+      p.html("<i class=\"icon-tag\"></i> <span>Все<br/>учатники</span>");
+      p.attr("rel", "#user_page");
+      p.css({
+        top: "80px"
+      });
+      p.click(function() {
+        $("#user_page").css({
+          position: "fixed",
+          left: initialOffset.left,
+          top: initialOffset.top
+        });
+        $("#user_page").removeClass("cpanel-navigation-goaway-left");
+        if (_this.active_page) {
+          _this.active_page.addClass("cpanel-navigation-goaway-right");
+          _this.active_page = void 0;
+        }
+        p.remove();
+        return setTimeout(function() {
+          return $("#user_page").attr("style", "");
+        }, 2000);
+      });
+      setTimeout(function() {
+        return $("body").append(p);
+      }, 1400);
+      return setTimeout(function() {
+        var user_card;
+        user_card = $(".user-pages .container[user_id=\"" + id + "\"]");
+        user_card.css({
+          position: "fixed",
+          left: initialOffset.left,
+          top: initialOffset.top
+        });
+        user_card.removeClass("cpanel-navigation-goaway-right");
+        _this.active_page = user_card;
+        return setTimeout(function() {
+          return user_card.attr("style", "");
+        }, 2000);
+      }, 100);
+    };
 
     Cpanel.prototype.userStatus = function(id, status) {
       var p, user, userMarkup;

@@ -48,12 +48,19 @@
       this.lectureTitle = data.lectureTitle;
       this.sectionNumber = data.sectionNumber;
       this.monographyParticipant = data.monographyParticipant;
-      return this.stayDemand = data.stayDemand;
+      this.stayDemand = data.stayDemand;
+      if (this.monographyParticipant) {
+        this.monographyTitle = data.monographyTitle;
+      }
+      if (this.stayDemand) {
+        this.stayStart = data.stayStart;
+        return this.stayEnd = data.stayEnd;
+      }
     };
 
     User.prototype.getData = function() {
       var res;
-      return res = {
+      res = {
         name: this.name,
         surname: this.surname,
         patronymic: this.patronymic,
@@ -74,6 +81,14 @@
         monographyParticipant: this.monographyParticipant,
         stayDemand: this.stayDemand
       };
+      if (this.monographyParticipant) {
+        res["monographyTitle"] = this.monographyTitle;
+      }
+      if (this.stayDemand) {
+        res["stayStart"] = this.stayStart;
+        res["stayEnd"] = this.stayEnd;
+      }
+      return res;
     };
 
     User.prototype.create = function() {
@@ -109,7 +124,6 @@
     };
 
     User.prototype.update = function(id, status) {
-      console.log("updating user to status " + status);
       this.status = status;
       return this.backend.put(["user", "" + id], this.getData());
     };

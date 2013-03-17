@@ -17,6 +17,22 @@ class window.UserViewModel
         @prevStatus = ko.computed =>
             statuses[statusGraph.prev[@status()]]
 
+        @fullJob = ko.computed =>
+            "#{@jobPosition} в #{@jobPlace} г. #{@city}, #{@country}"
+
+        @z_monographyTitle = ko.computed =>
+            @monographyTitle or ""
+        @z_stayStart = ko.computed =>
+            (@stayStart or "").replace /T.*/, ""
+        @z_stayEnd = ko.computed =>
+            (@stayEnd or "").replace /T.*/, ""
+
+        @isMonographyParticipant = ko.computed =>
+            @monographyParticipant and @monographyParticipant != "0"
+        @isStayDemand = ko.computed =>
+            @stayDemand and @stayDemand != "0"
+
+
     details: -> cpanel.userDetails @id
 
     goNextStatus: ->

@@ -116,6 +116,34 @@ class Cpanel
 		nextActionMarkup.unbind().click () => @userStatus user.id, nextAction
 		userMarkup
 	userDetails: (id) ->
+		initialOffset = $("#user_page").offset()
+		$("#user_page").addClass "cpanel-navigation-goaway-left"
+		p = $("<div>").addClass "hidden-page"
+		p.html "<i class=\"icon-tag\"></i> <span>Все<br/>учатники</span>"
+		p.attr "rel", "#user_page"
+		p.css top: "80px"
+		p.click =>
+			$("#user_page").css position: "fixed", left: initialOffset.left, top: initialOffset.top
+			$("#user_page").removeClass "cpanel-navigation-goaway-left"
+			if @active_page
+				@active_page.addClass "cpanel-navigation-goaway-right"
+				@active_page = undefined
+			p.remove()
+			setTimeout( ->
+				$("#user_page").attr "style", ""
+			, 2000)
+		setTimeout( ->
+			$("body").append p
+		, 1400)
+		setTimeout( =>
+			user_card = $(".user-pages .container[user_id=\"#{id}\"]")
+			user_card.css position: "fixed", left: initialOffset.left, top: initialOffset.top
+			user_card.removeClass "cpanel-navigation-goaway-right"
+			@active_page = user_card
+			setTimeout( ->
+				user_card.attr "style", ""
+			, 2000)
+		, 100)
 	userStatus: (id, status) ->
 		userMarkup = $ ".user-real[user_id=\"#{id}\"]"
 		user = new User

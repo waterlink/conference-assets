@@ -1,6 +1,7 @@
 window.global = window
 
 global.modules = {}
+global.module = {}
 
 global.require = (path) ->
 	unless global.modules[path]

@@ -70,15 +70,16 @@ html
         script(src="../assets/js/customBindings/select2.js")
         script(src="../assets/js/configureValidation.js")
 
+        script(src="../classes/require.js")
+            
         script(src="../assets/js/searchData.js")
         script(src="../assets/js/Alert.js")
-        script(src="../assets/js/viewModels/UserRegistrationViewModel.js")
+        script(src="../assets/js/viewModels/RegistrationViewModel.js")
 
-        script(src="../classes/require.js")
 
         :coffeescript
             global.application = require "../main"
             application.run()
 
         :coffeescript
-            ko.applyBindings new UserRegistrationViewModel
+            ko.applyBindings new RegistrationViewModel
