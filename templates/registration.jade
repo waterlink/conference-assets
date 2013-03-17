@@ -83,6 +83,9 @@ html
                     span.label.label-important Ошибка
                     | &nbsp;
                     span(data-bind="text: $root.files.localize(error)")
+                    {{else}}
+                    .progress.progress-success.progress-striped.active(role="progressbar", aria-valuemin="0", aria-valuemax="100", aria-valuenow="0")
+                        .bar(style="width:0%;")
                     {{/if}}
                 td
                     button.btn.btn-danger(data-bind="click: function() { $root.files.remove($value) }")
@@ -96,6 +99,7 @@ html
         script(src="../assets/js/libs/jquery-1.9.1.min.js")
         script(src="../assets/js/libs/jquery.ui.widget.js")
         script(src="../assets/js/libs/jquery.fileupload.js")
+        script(src="../assets/js/libs/jquery.fileupload-fp.js")
         script(src="../assets/js/libs/jquery.fileupload-ui.js")
         script(src="../assets/js/libs/jquery.tmpl.js")
         script(src="../assets/js/libs/lodash.min.js")

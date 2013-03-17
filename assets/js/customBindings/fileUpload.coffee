@@ -9,6 +9,9 @@ ko.bindingHandlers.fileUpload =
             $element.fileupload _.extend options,
                 maxNumberOfFiles: (if max? then max - files().length + !!initialized else undefined)
                 added: (e, data) -> files.push f for f in data.files
+                # process: [
+                #     action: "load"
+                # ]
             initialized = yes
 
         initialize()
