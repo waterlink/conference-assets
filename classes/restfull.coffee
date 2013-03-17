@@ -10,6 +10,8 @@ if not global.XMLHttpRequest
 global.domain = "http://conference.lan"
 if window
 	global.domain = ""
+if global.location.origin is "file://"
+	global.domain = "https://conference-waterlink.dotcloud.com"
 
 Function::property = (prop, desc) ->
 	Object.defineProperty @prototype, prop, desc
