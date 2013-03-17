@@ -40,6 +40,9 @@
       this.isStayDemand = ko.computed(function() {
         return _this.stayDemand && _this.stayDemand !== "0";
       });
+      this.z_participantType = ko.computed(function() {
+        return _this.participantType || "";
+      });
     }
 
     UserViewModel.prototype.details = function() {

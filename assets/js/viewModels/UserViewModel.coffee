@@ -32,6 +32,9 @@ class window.UserViewModel
         @isStayDemand = ko.computed =>
             @stayDemand and @stayDemand != "0"
 
+        @z_participantType = ko.computed =>
+            @participantType or ""
+
 
     details: -> cpanel.userDetails @id
 
