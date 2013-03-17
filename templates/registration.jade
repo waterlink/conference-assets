@@ -12,16 +12,16 @@ html
     body
         .navbar.navbar-inverse.navbar-fixed-top
             .navbar-inner
-                .container-fluid
+                .container
                     a.brand(href='javascript:;') Научная конференция 2013
 
-        .container-fluid
+        .container
             #needFixErrors.alert.alert-error.fade.in.hide
                 button(type="button", class="close") ×
                 h4.alert-heading Ошибки при заполнении формы :(
                 p Пожалуйста, исправьте их все и повторите попытку регистрации
 
-            .row-fluid
+            .row
                 form.form-signin.span12
                     h2.form-signin-heading Регистрация
                     input.span7.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
@@ -60,7 +60,7 @@ html
                     // ko with: files
                     span.btn.btn-success.fileinput-button
                         i.icon-plus.icon-white
-                        | Добавить документы
+                        | &nbsp; Добавить документы
                         input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone") }) }', type="file", name="files[]", multiple)
 
                     .clearfix
@@ -101,6 +101,8 @@ html
 
 
         script(src="../assets/js/libs/jquery-1.9.1.min.js")
+        script(src="../classes/require.js")
+
         script(src="../assets/js/libs/jquery.ui.widget.js")
         script(src="../assets/js/libs/jquery.fileupload.js")
         script(src="../assets/js/libs/jquery.fileupload-fp.js")
@@ -118,10 +120,15 @@ html
         script(src="../assets/js/customBindings/fileUpload.js")
         script(src="../assets/js/configureValidation.js")
 
+
         script(src="../assets/js/searchData.js")
         script(src="../assets/js/Alert.js")
         script(src="../assets/js/viewModels/FilesViewModel.js")
         script(src="../assets/js/viewModels/RegistrationViewModel.js")
+
+        :coffeescript
+            global.application = require "../main"
+            application.run()
 
         :coffeescript
             ko.applyBindings new RegistrationViewModel
