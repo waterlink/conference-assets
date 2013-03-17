@@ -2,6 +2,8 @@
 (function() {
   var _this = this;
 
+  global.UserViewModel = require("../assets/js/viewModels/UserViewModel");
+
   window.AdminViewModel = (function() {
 
     function AdminViewModel() {
@@ -22,31 +24,7 @@
           checked: false
         }
       ]);
-      this.users = ko.observableArray([
-        new UserViewModel({
-          name: "Иван",
-          surname: "Петров",
-          jobPosition: "Разработчик",
-          jobTitle: "Microsoft",
-          lectureTitle: "Как писать код",
-          status: "new"
-        }), new UserViewModel({
-          name: "Петр",
-          surname: "Иванов",
-          jobPosition: "Тестер",
-          jobTitle: "Google",
-          lectureTitle: "Как тестировать код",
-          monographyTitle: "Как писать код",
-          status: "emailsent"
-        }), new UserViewModel({
-          name: "Джек",
-          surname: "Воробей",
-          jobPosition: "Пират",
-          jobTitle: "Пираты карибского моря",
-          lectureTitle: "Как научиться писать код",
-          status: "paid"
-        })
-      ]);
+      this.users = ko.observableArray([]);
     }
 
     AdminViewModel.prototype.doSignOut = function() {
@@ -83,5 +61,7 @@
     return AdminViewModel;
 
   })();
+
+  module.exports = window.AdminViewModel;
 
 }).call(this);

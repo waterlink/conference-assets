@@ -1,12 +1,13 @@
 global.Restfull = require "../classes/restfull"
 global.User = require "../classes/user"
+global.AdminViewModel = require "../assets/js/viewModels/AdminViewModel"
 
-statuses =
+global.statuses =
 	"new": "Новый"
 	"emailsent": "Письмо отослано"
 	"paid": "Оплачено"
 
-statusGraph = 
+global.statusGraph = 
 	next:
 		"new": "emailsent"
 		"emailsent": "paid"
@@ -22,6 +23,8 @@ class Cpanel
 			fail: => @redirectToLogin()
 		$(document).ready () => @ready()
 	ready: ->
+		@adminViewModel = new AdminViewModel
+		ko.applyBindings @adminViewModel
 		@setup()
 		@loadUsers()
 	authenticated: (callbacks) ->
@@ -63,7 +66,15 @@ class Cpanel
 		realUsers = userView.find ".user-real"
 		realUsers.remove()
 		@users = {}
-		p.done (users) => userView.append @userSetup user for user in users
+		p.done (users) => 
+			# userView.append @userSetup user for user in users
+			# musers = []
+			@adminViewModel.users.removeAll()
+			for user in users
+				@users[user.id] = user 
+				# musers.push new UserViewModel user
+				@adminViewModel.users.push new UserViewModel user
+			# global.AdminViewModel.users = ko.observableArray musers
 	userSetup: (user, userMarkup) ->
 		@users[user.id] = user
 		unless userMarkup
@@ -110,9 +121,9 @@ class Cpanel
 		user = new User
 		user.fromData @users[id]
 		p = user.update id, status
-		p.done () =>
-			p = user.getById id
-			p.done (user) => 
-				@userSetup user, userMarkup
+		# p.done () =>
+		# 	p = user.getById id
+		# 	p.done (user) => 
+		# 		@userSetup user, userMarkup
 
 module.exports = Cpanel

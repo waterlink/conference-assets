@@ -9,19 +9,89 @@
       this.fullName = ko.computed(function() {
         return "" + (_this.surname || '') + " " + (_this.name || '') + " " + (_this.patronymic || '');
       });
-      this.job = ko.computed(function() {
-        return "" + (_this.jobPosition || '') + " в " + (_this.jobTitle || '');
+      this.status = ko.observable(this.status);
+      this.locStatus = ko.computed(function() {
+        return statuses[_this.status()];
       });
-      this.monography = ko.computed(function() {
-        return _this.monographyTitle || "-";
+      this.mailto = ko.computed(function() {
+        return "mailto:" + _this.email;
       });
-      this.downloadLink = ko.computed(function() {
-        return "http://google.com?q=архивчик";
+      this.nextStatus = ko.computed(function() {
+        return statuses[statusGraph.next[_this.status()]];
+      });
+      this.prevStatus = ko.computed(function() {
+        return statuses[statusGraph.prev[_this.status()]];
       });
     }
+
+    UserViewModel.prototype.details = function() {
+      return cpanel.userDetails(this.id);
+    };
+
+    UserViewModel.prototype.goNextStatus = function() {
+      var nextAction, onError, p,
+        _this = this;
+      nextAction = statusGraph.next[this.status()];
+      if (nextAction) {
+        p = cpanel.userStatus(this.id, nextAction);
+        $(".user-table-row[user_id=\"" + this.id + "\"] .user-actions .dropdown-toggle").button("loading");
+        onError = function() {
+          return $(".user-table-row[user_id=\"" + _this.id + "\"] .user-actions .dropdown-toggle").button("error");
+        };
+        p.done(function(e) {
+          var user;
+          if (e && e.error) {
+            return onError();
+          }
+          user = new User;
+          p = user.getById(_this.id);
+          p.done(function(user) {
+            if (!user || user.error) {
+              return onError();
+            }
+            _this.status(user.status);
+            return $(".user-table-row[user_id=\"" + _this.id + "\"] .user-actions .dropdown-toggle").button("reset");
+          });
+          return p.error(onError);
+        });
+        return p.error(onError);
+      }
+    };
+
+    UserViewModel.prototype.goPrevStatus = function() {
+      var onError, p, prevAction,
+        _this = this;
+      prevAction = statusGraph.prev[this.status()];
+      if (prevAction) {
+        p = cpanel.userStatus(this.id, prevAction);
+        $(".user-table-row[user_id=\"" + this.id + "\"] .user-actions .dropdown-toggle").button("loading");
+        onError = function() {
+          return $(".user-table-row[user_id=\"" + _this.id + "\"] .user-actions .dropdown-toggle").button("error");
+        };
+        p.done(function(e) {
+          var user;
+          if (e && e.error) {
+            return onError();
+          }
+          user = new User;
+          p = user.getById(_this.id);
+          p.done(function(user) {
+            if (!user || user.error) {
+              return onError();
+            }
+            _this.status(user.status);
+            return $(".user-table-row[user_id=\"" + _this.id + "\"] .user-actions .dropdown-toggle").button("reset");
+          });
+          return p.error(onError);
+        });
+        return p.error(onError);
+      }
+    };
 
     return UserViewModel;
 
   })();
+
+  module.exports = window.UserViewModel;
 
 }).call(this);

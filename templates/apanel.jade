@@ -1,0 +1,189 @@
+!!! 5
+html
+	head
+		meta(charset="utf-8")
+		title Панель оператора — Конференция
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(href="../assets/css/bootstrap.min.css", rel="stylesheet")
+		style
+			body { padding-top: 60px }
+		link(href="../assets/css/bootstrap-responsive.css", rel="stylesheet")
+		// Le HTML5 shim, for IE6-8 support of HTML5 elements
+		// [if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]
+		link(rel="shortcut icon", href="assets/favicon.ico")
+		style
+			.navbar-search-query { height: 12px !important; }
+			.user-table-too-long div { overflow: hidden; white-space: nowrap; }
+			.user-table-row:hover .user-table-too-long div { overflow: hidden; white-space: normal; word-wrap: break-word; }
+			.user-table-row:nth-child(odd) { background-color: #f5f5f5; border-radius: 5px; }
+			.user-table-row { padding: 5px; }
+			.user-table-row p { vertical-align: middle; }
+			.faded-text { 
+				background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 85%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(85%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 85%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 85%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 85%,rgba(255,255,255,1) 100%); /* IE10+ */
+				background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 85%,rgba(255,255,255,1) 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */ 
+				width: 100%;
+				height: 100%;
+				display: block;
+				box-sizing: border-box;
+				z-index: 100;
+				position: absolute;
+			}
+			.user-table-row:nth-child(odd) .faded-text {
+				background: -moz-linear-gradient(left, rgba(245,245,245,0) 0%, rgba(245,245,245,0) 85%, rgba(245,245,245,1) 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(245,245,245,0)), color-stop(85%,rgba(245,245,245,0)), color-stop(100%,rgba(245,245,245,1))); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,0) 85%,rgba(245,245,245,1) 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,0) 85%,rgba(245,245,245,1) 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(left, rgba(245,245,245,0) 0%,rgba(245,245,245,0) 85%,rgba(245,245,245,1) 100%); /* IE10+ */
+				background: linear-gradient(to right, rgba(245,245,245,0) 0%,rgba(245,245,245,0) 85%,rgba(245,245,245,1) 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00f5f5f5', endColorstr='#f5f5f5',GradientType=1 ); /* IE6-9 */ 
+			}
+			.user-table-row:hover .user-table-too-long .faded-text { display: none; }
+			.user-table-too-long > div { position: relative; }
+		script(src="../assets/js/libs/jquery-1.9.1.min.js")
+		script(src="../classes/require.js")
+
+		:coffeescript
+			global.Cpanel = require "../classes/cpanel"
+			global.cpanel = new Cpanel
+
+	body
+		.navbar.navbar-fixed-top.navbar-inverse
+			.navbar-inner
+				.container
+					a.brand(href='#')
+						| Панель оператора
+					ul.nav
+						li
+							a(href='#')
+								| Home
+						li
+							a(href='#')
+								| About
+						li
+							a(href='#')
+								| Contact
+					ul.nav.pull-right
+						li
+							a(href='#')
+								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text')
+							li.dropdown
+								a#operator_login.dropdown-toggle(href='#', data-toggle='dropdown')
+									span#operator_login_content @root
+									b.caret
+								ul.dropdown-menu
+									li
+										a#operator_logoff(href='#')
+											| Выход
+		.container#user_page
+			.row
+				.span9
+					#user_head
+						div
+							h3
+								| Перечень пользователей
+						.row-fluid.user-table-row
+							.span1
+								div
+									p
+										b
+											| Номер
+							.span3
+								div
+									p
+										strong
+											| ФИО
+							.span3
+								div
+									p
+										b
+											| Email
+							.span2
+								div
+									p
+										b
+											| Телефон
+							.span1
+								div
+									p
+										strong
+											| Статус
+							.span2
+								div
+									p
+										b
+											| Действия
+					#user_view(data-bind="foreach: users")
+						.row-fluid.user-table-row(data-bind="attr: {user_id: id}")
+							.span1
+								div
+									p.user-id(data-bind="text: id")
+										//- | 22
+							.span3.user-table-too-long
+								div
+									span.faded-text
+									p.user-fio(data-bind="text: fullName")
+										//- | Федоров Алексей Константинович
+							.span3.user-table-too-long
+								div
+									span.faded-text
+									a.user-email(href='#', data-bind="text: email, attr: {href: mailto}")
+										//- | waterlink000+scientificConference@gmail.com
+							.span2
+								div
+									p.user-phone(data-bind="text: phone")
+										//- | (099) 303 95 36
+							.span1
+								div
+									p.user-status(data-bind="text: locStatus")
+										//- | Новый
+							.span2
+								.btn-group.user-actions
+									a.btn.input-block-level.dropdown-toggle(data-toggle='dropdown', href='#', data-loading-text="Подождите...", data-error-text="Ошибка!")
+										span(style='font-size: 13px;')
+											| Действия
+										b.caret
+									ul.dropdown-menu
+										li
+											a.user-action-details(href='#', data-bind="click: details") 
+												| Подробно
+										li
+											a.user-action-nextstate(href='#', data-bind="click: goNextStatus, visible: nextStatus, text: nextStatus") 
+												| {next_state}
+										li
+											a.user-action-prevstate(href='#', data-bind="click: goPrevStatus, visible: prevStatus, text: prevStatus") 
+												| {prev_state}
+
+				.span3
+					.well
+						div
+							p
+								| Фильтр по статусу
+						a.btn.input-block-level.status-filter(href='#', rel='new')
+							| Новые
+						a.btn.input-block-level.status-filter(href='#', rel='emailsent')
+							| Письмо отослано
+						a.btn.input-block-level.status-filter(href='#', rel='paid')
+							| Оплачено
+
+				
+	script(src="../assets/js/libs/bootstrap.min.js")
+
+	script(src="../assets/js/libs/lodash.min.js")
+	//- script(src="../assets/js/libs/bootstrap.min.js")
+	//- script(src="../assets/js/libs/bootstrap-datepicker.js")
+	script(src="../assets/js/libs/knockout-2.2.1.js")
+	script(src="../assets/js/libs/knockout.mapping.js")
+	script(src="../assets/js/libs/knockout.validation.js")
+	script(src="../assets/js/customBindings/checkboxGroup.js")
+
+	//- script(src="../assets/js/viewModels/UserViewModel.js")
+	//- script(src="../assets/js/viewModels/AdminViewModel.js")
+
+	//- :coffeescript
+	//- 	ko.applyBindings new AdminViewModel
+

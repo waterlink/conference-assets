@@ -1,3 +1,5 @@
+global.UserViewModel = require "../assets/js/viewModels/UserViewModel"
+
 class window.AdminViewModel
     constructor: ->
         @name = "Петя"
@@ -8,12 +10,7 @@ class window.AdminViewModel
         ,
             text: "paid", checked: no
         ]
-        @users = ko.observableArray [
-            new UserViewModel name: "Иван", surname: "Петров", jobPosition: "Разработчик", jobTitle: "Microsoft", lectureTitle: "Как писать код", status: "new"
-            new UserViewModel name: "Петр", surname: "Иванов", jobPosition: "Тестер", jobTitle: "Google", lectureTitle: "Как тестировать код", monographyTitle: "Как писать код", status: "emailsent"
-            new UserViewModel name: "Джек", surname: "Воробей", jobPosition: "Пират", jobTitle: "Пираты карибского моря", lectureTitle: "Как научиться писать код", status: "paid"
-
-        ]
+        @users = ko.observableArray []
 
     doSignOut: ->
         window.location.href = "registration.html"
@@ -34,6 +31,6 @@ class window.AdminViewModel
             when "paid"
                 "Оплачен"
 
-
+module.exports = window.AdminViewModel
 
 
