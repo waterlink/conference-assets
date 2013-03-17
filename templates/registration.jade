@@ -7,6 +7,7 @@ html
         link(rel='stylesheet', href='../assets/css/bootstrap-responsive.css')
         link(rel='stylesheet', href='../assets/css/datepicker.css')
         link(rel='stylesheet', href='../assets/css/select2.css')
+        link(rel='stylesheet', href='../assets/css/jquery.fileupload-ui.css')
         link(rel='stylesheet', href='../assets/css/custom.css')
     body
         .navbar.navbar-inverse.navbar-fixed-top
@@ -20,45 +21,91 @@ html
                 h4.alert-heading Ошибки при заполнении формы :(
                 p Пожалуйста, исправьте их все и повторите попытку регистрации
 
-            form.form-signin.span12
-                h2.form-signin-heading Регистрация
-                input.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
-                input.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
-                input.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
-                select.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
-                .clearfix
-                select.input-block-level(data-bind="select2: { placeholder: 'Ученое звание' }, options: searchData.academicTitles, value: user.academicTitle")
-                .clearfix
-                input.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
-                input.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
-                select.input-block-level(data-bind="select2: { placeholder: 'Город' }, options: searchData.cities, value: user.city")
-                .clearfix
-                select.input-block-level(data-bind="select2: { placeholder: 'Страна' }, options: searchData.countries, value: user.country")
-                .clearfix
-                input.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Почтовый адрес')
-                input.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
-                input.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
-                input.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
-                select.input-block-level(data-bind="select2: { placeholder: 'Номер секции' }, options: searchData.sectionNumbers, value: user.sectionNumber")
-                .clearfix
-                label.checkbox
-                    input(data-bind='checked: user.monographyParticipant', type='checkbox')
-                    | Участвуете в монографии?
+            .row-fluid
+                form.form-signin.span12
+                    h2.form-signin-heading Регистрация
+                    input.span7.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
+                    input.span7.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
+                    input.span7.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
+                    .clearfix
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Ученое звание' }, options: searchData.academicTitles, value: user.academicTitle")
+                    .clearfix
+                    input.span7.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
+                    input.span7.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Город' }, options: searchData.cities, value: user.city")
+                    .clearfix
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Страна' }, options: searchData.countries, value: user.country")
+                    .clearfix
+                    input.span7.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Почтовый адрес')
+                    input.span7.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
+                    input.span7.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
+                    input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Номер секции' }, options: searchData.sectionNumbers, value: user.sectionNumber")
+                    .clearfix
+                    label.checkbox
+                        input(data-bind='checked: user.monographyParticipant', type='checkbox')
+                        | Участвуете в монографии?
 
-                div(data-bind="visible: user.monographyParticipant")
-                    select.input-block-level(data-bind="select2: { placeholder: 'Название раздела монографии' }, options: searchData.monographyTitles, value: user.monographyTitle")
-                .clearfix
-                label.checkbox
-                    input(data-bind='checked: user.stayDemand', type='checkbox')
-                    | Есть потребность в проживании?
-                input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
-                input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd', type='text', placeholder='До')
-                br
-                .clearfix
-                button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
+                    div(data-bind="visible: user.monographyParticipant")
+                        select.span7.input-block-level(data-bind="select2: { placeholder: 'Название раздела монографии' }, options: searchData.monographyTitles, value: user.monographyTitle")
+                    .clearfix
+                    label.checkbox
+                        input(data-bind='checked: user.stayDemand', type='checkbox')
+                        | Есть потребность в проживании?
+                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
+                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd, datepickerOptions: {start: start, end: end}', type='text', placeholder='До')
+                    .clearfix
+                    br
+                    // ko with: files
+                    span.btn.btn-success.fileinput-button
+                        i.icon-plus.icon-white
+                        | Добавить документы
+                        input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone") }) }', type="file", name="files[]", multiple)
+
+                    .clearfix
+                    br
+                    .span7(data-bind="visible: data().length > 0")
+                        table.table.table-striped
+                            tbody(data-bind="template: { name: 'filesTable', data: data() }")
+                    #dropzone.span7(data-bind="visible: data().length <= 0") Или просто перетащите мышкой файлы в эту область
+                    // /ko
+                    .clearfix
+                    br
+
+                    button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
+
+
+
+        script(id="filesTable", type="text/html")
+            {{each $data}}
+            tr
+                td(data-bind="text: name")
+                td(data-bind="text: $root.files.formatSize(size)")
+                td
+                    {{if error}}
+                    span.label.label-important Ошибка
+                    | &nbsp;
+                    span(data-bind="text: $root.files.localize(error)")
+                    {{else}}
+                    .progress.progress-success.progress-striped.active(role="progressbar", aria-valuemin="0", aria-valuemax="100", aria-valuenow="0")
+                        .bar(style="width:0%;")
+                    {{/if}}
+                td
+                    button.btn.btn-danger(data-bind="click: function() { $root.files.remove($value) }")
+                        i.icon-trash.icon-white
+                        | &nbsp; Удалить
+            {{/each}}
+
+
 
 
         script(src="../assets/js/libs/jquery-1.9.1.min.js")
+        script(src="../assets/js/libs/jquery.ui.widget.js")
+        script(src="../assets/js/libs/jquery.fileupload.js")
+        script(src="../assets/js/libs/jquery.fileupload-fp.js")
+        script(src="../assets/js/libs/jquery.fileupload-ui.js")
+        script(src="../assets/js/libs/jquery.tmpl.js")
         script(src="../assets/js/libs/lodash.min.js")
         script(src="../assets/js/libs/bootstrap.min.js")
         script(src="../assets/js/libs/bootstrap-datepicker.js")
@@ -68,10 +115,12 @@ html
         script(src="../assets/js/libs/select2.js")
         script(src="../assets/js/customBindings/datePicker.js")
         script(src="../assets/js/customBindings/select2.js")
+        script(src="../assets/js/customBindings/fileUpload.js")
         script(src="../assets/js/configureValidation.js")
 
         script(src="../assets/js/searchData.js")
         script(src="../assets/js/Alert.js")
+        script(src="../assets/js/viewModels/FilesViewModel.js")
         script(src="../assets/js/viewModels/RegistrationViewModel.js")
 
         :coffeescript
