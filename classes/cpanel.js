@@ -114,18 +114,22 @@
     };
 
     Cpanel.prototype.loadUsers = function() {
-      var p, realUsers, search, userView, words,
+      var p, search, user, words,
         _this = this;
       search = this.adminViewModel.search();
       if (search) {
-        words = search.split(" ").filter(function(x) {
-          return x;
-        });
-        words = _.map(words, function(x) {
-          return x.toLowerCase();
-        });
-        if (words) {
-          this.filter.words = words;
+        if (!search.match(/^[0-9]+$/)) {
+          words = search.split(" ").filter(function(x) {
+            return x;
+          });
+          words = _.map(words, function(x) {
+            return x.toLowerCase();
+          });
+          if (words) {
+            this.filter.words = words;
+          } else {
+            delete this.filter.words;
+          }
         } else {
           delete this.filter.words;
         }
@@ -133,22 +137,33 @@
         delete this.filter.words;
       }
       console.log(this.filter.words);
-      p = this.rest.get("user", this.filter);
-      userView = $("#user_view");
-      realUsers = userView.find(".user-real");
-      realUsers.remove();
-      this.users = {};
-      return p.done(function(users) {
-        var user, _i, _len, _results;
-        _this.adminViewModel.users.removeAll();
-        _results = [];
-        for (_i = 0, _len = users.length; _i < _len; _i++) {
-          user = users[_i];
-          _this.users[user.id] = user;
-          _results.push(_this.adminViewModel.users.push(new UserViewModel(user)));
-        }
-        return _results;
-      });
+      if (search.match(/^[0-9]+$/)) {
+        user = new User;
+        p = user.getById(search);
+        return p.done(function(user) {
+          _this.users = {};
+          _this.adminViewModel.users.removeAll();
+          console.log(user);
+          if (user) {
+            _this.users[user.id] = user;
+            return _this.adminViewModel.users.push(new UserViewModel(user));
+          }
+        });
+      } else {
+        p = this.rest.get("user", this.filter);
+        return p.done(function(users) {
+          var _i, _len, _results;
+          _this.users = {};
+          _this.adminViewModel.users.removeAll();
+          _results = [];
+          for (_i = 0, _len = users.length; _i < _len; _i++) {
+            user = users[_i];
+            _this.users[user.id] = user;
+            _results.push(_this.adminViewModel.users.push(new UserViewModel(user)));
+          }
+          return _results;
+        });
+      }
     };
 
     Cpanel.prototype.userSetup = function(user, userMarkup) {
@@ -233,11 +248,11 @@
         p.remove();
         return setTimeout(function() {
           return $("#user_page").attr("style", "");
-        }, 2000);
+        }, 500);
       });
       setTimeout(function() {
         return $("body").append(p);
-      }, 1400);
+      }, 350);
       return setTimeout(function() {
         var user_card;
         user_card = $(".user-pages .container[user_id=\"" + id + "\"]");
@@ -250,8 +265,8 @@
         _this.active_page = user_card;
         return setTimeout(function() {
           return user_card.attr("style", "");
-        }, 2000);
-      }, 100);
+        }, 500);
+      }, 50);
     };
 
     Cpanel.prototype.userStatus = function(id, status) {

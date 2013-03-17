@@ -32,24 +32,24 @@
 .user-table-too-long > div { position: relative; }
 
 .cpanel-navigation-page {
-	transition: all 2s;
-	-moz-transition: all 2s;
-	-webkit-transition: all 2s;
-	-o-transition: all 2s;
+	transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
 }
 
 .cpanel-navigation-page-faster {
-	transition: all 1s;
-	-moz-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
+	transition: all 0.25s;
+	-moz-transition: all 0.25s;
+	-webkit-transition: all 0.25s;
+	-o-transition: all 0.25s;
 }
 
 .cpanel-navigation-page * {
-	transition: all 0.7s;
-	-moz-transition: all 0.7s;
-	-webkit-transition: all 0.7s;
-	-o-transition: all 0.7s;
+	transition: all 0.175s;
+	-moz-transition: all 0.175s;
+	-webkit-transition: all 0.175s;
+	-o-transition: all 0.175s;
 }
 
 .cpanel-navigation-goaway-left {

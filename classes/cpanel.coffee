@@ -63,29 +63,36 @@ class Cpanel
 	loadUsers: ->
 		search = @adminViewModel.search()
 		if search
-			words = search.split(" ").filter (x) -> x
-			words = _.map words, (x) -> x.toLowerCase()
-			if words
-				@filter.words = words
+			if not search.match /^[0-9]+$/
+				words = search.split(" ").filter (x) -> x
+				words = _.map words, (x) -> x.toLowerCase()
+				if words
+					@filter.words = words
+				else
+					delete @filter.words
 			else
 				delete @filter.words
 		else if @filter.words
 			delete @filter.words
 		console.log @filter.words
-		p = @rest.get "user", @filter
-		userView = $ "#user_view"
-		realUsers = userView.find ".user-real"
-		realUsers.remove()
-		@users = {}
-		p.done (users) => 
-			# userView.append @userSetup user for user in users
-			# musers = []
-			@adminViewModel.users.removeAll()
-			for user in users
-				@users[user.id] = user 
-				# musers.push new UserViewModel user
-				@adminViewModel.users.push new UserViewModel user
-			# global.AdminViewModel.users = ko.observableArray musers
+		if search.match /^[0-9]+$/
+			user = new User
+			p = user.getById search
+			p.done (user) =>
+				@users = {}
+				@adminViewModel.users.removeAll()
+				console.log user
+				if user
+					@users[user.id] = user
+					@adminViewModel.users.push new UserViewModel user
+		else
+			p = @rest.get "user", @filter
+			p.done (users) => 
+				@users = {}
+				@adminViewModel.users.removeAll()
+				for user in users
+					@users[user.id] = user 
+					@adminViewModel.users.push new UserViewModel user
 	userSetup: (user, userMarkup) ->
 		@users[user.id] = user
 		unless userMarkup
@@ -142,10 +149,10 @@ class Cpanel
 			p.remove()
 			setTimeout( ->
 				$("#user_page").attr "style", ""
-			, 2000)
+			, 500)
 		setTimeout( ->
 			$("body").append p
-		, 1400)
+		, 350)
 		setTimeout( =>
 			user_card = $(".user-pages .container[user_id=\"#{id}\"]")
 			user_card.css position: "fixed", left: initialOffset.left, top: initialOffset.top
@@ -153,8 +160,8 @@ class Cpanel
 			@active_page = user_card
 			setTimeout( ->
 				user_card.attr "style", ""
-			, 2000)
-		, 100)
+			, 500)
+		, 50)
 	userStatus: (id, status) ->
 		userMarkup = $ ".user-real[user_id=\"#{id}\"]"
 		user = new User
