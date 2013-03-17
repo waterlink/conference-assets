@@ -25,7 +25,7 @@
     }
   };
 
-  global.cpanelPageLimit = 5;
+  global.cpanelPageLimit = 10;
 
   Cpanel = (function() {
 
@@ -39,9 +39,6 @@
         fail: function() {
           return _this.redirectToLogin();
         }
-      });
-      $(document).ready(function() {
-        return _this.ready();
       });
     }
 
@@ -61,7 +58,10 @@
         if (data && data.whois) {
           _this.whois = data.whois;
           _this.group = data.group;
-          return callbacks.ok();
+          callbacks.ok();
+          return $(document).ready(function() {
+            return _this.ready();
+          });
         } else {
           return callbacks.fail();
         }
@@ -118,6 +118,23 @@
         $(".status-filter[rel=\"" + status + "\"]").addClass("active");
       }
       return this.loadUsers();
+    };
+
+    Cpanel.prototype.loadOperators = function(cb) {
+      var p,
+        _this = this;
+      p = this.rest.get("operator");
+      return p.done(function(operators) {
+        var operator, _i, _len;
+        _this.adminViewModel.operators.removeAll();
+        for (_i = 0, _len = operators.length; _i < _len; _i++) {
+          operator = operators[_i];
+          _this.adminViewModel.operators.push(new OperatorViewModel(operator));
+        }
+        if (cb) {
+          return cb();
+        }
+      });
     };
 
     Cpanel.prototype.loadUsers = function() {

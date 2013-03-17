@@ -15,7 +15,7 @@ global.statusGraph =
 		"emailsent": "new"
 		"paid": "emailsent"
 
-global.cpanelPageLimit = 5
+global.cpanelPageLimit = 10
 
 class Cpanel
 	constructor: ->
@@ -23,7 +23,6 @@ class Cpanel
 		@authenticated
 			ok: => @showOperatorLogin()
 			fail: => @redirectToLogin()
-		$(document).ready () => @ready()
 	ready: ->
 		@adminViewModel = new AdminViewModel
 		ko.applyBindings @adminViewModel
@@ -37,6 +36,7 @@ class Cpanel
 				@whois = data.whois
 				@group = data.group
 				callbacks.ok()
+				$(document).ready () => @ready()
 			else
 				callbacks.fail()
 	redirectToLogin: -> global.location = "login.html"
@@ -64,6 +64,14 @@ class Cpanel
 			@filter.status = status
 			$(".status-filter[rel=\"#{status}\"]").addClass "active"
 		@loadUsers()
+	loadOperators: (cb) ->
+		p = @rest.get "operator"
+		p.done (operators) =>
+			@adminViewModel.operators.removeAll()
+			for operator in operators
+				@adminViewModel.operators.push new OperatorViewModel operator
+			if cb
+				cb()
 	loadUsers: ->
 		search = @adminViewModel.search()
 		if search

@@ -25,28 +25,69 @@ html
 				.container
 					a.brand(href='#')
 						| Панель оператора
-					ul.nav
-						li
-							a(href='#')
-								| Home
-						li
-							a(href='#')
-								| About
-						li
-							a(href='#')
-								| Contact
+					ul.nav(data-bind="if: isAdmin")
+						li#operators_li
+							a(href='#', data-bind="click: goOperatorPage")
+								| Операторы
 					ul.nav.pull-right
 						li
 							a(href='#', data-toggle="tooltip", data-original-title="Поиск по ФИО или по Номеру", data-placement="bottom")
 								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text', data-bind="value: search, event: {keypress: doSearch}")
 							li.dropdown
 								a#operator_login.dropdown-toggle(href='#', data-toggle='dropdown')
-									span#operator_login_content @root
+									span#operator_login_content
 									b.caret
 								ul.dropdown-menu
 									li
 										a#operator_logoff(href='#')
 											| Выход
+		.operator-page(data-bind="if: isAdmin")
+			.container.cpanel-navigation-page.cpanel-navigation-goaway-left
+				h3 Перечень пользователей
+				div(data-bind="foreach: operators")
+					.row-fluid.row-operator
+						.span3
+							span(data-bind="text: login")
+							| &nbsp;
+							span.badge.badge-success(data-bind="if: admin") admin
+						div(data-bind="ifnot: resettingPassword")
+							.span3
+								a.btn.input-block-level(data-bind="click: resetPassword", data-loading-text="Сбрасываю...") Сбросить пароль
+						div(data-bind="if: resettingPassword")
+							.span3
+								input.input-block-level(type="password", data-bind="value: newpassword", placeholder="Новый пароль")
+						div(data-bind="if: hasSessions")
+							.span3
+								a.btn.input-block-level(data-bind="click: resetSessions, ifnot: resettingPassword", data-loading-text="Сбрасываю...") Сбросить сессии
+						div(data-bind="if: resettingPassword")
+							.span3
+								input.input-block-level(type="password", data-bind="value: confirmpassword", placeholder="Подтвердите пароль")
+						div(data-bind="if: notami")
+							.span3
+								a.btn.btn-danger.input-block-level(data-bind="click: remove, ifnot: resettingPassword", data-loading-text="Удаляю...") Удалить
+						div(data-bind="if: resettingPassword")
+							.span3
+								.btn-group.input-block-level
+									a.btn.btn-danger(data-bind="click: confirmResetPassword", data-loading-text="Сбрасываю...") Сбросить
+									a.btn(data-bind="click: cancelResetPassword", data-loading-text="Отменяю...") Отменить
+				.row-fluid.row-operator-add
+					div(data-bind="ifnot: addingOperator")
+						.span3
+							a.btn.input-block-level(data-bind="click: newOperator", data-loading-text="Добавляю...") Добавить оператора
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="text", data-bind="value: operatorLogin", placeholder="Логин")
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="password", data-bind="value: operatorPassword", placeholder="Пароль")
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="password", data-bind="value: operatorConfirmPassword", placeholder="Подтвердите пароль")
+					div(data-bind="if: addingOperator")
+						.span3
+							.btn-group.input-block-level
+								a.btn.btn-danger(data-bind="click: confirmAddOperator", data-loading-text="Создаю...") Создать
+								a.btn(data-bind="click: cancelAddOperator", data-loading-text="Отменяю...") Отменить
 		.user-pages(data-bind="foreach: users")
 			.container.cpanel-navigation-page.cpanel-navigation-goaway-right(data-bind="attr: {user_id: id}")
 				h3(data-bind="text: fullName")

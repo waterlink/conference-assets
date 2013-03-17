@@ -55,13 +55,13 @@
 .cpanel-navigation-goaway-left {
 	position: fixed;
 	left: -200%;
-	top: 120px;
+	top: 60px;
 }
 
 .cpanel-navigation-goaway-right {
 	position: fixed;
 	right: -200%;
-	top: 120px;
+	top: 60px;
 }
 
 .hidden-page {
@@ -70,11 +70,38 @@
 	cursor: pointer;
 }
 
+.hidden-page-right {
+	position: fixed;
+	right: 5px;
+	cursor: pointer;
+}
+
 .hidden-page span {
+	font-size: 9px;
+	display: none;
+}
+
+.hidden-page-right span {
 	font-size: 9px;
 	display: none;
 }
 
 .hidden-page:hover span {
 	display: block;
+}
+
+.hidden-page-right:hover span {
+	display: block;
+}
+
+.row-operator {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.row-operator:hover {
+	background-color: #ddd;
+	border-radius: 4px;
 }
