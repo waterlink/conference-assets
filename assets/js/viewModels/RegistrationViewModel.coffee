@@ -30,7 +30,7 @@ class window.RegistrationViewModel
 
         @searchData = window.searchData
 
-        @errors = ko.validation.group(@user)
+        @errors = ko.validation.group @user
         @errorAlert = new Alert "#needFixErrors"
 
     doRegister: ->
@@ -39,8 +39,10 @@ class window.RegistrationViewModel
         if @errors().length is 0
             console.log ko.mapping.toJS @user
             creating = new User
-            creating.fromData ko.mapping.toJS(@user)
+            creating.fromData ko.mapping.toJS @user
             p = creating.create()
+            button = $ ".form-signin .btn-primary"
+            button.button "loading"
             p.done (data) ->
                 if data
                     if data.error
@@ -49,6 +51,10 @@ class window.RegistrationViewModel
                         # вроде должна возникать коллизия только по email
                         # если такой уже зареган
                         alert data.error
+                        button.button "reset"
+                        return
+                button.button "reset"
+                global.location = "success.html"
         else
             @errorAlert.show()
             @errors.showAllMessages()

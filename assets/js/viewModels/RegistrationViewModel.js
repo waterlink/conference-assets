@@ -40,7 +40,7 @@
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
-      var creating, p;
+      var button, creating, p;
       if (!this.hasValidation) {
         this.addValidation();
       }
@@ -49,12 +49,18 @@
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
         p = creating.create();
+        button = $(".form-signin .btn-primary");
+        button.button("loading");
         return p.done(function(data) {
           if (data) {
             if (data.error) {
-              return alert(data.error);
+              alert(data.error);
+              button.button("reset");
+              return;
             }
           }
+          button.button("reset");
+          return global.location = "success.html";
         });
       } else {
         this.errorAlert.show();
