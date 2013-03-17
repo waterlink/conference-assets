@@ -2,31 +2,33 @@
 (function() {
 
   ko.bindingHandlers.fileUpload = {
-    init: function(element, valueAccessor, allBindingsAccessor) {
-      var files;
-      files = valueAccessor();
-      return $(element).fileupload({
-        drop: function(e, data) {
-          var f, _i, _len, _ref, _results;
-          _ref = data.files;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            f = _ref[_i];
-            _results.push(files.push(f));
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+      var $element, args, files, initialize, initialized, max, options, _ref, _ref1;
+      args = valueAccessor();
+      _ref = [args.files, args.options], files = _ref[0], options = _ref[1];
+      $element = $(element);
+      _ref1 = [options.maxNumberOfFiles, false], max = _ref1[0], initialized = _ref1[1];
+      initialize = function() {
+        $element.fileupload(_.extend(options, {
+          maxNumberOfFiles: (max != null ? max - files().length + !!initialized : void 0),
+          added: function(e, data) {
+            var f, _i, _len, _ref2, _results;
+            _ref2 = data.files;
+            _results = [];
+            for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+              f = _ref2[_i];
+              _results.push(files.push(f));
+            }
+            return _results;
           }
-          return _results;
-        },
-        change: function(e, data) {
-          var f, _i, _len, _ref, _results;
-          _ref = data.files;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            f = _ref[_i];
-            _results.push(files.push(f));
-          }
-          return _results;
-        }
-      });
+        }));
+        return initialized = true;
+      };
+      initialize();
+      return viewModel.validate = function(files) {
+        initialize();
+        return $element.fileupload("validate", files);
+      };
     }
   };
 

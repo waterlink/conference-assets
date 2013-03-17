@@ -23,64 +23,81 @@ html
 
             form.form-signin.span12
                 h2.form-signin-heading Регистрация
-                input.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
-                input.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
-                input.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
-                select.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
+                input.span7.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
+                input.span7.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
+                input.span7.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
+                select.span7.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
                 .clearfix
-                select.input-block-level(data-bind="select2: { placeholder: 'Ученое звание' }, options: searchData.academicTitles, value: user.academicTitle")
+                select.span7.input-block-level(data-bind="select2: { placeholder: 'Ученое звание' }, options: searchData.academicTitles, value: user.academicTitle")
                 .clearfix
-                input.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
-                input.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
-                select.input-block-level(data-bind="select2: { placeholder: 'Город' }, options: searchData.cities, value: user.city")
+                input.span7.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
+                input.span7.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
+                select.span7.input-block-level(data-bind="select2: { placeholder: 'Город' }, options: searchData.cities, value: user.city")
                 .clearfix
-                select.input-block-level(data-bind="select2: { placeholder: 'Страна' }, options: searchData.countries, value: user.country")
+                select.span7.input-block-level(data-bind="select2: { placeholder: 'Страна' }, options: searchData.countries, value: user.country")
                 .clearfix
-                input.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Почтовый адрес')
-                input.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
-                input.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
-                input.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
-                select.input-block-level(data-bind="select2: { placeholder: 'Номер секции' }, options: searchData.sectionNumbers, value: user.sectionNumber")
+                input.span7.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Почтовый адрес')
+                input.span7.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
+                input.span7.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
+                input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
+                select.span7.input-block-level(data-bind="select2: { placeholder: 'Номер секции' }, options: searchData.sectionNumbers, value: user.sectionNumber")
                 .clearfix
                 label.checkbox
                     input(data-bind='checked: user.monographyParticipant', type='checkbox')
                     | Участвуете в монографии?
 
                 div(data-bind="visible: user.monographyParticipant")
-                    select.input-block-level(data-bind="select2: { placeholder: 'Название раздела монографии' }, options: searchData.monographyTitles, value: user.monographyTitle")
+                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Название раздела монографии' }, options: searchData.monographyTitles, value: user.monographyTitle")
                 .clearfix
                 label.checkbox
                     input(data-bind='checked: user.stayDemand', type='checkbox')
                     | Есть потребность в проживании?
-                input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
-                input.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd', type='text', placeholder='До')
+                input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
+                input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd', type='text', placeholder='До')
                 .clearfix
                 br
+                // ko with: files
                 span.btn.btn-success.fileinput-button
                     i.icon-plus.icon-white
                     | Добавить документы
-                    input(data-bind='fileUpload: files', type="file", name="files[]", multiple)
+                    input(data-bind='fileUpload: { files: data, options: window.validation }', type="file", name="files[]", multiple)
                 .clearfix
                 br
-                table.table.table-striped(data-bind="visible: files().length > 0")
-                    tbody(data-bind="foreach: files")
-                        tr
-                            td(data-bind="text: name")
-                            td(data-bind="text: $root.formatSize(size)")
-                            td
-                                button.btn.btn-danger(data-bind="click: function() { $root.files.remove($data) }")
-                                    i.icon-trash.icon-white
-                                    | Remove
+                table.table.table-striped(data-bind="visible: data().length > 0")
+                    tbody(data-bind="template: { name: 'filesTable', data: data() }")
+                // /ko
                 .clearfix
                 br
 
                 button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
 
 
+
+        script(id="filesTable", type="text/html")
+            {{each $data}}
+            tr
+                td(data-bind="text: name")
+                td(data-bind="text: $root.files.formatSize(size)")
+                td
+                    {{if error}}
+                    span.label.label-important Ошибка
+                    | &nbsp;
+                    span(data-bind="text: $root.files.localize(error)")
+                    {{/if}}
+                td
+                    button.btn.btn-danger(data-bind="click: function() { $root.files.remove($value) }")
+                        i.icon-trash.icon-white
+                        | &nbsp; Удалить
+            {{/each}}
+
+
+
+
         script(src="../assets/js/libs/jquery-1.9.1.min.js")
         script(src="../assets/js/libs/jquery.ui.widget.js")
         script(src="../assets/js/libs/jquery.fileupload.js")
         script(src="../assets/js/libs/jquery.fileupload-ui.js")
+        script(src="../assets/js/libs/jquery.tmpl.js")
         script(src="../assets/js/libs/lodash.min.js")
         script(src="../assets/js/libs/bootstrap.min.js")
         script(src="../assets/js/libs/bootstrap-datepicker.js")
@@ -95,6 +112,7 @@ html
 
         script(src="../assets/js/searchData.js")
         script(src="../assets/js/Alert.js")
+        script(src="../assets/js/viewModels/FilesViewModel.js")
         script(src="../assets/js/viewModels/RegistrationViewModel.js")
 
         :coffeescript

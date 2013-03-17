@@ -90,7 +90,7 @@
                 $(this).fileupload('process', data).done(function () {
                     that._adjustMaxNumberOfFiles(-files.length);
                     data.maxNumberOfFilesAdjusted = true;
-                    data.files.valid = data.isValidated = that._validate(files);
+                    data.files.valid = data.isValidated = that.validate(files);
                     data.context = that._renderUpload(files).data('data', data);
                     options.filesContainer[
                         options.prependFiles ? 'prepend' : 'append'
@@ -117,7 +117,7 @@
                         that._adjustMaxNumberOfFiles(-data.files.length);
                         data.maxNumberOfFilesAdjusted = true;
                     }
-                    if (!that._validate(data.files)) {
+                    if (!that.validate(data.files)) {
                         return false;
                     }
                 }
@@ -474,7 +474,7 @@
             return null;
         },
 
-        _validate: function (files) {
+        validate: function (files) {
             var that = this,
                 valid = !!files.length;
             $.each(files, function (index, file) {

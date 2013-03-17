@@ -1,8 +1,18 @@
 ko.bindingHandlers.fileUpload =
-    init: (element, valueAccessor, allBindingsAccessor) ->
-        files = valueAccessor()
+    init: (element, valueAccessor, allBindingsAccessor, viewModel) ->
+        args = valueAccessor()
+        [files, options] = [args.files, args.options]
+        $element = $ element
+        [max, initialized] = [options.maxNumberOfFiles, no]
 
-        $(element).fileupload
-            drop:   (e, data) -> files.push f for f in data.files
-            change: (e, data) -> files.push f for f in data.files
+        initialize = ->
+            $element.fileupload _.extend options,
+                maxNumberOfFiles: (if max? then max - files().length + !!initialized else undefined)
+                added: (e, data) -> files.push f for f in data.files
+            initialized = yes
 
+        initialize()
+
+        viewModel.validate = (files) ->
+            initialize()
+            $element.fileupload "validate", files
