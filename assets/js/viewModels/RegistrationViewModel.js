@@ -29,8 +29,8 @@
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
         stayDemand: ko.observable(false),
-        stayStart: ko.observable(""),
-        stayEnd: ko.observable("")
+        stayStart: ko.observable(new Date(this.start)),
+        stayEnd: ko.observable(new Date(this.end))
       };
       this.files = new FilesViewModel;
       this.searchData = window.searchData;
