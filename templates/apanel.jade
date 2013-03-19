@@ -206,13 +206,13 @@ html
 										b.caret
 									ul.dropdown-menu
 										li
-											a.user-action-details(href='#', data-bind="click: details") 
+											a.user-action-details(href='#', data-bind="click: details")
 												| Подробно
 										li
-											a.user-action-nextstate(href='#', data-bind="click: goNextStatus, visible: nextStatus, text: nextStatus") 
+											a.user-action-nextstate(href='#', data-bind="click: goNextStatus, visible: nextStatus, text: nextStatus")
 												| {next_state}
 										li
-											a.user-action-prevstate(href='#', data-bind="click: goPrevStatus, visible: prevStatus, text: prevStatus") 
+											a.user-action-prevstate(href='#', data-bind="click: goPrevStatus, visible: prevStatus, text: prevStatus")
 												| {prev_state}
 
 				.span3
@@ -227,20 +227,35 @@ html
 						a.btn.input-block-level.status-filter(href='#', rel='paid')
 							| Оплачено
 
-				
-	script(src="../assets/js/libs/bootstrap.min.js")
 
-	script(src="../assets/js/libs/lodash.min.js")
-	//- script(src="../assets/js/libs/bootstrap.min.js")
-	//- script(src="../assets/js/libs/bootstrap-datepicker.js")
-	script(src="../assets/js/libs/knockout-2.2.1.js")
-	script(src="../assets/js/libs/knockout.mapping.js")
-	script(src="../assets/js/libs/knockout.validation.js")
-	script(src="../assets/js/customBindings/checkboxGroup.js")
+		.backToUsers.right.hide(data-bind="click: doBackToUsersRight, css: { hide: backToUsersRightIsHidden }", rel="#user_page")
+			.inner
+				i.icon-arrow-right
+				span.medium-screen
+					| &nbsp; Назад &nbsp;
+					span.wide-screen к списку пользователей
 
-	//- script(src="../assets/js/viewModels/UserViewModel.js")
-	//- script(src="../assets/js/viewModels/AdminViewModel.js")
+		.backToUsers.left.hide(data-bind="click: doBackToUsersLeft, css: { hide: backToUsersLeftIsHidden }", rel="#user_page")
+			.inner
+				i.icon-arrow-left
+				span.medium-screen
+					| &nbsp; Назад &nbsp;
+					span.wide-screen к списку пользователей
 
-	:coffeescript
-		$('#search_query').parent().tooltip()
+
+		script(src="../assets/js/libs/bootstrap.min.js")
+
+		script(src="../assets/js/libs/lodash.min.js")
+		//- script(src="../assets/js/libs/bootstrap.min.js")
+		//- script(src="../assets/js/libs/bootstrap-datepicker.js")
+		script(src="../assets/js/libs/knockout-2.2.1.js")
+		script(src="../assets/js/libs/knockout.mapping.js")
+		script(src="../assets/js/libs/knockout.validation.js")
+		script(src="../assets/js/customBindings/checkboxGroup.js")
+
+		//- script(src="../assets/js/viewModels/UserViewModel.js")
+		//- script(src="../assets/js/viewModels/AdminViewModel.js")
+
+		:coffeescript
+			$('#search_query').parent().tooltip()
 

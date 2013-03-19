@@ -7,7 +7,7 @@ global.statuses =
 	"emailsent": "Письмо отослано"
 	"paid": "Оплачено"
 
-global.statusGraph = 
+global.statusGraph =
 	next:
 		"new": "emailsent"
 		"emailsent": "paid"
@@ -41,7 +41,7 @@ class Cpanel
 				callbacks.fail()
 	redirectToLogin: -> global.location = "login.html"
 	showOperatorLogin: -> $('#operator_login_content').text "@#{@whois}"
-	logoff: -> 
+	logoff: ->
 		p = @rest.delete "index"
 		p.done () => @redirectToLogin()
 	setup: ->
@@ -100,12 +100,12 @@ class Cpanel
 					@adminViewModel.userCount 1
 		else
 			p = @rest.get "user", @filter
-			p.done (users) => 
+			p.done (users) =>
 				@users = {}
 				@adminViewModel.users.removeAll()
 				@adminViewModel.userCount 0
 				for user in users
-					@users[user.id] = user 
+					@users[user.id] = user
 					@adminViewModel.users.push new UserViewModel user
 					@adminViewModel.userCount @adminViewModel.userCount() + 1
 	userSetup: (user, userMarkup) ->
@@ -135,7 +135,7 @@ class Cpanel
 		prevActionMarkup = userActions.find ".user-action-prevstate"
 		if nextAction
 			nextActionMarkup.parent().removeClass "hide"
-		else 
+		else
 			nextActionMarkup.parent().addClass "hide"
 		if prevAction
 			prevActionMarkup.parent().removeClass "hide"
@@ -148,35 +148,21 @@ class Cpanel
 		prevActionMarkup.unbind().click () => @userStatus user.id, prevAction
 		nextActionMarkup.unbind().click () => @userStatus user.id, nextAction
 		userMarkup
+
 	userDetails: (id) ->
-		initialOffset = $("#user_page").offset()
+		@adminViewModel.backToUsersLeftIsHidden no
+		@adminViewModel.initialOffset = $("#user_page").offset()
 		$("#user_page").addClass "cpanel-navigation-goaway-left"
-		p = $("<div>").addClass "hidden-page"
-		p.html "<i class=\"icon-tag\"></i> <span>Все<br/>учатники</span>"
-		p.attr "rel", "#user_page"
-		p.css top: "80px"
-		p.click =>
-			$("#user_page").css position: "fixed", left: initialOffset.left, top: initialOffset.top
-			$("#user_page").removeClass "cpanel-navigation-goaway-left"
-			if @active_page
-				@active_page.addClass "cpanel-navigation-goaway-right"
-				@active_page = undefined
-			p.remove()
-			setTimeout( ->
-				$("#user_page").attr "style", ""
-			, 500)
-		setTimeout( ->
-			$("body").append p
-		, 350)
-		setTimeout( =>
+
+		setTimeout =>
 			user_card = $(".user-pages .container[user_id=\"#{id}\"]")
-			user_card.css position: "fixed", left: initialOffset.left, top: initialOffset.top
+			user_card.css position: "fixed", left: @adminViewModel.initialOffset.left, top: @adminViewModel.initialOffset.top
 			user_card.removeClass "cpanel-navigation-goaway-right"
 			@active_page = user_card
-			setTimeout( ->
+			setTimeout ->
 				user_card.attr "style", ""
-			, 500)
-		, 50)
+			, 500
+		, 50
 	userStatus: (id, status) ->
 		userMarkup = $ ".user-real[user_id=\"#{id}\"]"
 		user = new User
@@ -184,7 +170,7 @@ class Cpanel
 		p = user.update id, status
 		# p.done () =>
 		# 	p = user.getById id
-		# 	p.done (user) => 
+		# 	p.done (user) =>
 		# 		@userSetup user, userMarkup
 
 module.exports = Cpanel

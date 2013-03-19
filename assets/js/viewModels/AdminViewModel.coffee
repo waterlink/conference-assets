@@ -35,6 +35,9 @@ class window.AdminViewModel
         @operatorPassword = ko.observable ""
         @operatorConfirmPassword = ko.observable ""
 
+        @backToUsersLeftIsHidden = ko.observable yes
+        @backToUsersRightIsHidden = ko.observable yes
+
 
     doSignOut: ->
         window.location.href = "registration.html"
@@ -58,7 +61,7 @@ class window.AdminViewModel
     doSearch: (data, event) =>
         if event.which is 13
             $("#search_query").blur()
-            setTimeout( => 
+            setTimeout( =>
                 cpanel.loadUsers()
             , 30)
             event.preventDefault();
@@ -80,45 +83,30 @@ class window.AdminViewModel
             cpanel.loadUsers()
 
     goOperatorPage: =>
-        if cpanel.operator_page
-            return
+        return if cpanel.operator_page
+
         $("#operators_li").addClass "active"
-        initialOffset = $("#user_page").offset()
+        @initialOffset = $("#user_page").offset()
+
         if cpanel.active_page
             cpanel.active_page.addClass "cpanel-navigation-goaway-right"
             cpanel.active_page = undefined
             $('.hidden-page').remove()
             $("#user_page").removeClass "cpanel-navigation-goaway-left"
+
         $("#user_page").addClass "cpanel-navigation-goaway-right"
-        p = $("<div>").addClass "hidden-page-right"
-        p.html "<i class=\"icon-tag\"></i> <span>Все<br/>учатники</span>"
-        p.attr "rel", "#user_page"
-        p.css top: "80px"
-        p.click =>
-            $("#user_page").css position: "fixed", left: initialOffset.left, top: initialOffset.top
-            $("#user_page").removeClass "cpanel-navigation-goaway-right"
-            $("#user_page").removeClass "cpanel-navigation-goaway-left"
-            cpanel.operator_page = $(".operator-page .container")
-            if cpanel.operator_page.length
-                $("#operators_li").removeClass "active"
-                cpanel.operator_page.addClass "cpanel-navigation-goaway-left"
-                cpanel.operator_page = undefined
-            p.remove()
-            setTimeout( ->
-                $("#user_page").attr "style", ""
-            , 500)
-        setTimeout( ->
-            $("body").append p
-        , 350)
-        setTimeout( =>
-            operator_page = $(".operator-page .container")
-            operator_page.css position: "fixed", left: initialOffset.left, top: initialOffset.top
+
+        setTimeout =>
+            operator_page = $ ".operator-page .container"
+            operator_page.css position: "fixed", left: @initialOffset.left, top: @initialOffset.top
             operator_page.removeClass "cpanel-navigation-goaway-left"
             cpanel.operator_page = operator_page
-            setTimeout( ->
+            setTimeout ->
                 operator_page.attr "style", ""
-            , 500)
-        , 50)
+            , 500
+            @backToUsersRightIsHidden no
+            @backToUsersLeftIsHidden  yes
+        , 50
 
     newOperator: =>
         @addingOperator true
@@ -145,6 +133,36 @@ class window.AdminViewModel
         @operatorPassword ""
         @operatorConfirmPassword ""
 
+    doBackToUsersRight: =>
+        $("#user_page").css position: "fixed", left: @initialOffset.left, top: @initialOffset.top
+        $("#user_page").removeClass "cpanel-navigation-goaway-right"
+        $("#user_page").removeClass "cpanel-navigation-goaway-left"
+
+        cpanel.operator_page = $ ".operator-page .container"
+        if cpanel.operator_page.length
+            $("#operators_li").removeClass "active"
+            cpanel.operator_page.addClass "cpanel-navigation-goaway-left"
+            cpanel.operator_page = undefined
+
+        setTimeout ->
+            $("#user_page").attr "style", ""
+        , 500
+
+        @backToUsersRightIsHidden yes
+
+    doBackToUsersLeft: =>
+        $("#user_page").css position: "fixed", left: @initialOffset.left, top: @initialOffset.top
+        $("#user_page").removeClass "cpanel-navigation-goaway-left"
+
+        if cpanel.active_page
+            cpanel.active_page.addClass "cpanel-navigation-goaway-right"
+            cpanel.active_page = undefined
+
+        setTimeout ->
+            $("#user_page").attr "style", ""
+        , 500
+
+        @backToUsersLeftIsHidden yes
 
 module.exports = window.AdminViewModel
 
