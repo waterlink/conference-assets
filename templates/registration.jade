@@ -57,19 +57,20 @@ html
                     input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd, datepickerOptions: {start: start, end: end}', type='text', placeholder='До')
                     .clearfix
                     br
-                    // ko with: files
-                    span.btn.btn-success.fileinput-button
-                        i.icon-plus.icon-white
-                        | &nbsp; Добавить документы
-                        input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone"), autoUpload: true }) }', type="file", name="files[]", data-url="/uploads", multiple)
+                    div(data-bind="if: files")
+                        // ko with: files
+                        span.btn.btn-success.fileinput-button
+                            i.icon-plus.icon-white
+                            | &nbsp; Добавить документы
+                            input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone"), autoUpload: true }) }', type="file", name="files[]", multiple)
 
-                    .clearfix
-                    br
-                    .span7(data-bind="visible: data().length > 0")
-                        table.table.table-striped
-                            tbody(data-bind="template: { name: 'filesTable', data: data() }")
-                    #dropzone.span7(data-bind="visible: data().length <= 0") Или просто перетащите мышкой файлы в эту область
-                    // /ko
+                        .clearfix
+                        br
+                        .span7(data-bind="visible: data().length > 0")
+                            table.table.table-striped
+                                tbody(data-bind="template: { name: 'filesTable', data: data() }")
+                        #dropzone.span7(data-bind="visible: data().length <= 0") Или просто перетащите мышкой файлы в эту область
+                        // /ko
                     .clearfix
                     br
 

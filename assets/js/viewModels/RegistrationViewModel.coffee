@@ -1,3 +1,5 @@
+require "../classes/restfull"
+
 class window.RegistrationViewModel
     constructor: ->
         @start = new Date
@@ -29,10 +31,18 @@ class window.RegistrationViewModel
             stayEnd               : ko.observable new Date @end
 
         @files = new FilesViewModel
+        # @files = ko.observable false
         @searchData = window.searchData
 
         @errors = ko.validation.group @user
         @errorAlert = new Alert "#needFixErrors"
+
+        @rest = new Restfull ""
+        # p = @rest.get "uploads/id"
+        # p.done (upload) => @files new FilesViewModel upload.id
+        # p.error (err) =>
+        #     console.log err
+        #     alert err
 
     doRegister: ->
         @addValidation() unless @hasValidation
@@ -41,6 +51,7 @@ class window.RegistrationViewModel
             console.log ko.mapping.toJS @user
             creating = new User
             creating.fromData ko.mapping.toJS @user
+            creating.uploadId = @files.uploadId()
             p = creating.create()
             button = $ ".form-signin .btn-primary"
             button.button "loading"

@@ -1,6 +1,8 @@
 class window.FilesViewModel
-    constructor:  ->
+    constructor: ->
         @data = ko.observableArray()
+        @uploadId = ko.observable ""
+        # @dataUrl = ko.computed => "/uploads/index/#{@uploadId()}"
 
     formatSize: (bytes) ->
         [KB, MB, GB] = [1024, 1024*1024, 1024*1024*1024]

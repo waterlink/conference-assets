@@ -3,6 +3,7 @@
   window.FilesViewModel = (function() {
     function FilesViewModel() {
       this.data = ko.observableArray();
+      this.uploadId = ko.observable("");
     }
 
     FilesViewModel.prototype.formatSize = function(bytes) {

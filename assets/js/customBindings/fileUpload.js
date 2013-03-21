@@ -9,40 +9,50 @@
       $element = $(element);
       _ref1 = [options.maxNumberOfFiles, false], max = _ref1[0], initialized = _ref1[1];
       initialize = function() {
-        var _this = this;
+        var p,
+          _this = this;
 
-        $element.fileupload(_.extend(options, {
-          maxNumberOfFiles: (max != null ? max - files().length + !!initialized : void 0),
-          added: function(e, data) {
-            var f, _i, _len, _ref2, _results;
+        console.log($element);
+        console.log($element.attr("data-url"));
+        this.rest = new Restfull("");
+        p = this.rest.get("uploads/id");
+        return p.done(function(upload) {
+          $element.attr("data-url", "/uploads/index/" + upload.id);
+          console.log($element.attr("data-url"));
+          viewModel.uploadId(upload.id);
+          $element.fileupload(_.extend(options, {
+            maxNumberOfFiles: (max != null ? max - files().length + !!initialized : void 0),
+            added: function(e, data) {
+              var f, _i, _len, _ref2, _results;
 
-            _ref2 = data.files;
-            _results = [];
-            for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-              f = _ref2[_i];
-              f.loaded = ko.observable("0%");
-              _results.push(files.push(f));
-            }
-            return _results;
-          },
-          process: [
-            {
-              action: "load"
-            }
-          ],
-          progress: function(e, data) {
-            var f, _i, _len, _ref2, _results;
+              _ref2 = data.files;
+              _results = [];
+              for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+                f = _ref2[_i];
+                f.loaded = ko.observable("0%");
+                _results.push(files.push(f));
+              }
+              return _results;
+            },
+            process: [
+              {
+                action: "load"
+              }
+            ],
+            progress: function(e, data) {
+              var f, _i, _len, _ref2, _results;
 
-            _ref2 = data.files;
-            _results = [];
-            for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-              f = _ref2[_i];
-              _results.push(f.loaded(parseInt(data.loaded * 100 / data.total, 10) + "%"));
+              _ref2 = data.files;
+              _results = [];
+              for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+                f = _ref2[_i];
+                _results.push(f.loaded(parseInt(data.loaded * 100 / data.total, 10) + "%"));
+              }
+              return _results;
             }
-            return _results;
-          }
-        }));
-        return initialized = true;
+          }));
+          return initialized = true;
+        });
       };
       initialize();
       return viewModel.validate = function(files) {

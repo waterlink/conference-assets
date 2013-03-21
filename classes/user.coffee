@@ -18,6 +18,7 @@ class User
 		@sectionNumber = ""
 		@monographyParticipant = false
 		@stayDemand = false
+		@uploadId = false
 
 	fromData: (data) ->
 		@id = data.id
@@ -44,6 +45,7 @@ class User
 		if @stayDemand
 			@stayStart = data.stayStart
 			@stayEnd = data.stayEnd
+		@uploadId = data.uploadId
 
 	getData: ->
 		res =
@@ -66,6 +68,7 @@ class User
 			sectionNumber: @sectionNumber
 			monographyParticipant: @monographyParticipant
 			stayDemand: @stayDemand
+			uploadId: @uploadId
 		if @monographyParticipant
 			res["monographyTitle"] = @monographyTitle
 		if @stayDemand

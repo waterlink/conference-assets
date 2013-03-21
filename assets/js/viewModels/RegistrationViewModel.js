@@ -2,6 +2,8 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+  require("../classes/restfull");
+
   window.RegistrationViewModel = (function() {
     function RegistrationViewModel() {
       this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);      this.start = new Date;
@@ -33,6 +35,7 @@
       this.searchData = window.searchData;
       this.errors = ko.validation.group(this.user);
       this.errorAlert = new Alert("#needFixErrors");
+      this.rest = new Restfull("");
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
@@ -45,6 +48,7 @@
         console.log(ko.mapping.toJS(this.user));
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
+        creating.uploadId = this.files.uploadId();
         p = creating.create();
         button = $(".form-signin .btn-primary");
         button.button("loading");

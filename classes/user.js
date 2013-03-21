@@ -26,6 +26,7 @@
       this.sectionNumber = "";
       this.monographyParticipant = false;
       this.stayDemand = false;
+      this.uploadId = false;
     }
 
     User.prototype.fromData = function(data) {
@@ -53,8 +54,9 @@
       }
       if (this.stayDemand) {
         this.stayStart = data.stayStart;
-        return this.stayEnd = data.stayEnd;
+        this.stayEnd = data.stayEnd;
       }
+      return this.uploadId = data.uploadId;
     };
 
     User.prototype.getData = function() {
@@ -79,7 +81,8 @@
         lectureTitle: this.lectureTitle,
         sectionNumber: this.sectionNumber,
         monographyParticipant: this.monographyParticipant,
-        stayDemand: this.stayDemand
+        stayDemand: this.stayDemand,
+        uploadId: this.uploadId
       };
       if (this.monographyParticipant) {
         res["monographyTitle"] = this.monographyTitle;
