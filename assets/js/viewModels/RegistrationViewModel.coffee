@@ -1,4 +1,6 @@
-class window.UserRegistrationViewModel
+require "../classes/restfull"
+
+class window.RegistrationViewModel
     constructor: ->
         @start = new Date
         @end   = new Date
@@ -25,13 +27,22 @@ class window.UserRegistrationViewModel
             monographyParticipant : ko.observable no
             monographyTitle       : ko.observable ""
             stayDemand            : ko.observable no
-            stayStart             : ko.observable ""
-            stayEnd               : ko.observable ""
+            stayStart             : ko.observable new Date @start
+            stayEnd               : ko.observable new Date @end
 
+        @files = new FilesViewModel
+        # @files = ko.observable false
         @searchData = window.searchData
 
-        @errors = ko.validation.group(@user)
+        @errors = ko.validation.group @user
         @errorAlert = new Alert "#needFixErrors"
+
+        @rest = new Restfull ""
+        # p = @rest.get "uploads/id"
+        # p.done (upload) => @files new FilesViewModel upload.id
+        # p.error (err) =>
+        #     console.log err
+        #     alert err
 
     doRegister: ->
         @addValidation() unless @hasValidation
@@ -39,8 +50,11 @@ class window.UserRegistrationViewModel
         if @errors().length is 0
             console.log ko.mapping.toJS @user
             creating = new User
-            creating.fromData ko.mapping.toJS(@user)
+            creating.fromData ko.mapping.toJS @user
+            creating.uploadId = @files.uploadId()
             p = creating.create()
+            button = $ ".form-signin .btn-primary"
+            button.button "loading"
             p.done (data) ->
                 if data
                     if data.error
@@ -49,6 +63,10 @@ class window.UserRegistrationViewModel
                         # вроде должна возникать коллизия только по email
                         # если такой уже зареган
                         alert data.error
+                        button.button "reset"
+                        return
+                button.button "reset"
+                global.location = "success.html"
         else
             @errorAlert.show()
             @errors.showAllMessages()
@@ -59,7 +77,6 @@ class window.UserRegistrationViewModel
 
     addValidation: ->
         @makeFieldsRequired()
-        @user.email.extend email: message: "Введите корректный email", params: yes
         @hasValidation = yes
 
     makeFieldsRequired: ->

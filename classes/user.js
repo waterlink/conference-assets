@@ -26,6 +26,7 @@
       this.sectionNumber = "";
       this.monographyParticipant = false;
       this.stayDemand = false;
+      this.uploadId = false;
     }
 
     User.prototype.fromData = function(data) {
@@ -47,13 +48,21 @@
       this.lectureTitle = data.lectureTitle;
       this.sectionNumber = data.sectionNumber;
       this.monographyParticipant = data.monographyParticipant;
-      return this.stayDemand = data.stayDemand;
+      this.stayDemand = data.stayDemand;
+      if (this.monographyParticipant) {
+        this.monographyTitle = data.monographyTitle;
+      }
+      if (this.stayDemand) {
+        this.stayStart = data.stayStart;
+        this.stayEnd = data.stayEnd;
+      }
+      return this.uploadId = data.uploadId;
     };
 
     User.prototype.getData = function() {
       var res;
 
-      return res = {
+      res = {
         name: this.name,
         surname: this.surname,
         patronymic: this.patronymic,
@@ -72,8 +81,17 @@
         lectureTitle: this.lectureTitle,
         sectionNumber: this.sectionNumber,
         monographyParticipant: this.monographyParticipant,
-        stayDemand: this.stayDemand
+        stayDemand: this.stayDemand,
+        uploadId: this.uploadId
       };
+      if (this.monographyParticipant) {
+        res["monographyTitle"] = this.monographyTitle;
+      }
+      if (this.stayDemand) {
+        res["stayStart"] = this.stayStart;
+        res["stayEnd"] = this.stayEnd;
+      }
+      return res;
     };
 
     User.prototype.create = function() {
@@ -110,7 +128,6 @@
     };
 
     User.prototype.update = function(id, status) {
-      console.log("updating user to status " + status);
       this.status = status;
       return this.backend.put(["user", "" + id], this.getData());
     };

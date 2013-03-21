@@ -1,12 +1,13 @@
 global.Restfull = require "../classes/restfull"
 global.User = require "../classes/user"
+global.AdminViewModel = require "../assets/js/viewModels/AdminViewModel"
 
-statuses =
+global.statuses =
 	"new": "Новый"
 	"emailsent": "Письмо отослано"
 	"paid": "Оплачено"
 
-statusGraph = 
+global.statusGraph =
 	next:
 		"new": "emailsent"
 		"emailsent": "paid"
@@ -14,14 +15,17 @@ statusGraph =
 		"emailsent": "new"
 		"paid": "emailsent"
 
+global.cpanelPageLimit = 10
+
 class Cpanel
 	constructor: ->
 		@rest = new Restfull
 		@authenticated
 			ok: => @showOperatorLogin()
 			fail: => @redirectToLogin()
-		$(document).ready () => @ready()
 	ready: ->
+		@adminViewModel = new AdminViewModel
+		ko.applyBindings @adminViewModel
 		@setup()
 		@loadUsers()
 	authenticated: (callbacks) ->
@@ -32,18 +36,21 @@ class Cpanel
 				@whois = data.whois
 				@group = data.group
 				callbacks.ok()
+				$(document).ready () => @ready()
 			else
 				callbacks.fail()
 	redirectToLogin: -> global.location = "login.html"
 	showOperatorLogin: -> $('#operator_login_content').text "@#{@whois}"
-	logoff: -> 
+	logoff: ->
 		p = @rest.delete "index"
 		p.done () => @redirectToLogin()
 	setup: ->
 		me = @
-		@filter = {}
+		@filter = {skip: 0, limit: global.cpanelPageLimit}
+		@page = 0
 		$('#operator_logoff').click () => @logoff()
 		$('.status-filter').click -> me.statusFilterChanged $(@).attr("rel")
+		$('.status-filter[rel="new"]').click()
 	statusFilterChanged: (status) ->
 		if @filter.status
 			if @filter.status is status
@@ -57,13 +64,50 @@ class Cpanel
 			@filter.status = status
 			$(".status-filter[rel=\"#{status}\"]").addClass "active"
 		@loadUsers()
+	loadOperators: (cb) ->
+		p = @rest.get "operator"
+		p.done (operators) =>
+			@adminViewModel.operators.removeAll()
+			for operator in operators
+				@adminViewModel.operators.push new OperatorViewModel operator
+			if cb
+				cb()
 	loadUsers: ->
-		p = @rest.get "user", @filter
-		userView = $ "#user_view"
-		realUsers = userView.find ".user-real"
-		realUsers.remove()
-		@users = {}
-		p.done (users) => userView.append @userSetup user for user in users
+		search = @adminViewModel.search()
+		if search
+			if not search.match /^[0-9]+$/
+				words = search.split(" ").filter (x) -> x
+				words = _.map words, (x) -> x.toLowerCase()
+				if words
+					@filter.words = words
+				else
+					delete @filter.words
+			else
+				delete @filter.words
+		else if @filter.words
+			delete @filter.words
+		console.log @filter.words
+		if search.match /^[0-9]+$/
+			user = new User
+			p = user.getById search
+			p.done (user) =>
+				@users = {}
+				@adminViewModel.users.removeAll()
+				console.log user
+				if user
+					@users[user.id] = user
+					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.userCount 1
+		else
+			p = @rest.get "user", @filter
+			p.done (users) =>
+				@users = {}
+				@adminViewModel.users.removeAll()
+				@adminViewModel.userCount 0
+				for user in users
+					@users[user.id] = user
+					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.userCount @adminViewModel.userCount() + 1
 	userSetup: (user, userMarkup) ->
 		@users[user.id] = user
 		unless userMarkup
@@ -91,7 +135,7 @@ class Cpanel
 		prevActionMarkup = userActions.find ".user-action-prevstate"
 		if nextAction
 			nextActionMarkup.parent().removeClass "hide"
-		else 
+		else
 			nextActionMarkup.parent().addClass "hide"
 		if prevAction
 			prevActionMarkup.parent().removeClass "hide"
@@ -104,15 +148,29 @@ class Cpanel
 		prevActionMarkup.unbind().click () => @userStatus user.id, prevAction
 		nextActionMarkup.unbind().click () => @userStatus user.id, nextAction
 		userMarkup
+
 	userDetails: (id) ->
+		@adminViewModel.backToUsersLeftIsHidden no
+		@adminViewModel.initialOffset = $("#user_page").offset()
+		$("#user_page").addClass "cpanel-navigation-goaway-left"
+
+		setTimeout =>
+			user_card = $(".user-pages .container[user_id=\"#{id}\"]")
+			user_card.css position: "fixed", left: @adminViewModel.initialOffset.left, top: @adminViewModel.initialOffset.top
+			user_card.removeClass "cpanel-navigation-goaway-right"
+			@active_page = user_card
+			setTimeout ->
+				user_card.attr "style", ""
+			, 500
+		, 50
 	userStatus: (id, status) ->
 		userMarkup = $ ".user-real[user_id=\"#{id}\"]"
 		user = new User
 		user.fromData @users[id]
 		p = user.update id, status
-		p.done () =>
-			p = user.getById id
-			p.done (user) => 
-				@userSetup user, userMarkup
+		# p.done () =>
+		# 	p = user.getById id
+		# 	p.done (user) =>
+		# 		@userSetup user, userMarkup
 
 module.exports = Cpanel

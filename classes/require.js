@@ -4,6 +4,8 @@
 
   global.modules = {};
 
+  global.module = {};
+
   global.require = function(path) {
     var p;
 

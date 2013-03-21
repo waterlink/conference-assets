@@ -5,9 +5,22 @@ Conference project. Assets git submodule.
 
 ### Help
 
+_Все это нужно для того, чтобы origin "file://" смог обращаться api запросами на https://conference-waterlink.dotcloud.com_
+
 Для того, чтобы открывать без веб-сервера и нормально работать (используя бекэндом testint окружение на dotcloud):
 
-запусти chrome(ium) с параметром --allow-file-access-from-files
+запусти chrome(ium) с параметром --allow-file-access-from-files --disable-web-security
+
+__ИСПОЛЬЗОВАТЬ ОЧЕНЬ ОСТОРОЖНО__
+
+Например, использовать 2 браузера: chrome и chromium, в chromium открывать только файлы проекта и ничего более
+(через протокол file://) — он и будет запущен как раз так
+
+```bash
+$ chromium-browser --allow-file-access-from-files --disable-web-security
+```
+
+А гуглить, лазить, общаться, серфить по интернету в chrome, который запущен обычным образом.
 
 ### TODO
 

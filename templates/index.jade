@@ -2,7 +2,7 @@
 html
     head
         meta(charset='utf-8')
-        title Регистрация - Научная конференция 2013
+        title Регистрация — Научная конференция 2013
         link(rel='stylesheet', href='../assets/css/bootstrap.css')
         link(rel='stylesheet', href='../assets/css/bootstrap-responsive.css')
         link(rel='stylesheet', href='../assets/css/datepicker.css')
@@ -11,10 +11,10 @@ html
     body
         .navbar.navbar-inverse.navbar-fixed-top
             .navbar-inner
-                .container-fluid
+                .container
                     a.brand(href='javascript:;') Научная конференция 2013
 
-        .container-fluid
+        .container
             #needFixErrors.alert.alert-error.fade.in.hide
                 button(type="button", class="close") ×
                 h4.alert-heading Ошибки при заполнении формы :(
@@ -55,7 +55,7 @@ html
                 input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd', type='text', placeholder='До')
                 br
                 .clearfix
-                button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
+                button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit', data-loading-text="Подождите...") Готово
 
 
         script(src="../assets/js/libs/jquery-1.9.1.min.js")
@@ -70,15 +70,16 @@ html
         script(src="../assets/js/customBindings/select2.js")
         script(src="../assets/js/configureValidation.js")
 
+        script(src="../classes/require.js")
+            
         script(src="../assets/js/searchData.js")
         script(src="../assets/js/Alert.js")
-        script(src="../assets/js/viewModels/UserRegistrationViewModel.js")
+        script(src="../assets/js/viewModels/RegistrationViewModel.js")
 
-        script(src="../classes/require.js")
 
         :coffeescript
             global.application = require "../main"
             application.run()
 
         :coffeescript
-            ko.applyBindings new UserRegistrationViewModel
+            ko.applyBindings new RegistrationViewModel

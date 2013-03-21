@@ -1,0 +1,264 @@
+!!! 5
+html
+	head
+		meta(charset="utf-8")
+		title Панель оператора — Конференция
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(href="../assets/css/bootstrap.min.css", rel="stylesheet")
+		style
+			body { padding-top: 60px }
+		link(href="../assets/css/bootstrap-responsive.css", rel="stylesheet")
+		// Le HTML5 shim, for IE6-8 support of HTML5 elements
+		// [if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]
+		link(rel="shortcut icon", href="assets/favicon.ico")
+		link(href="../assets/css/apanel.css", rel="stylesheet")
+		script(src="../assets/js/libs/jquery-1.9.1.min.js")
+		script(src="../classes/require.js")
+
+		:coffeescript
+			global.Cpanel = require "../classes/cpanel"
+			global.cpanel = new Cpanel
+
+	body
+		.navbar.navbar-fixed-top.navbar-inverse
+			.navbar-inner
+				.container
+					a.brand(href='#')
+						| Панель оператора
+					ul.nav(data-bind="if: isAdmin")
+						li#operators_li
+							a(href='#', data-bind="click: goOperatorPage")
+								| Операторы
+					ul.nav.pull-right
+						li
+							a(href='#', data-toggle="tooltip", data-original-title="Поиск по ФИО или по Номеру", data-placement="bottom")
+								input#search_query.input-medium.search-query.navbar-search-query(placeholder='Поиск', type='text', data-bind="value: search, event: {keypress: doSearch}")
+							li.dropdown
+								a#operator_login.dropdown-toggle(href='#', data-toggle='dropdown')
+									span#operator_login_content
+									b.caret
+								ul.dropdown-menu
+									li
+										a#operator_logoff(href='#')
+											| Выход
+		.operator-page(data-bind="if: isAdmin")
+			.container.cpanel-navigation-page.cpanel-navigation-goaway-left
+				h3 Перечень пользователей
+				div(data-bind="foreach: operators")
+					.row-fluid.row-operator
+						.span3
+							span(data-bind="text: login")
+							| &nbsp;
+							span.badge.badge-success(data-bind="if: admin") admin
+						div(data-bind="ifnot: resettingPassword")
+							.span3
+								a.btn.input-block-level(data-bind="click: resetPassword", data-loading-text="Сбрасываю...") Сбросить пароль
+						div(data-bind="if: resettingPassword")
+							.span3
+								input.input-block-level(type="password", data-bind="value: newpassword", placeholder="Новый пароль")
+						div(data-bind="if: hasSessions")
+							.span3
+								a.btn.input-block-level(data-bind="click: resetSessions, ifnot: resettingPassword", data-loading-text="Сбрасываю...") Сбросить сессии
+						div(data-bind="if: resettingPassword")
+							.span3
+								input.input-block-level(type="password", data-bind="value: confirmpassword", placeholder="Подтвердите пароль")
+						div(data-bind="if: notami")
+							.span3
+								a.btn.btn-danger.input-block-level(data-bind="click: remove, ifnot: resettingPassword", data-loading-text="Удаляю...") Удалить
+						div(data-bind="if: resettingPassword")
+							.span3
+								.btn-group.input-block-level
+									a.btn.btn-danger(data-bind="click: confirmResetPassword", data-loading-text="Сбрасываю...") Сбросить
+									a.btn(data-bind="click: cancelResetPassword", data-loading-text="Отменяю...") Отменить
+				.row-fluid.row-operator-add
+					div(data-bind="ifnot: addingOperator")
+						.span3
+							a.btn.input-block-level(data-bind="click: newOperator", data-loading-text="Добавляю...") Добавить оператора
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="text", data-bind="value: operatorLogin", placeholder="Логин")
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="password", data-bind="value: operatorPassword", placeholder="Пароль")
+					div(data-bind="if: addingOperator")
+						.span3
+							input.input-block-level(type="password", data-bind="value: operatorConfirmPassword", placeholder="Подтвердите пароль")
+					div(data-bind="if: addingOperator")
+						.span3
+							.btn-group.input-block-level
+								a.btn.btn-danger(data-bind="click: confirmAddOperator", data-loading-text="Создаю...") Создать
+								a.btn(data-bind="click: cancelAddOperator", data-loading-text="Отменяю...") Отменить
+		.user-pages(data-bind="foreach: users")
+			.container.cpanel-navigation-page.cpanel-navigation-goaway-right(data-bind="attr: {user_id: id}")
+				h3(data-bind="text: fullName")
+				.row
+					.span4
+						h4 Контактные данные
+						em Электронная почта
+						p
+							a(data-bind="text: email, attr: {href: mailto}")
+						em Телефон
+						p(data-bind="text: phone")
+						em Адрес
+						p(data-bind="text: postalAddress")
+					.span4(data-bind="visible: isMonographyParticipant")
+						h4 Участие в монографии
+						p(data-bind="text: z_monographyTitle")
+					.span4(data-bind="visible: isStayDemand")
+						h4 Есть потребность в проживании
+						p
+							em c&nbsp;
+							span(data-bind="text: z_stayStart")
+						p
+							em по&nbsp;
+							span(data-bind="text: z_stayEnd")
+					.span4
+						h4 Основные данные
+						em Тип участия
+						p(data-bind="text: z_participantType")
+						em Название доклада
+						p(data-bind="text: lectureTitle")
+						em Номер секции
+						p(data-bind="text: sectionNumber")
+						em Прикрипленные файлы
+						p
+							a(data-bind="attr: {href: downloadLink}") Скачать архив
+					.span4
+						h4 Научные данные
+						em Работа
+						p(data-bind="text: fullJob")
+						em Научная степень
+						p(data-bind="text: academicDegree")
+						em Ученое звание
+						p(data-bind="text: academicTitle")
+		.container.cpanel-navigation-page#user_page
+			.row
+				.span9
+					#user_head
+						.row-fluid
+							.span6.pull-left
+								h3
+									| Перечень пользователей
+							.btn-group.pull-right
+								a.btn(href="#", data-bind="attr: {class: prevPageClass}, click: prevPage")
+									i.icon-arrow-left
+									| &nbsp; Предыдущие
+								a.btn(href="#", data-bind="attr: {class: nextPageClass}, click: nextPage")
+									| Следующие &nbsp;
+									i.icon-arrow-right
+						.row-fluid.user-table-row
+							.span1
+								div
+									p
+										b
+											| Номер
+							.span3
+								div
+									p
+										strong
+											| ФИО
+							.span3
+								div
+									p
+										b
+											| Email
+							.span2
+								div
+									p
+										b
+											| Телефон
+							.span1
+								div
+									p
+										strong
+											| Статус
+							.span2
+								div
+									p
+										b
+											| Действия
+					#user_view(data-bind="foreach: users")
+						.row-fluid.user-table-row(data-bind="attr: {user_id: id}")
+							.span1
+								div
+									p.user-id(data-bind="text: id")
+										//- | 22
+							.span3.user-table-too-long
+								div
+									span.faded-text
+									p.user-fio(data-bind="text: fullName")
+										//- | Федоров Алексей Константинович
+							.span3.user-table-too-long
+								div
+									span.faded-text
+									a.user-email(href='#', data-bind="text: email, attr: {href: mailto}")
+										//- | waterlink000+scientificConference@gmail.com
+							.span2
+								div
+									p.user-phone(data-bind="text: phone")
+										//- | (099) 303 95 36
+							.span1
+								div
+									p.user-status(data-bind="text: locStatus")
+										//- | Новый
+							.span2
+								.btn-group.user-actions.input-block-level
+									a.btn.input-block-level.dropdown-toggle(data-toggle='dropdown', href='#', data-loading-text="Подождите...", data-error-text="Ошибка!")
+										span(style='font-size: 13px;')
+											| Действия&nbsp;
+										b.caret
+									ul.dropdown-menu
+										li
+											a.user-action-details(href='#', data-bind="click: details")
+												| Подробно
+										li
+											a.user-action-nextstate(href='#', data-bind="click: goNextStatus, visible: nextStatus, text: nextStatus")
+												| {next_state}
+										li
+											a.user-action-prevstate(href='#', data-bind="click: goPrevStatus, visible: prevStatus, text: prevStatus")
+												| {prev_state}
+
+				.span3
+					.well
+						div
+							p
+								| Фильтр по статусу
+						a.btn.input-block-level.status-filter(href='#', rel='new')
+							| Новые
+						a.btn.input-block-level.status-filter(href='#', rel='emailsent')
+							| Письмо отослано
+						a.btn.input-block-level.status-filter(href='#', rel='paid')
+							| Оплачено
+
+
+		.backToUsers.right.hide(data-bind="click: doBackToUsersRight, css: { hide: backToUsersRightIsHidden }", rel="#user_page")
+			.inner
+				span.span-back-right
+				span.medium-screen
+					| &nbsp; Назад &nbsp;
+					span.wide-screen к списку пользователей
+
+		.backToUsers.left.hide(data-bind="click: doBackToUsersLeft, css: { hide: backToUsersLeftIsHidden }", rel="#user_page")
+			.inner
+				span.span-back-left
+				span.medium-screen
+					| &nbsp; Назад &nbsp;
+					span.wide-screen к списку пользователей
+
+
+		script(src="../assets/js/libs/bootstrap.min.js")
+
+		script(src="../assets/js/libs/lodash.min.js")
+		//- script(src="../assets/js/libs/bootstrap.min.js")
+		//- script(src="../assets/js/libs/bootstrap-datepicker.js")
+		script(src="../assets/js/libs/knockout-2.2.1.js")
+		script(src="../assets/js/libs/knockout.mapping.js")
+		script(src="../assets/js/libs/knockout.validation.js")
+		script(src="../assets/js/customBindings/checkboxGroup.js")
+
+		//- script(src="../assets/js/viewModels/UserViewModel.js")
+		//- script(src="../assets/js/viewModels/AdminViewModel.js")
+
+		:coffeescript
+			$('#search_query').parent().tooltip()
+

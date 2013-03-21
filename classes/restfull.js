@@ -21,6 +21,10 @@
     global.domain = "";
   }
 
+  if (global.location.origin === "file://") {
+    global.domain = "https://conference-waterlink.dotcloud.com";
+  }
+
   Function.prototype.property = function(prop, desc) {
     return Object.defineProperty(this.prototype, prop, desc);
   };

@@ -2,8 +2,10 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  window.UserRegistrationViewModel = (function() {
-    function UserRegistrationViewModel() {
+  require("../classes/restfull");
+
+  window.RegistrationViewModel = (function() {
+    function RegistrationViewModel() {
       this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);      this.start = new Date;
       this.end = new Date;
       this.start.setDate(this.start.getDate() - 7);
@@ -26,16 +28,18 @@
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
         stayDemand: ko.observable(false),
-        stayStart: ko.observable(""),
-        stayEnd: ko.observable("")
+        stayStart: ko.observable(new Date(this.start)),
+        stayEnd: ko.observable(new Date(this.end))
       };
+      this.files = new FilesViewModel;
       this.searchData = window.searchData;
       this.errors = ko.validation.group(this.user);
       this.errorAlert = new Alert("#needFixErrors");
+      this.rest = new Restfull("");
     }
 
-    UserRegistrationViewModel.prototype.doRegister = function() {
-      var creating, p;
+    RegistrationViewModel.prototype.doRegister = function() {
+      var button, creating, p;
 
       if (!this.hasValidation) {
         this.addValidation();
@@ -44,13 +48,20 @@
         console.log(ko.mapping.toJS(this.user));
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
+        creating.uploadId = this.files.uploadId();
         p = creating.create();
+        button = $(".form-signin .btn-primary");
+        button.button("loading");
         return p.done(function(data) {
           if (data) {
             if (data.error) {
-              return alert(data.error);
+              alert(data.error);
+              button.button("reset");
+              return;
             }
           }
+          button.button("reset");
+          return global.location = "success.html";
         });
       } else {
         this.errorAlert.show();
@@ -58,23 +69,17 @@
       }
     };
 
-    UserRegistrationViewModel.prototype.isAvailableDateToStay = function(date) {
+    RegistrationViewModel.prototype.isAvailableDateToStay = function(date) {
       console.log(date);
       return true;
     };
 
-    UserRegistrationViewModel.prototype.addValidation = function() {
+    RegistrationViewModel.prototype.addValidation = function() {
       this.makeFieldsRequired();
-      this.user.email.extend({
-        email: {
-          message: "Введите корректный email",
-          params: true
-        }
-      });
       return this.hasValidation = true;
     };
 
-    UserRegistrationViewModel.prototype.makeFieldsRequired = function() {
+    RegistrationViewModel.prototype.makeFieldsRequired = function() {
       var isRequired, key, value, _ref,
         _this = this;
 
@@ -113,7 +118,7 @@
       });
     };
 
-    return UserRegistrationViewModel;
+    return RegistrationViewModel;
 
   })();
 
