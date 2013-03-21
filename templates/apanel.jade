@@ -12,6 +12,9 @@ html
 		// [if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]
 		link(rel="shortcut icon", href="assets/favicon.ico")
 		link(href="../assets/css/apanel.css", rel="stylesheet")
+		link(rel='stylesheet', href='../assets/css/datepicker.css')
+		link(rel='stylesheet', href='../assets/css/select2.css')
+		link(rel='stylesheet', href='../assets/css/custom.css')
 		script(src="../assets/js/libs/jquery-1.9.1.min.js")
 		script(src="../classes/require.js")
 
@@ -90,47 +93,103 @@ html
 								a.btn(data-bind="click: cancelAddOperator", data-loading-text="Отменяю...") Отменить
 		.user-pages(data-bind="foreach: users")
 			.container.cpanel-navigation-page.cpanel-navigation-goaway-right(data-bind="attr: {user_id: id}")
-				h3(data-bind="text: fullName")
+				.row
+					.span6
+						h3(data-bind="text: fullName")
+					.span6
+						a.btn.btn-primary.pull-right(href="#", data-bind="click: doSave", data-loading-text="Сохраняю..") Сохранить
+				.row
+					.span4
+						em ФИО
+						p
+							input.input-block-level(type="text", data-bind="value: fullName")
 				.row
 					.span4
 						h4 Контактные данные
 						em Электронная почта
 						p
-							a(data-bind="text: email, attr: {href: mailto}")
+							//- a(data-bind="text: email, attr: {href: mailto}")
+							input.input-block-level(type="text", data-bind="value: email")
 						em Телефон
-						p(data-bind="text: phone")
+						//- p(data-bind="text: phone")
+						p
+							input.input-block-level(type="text", data-bind="value: phone")
 						em Адрес
-						p(data-bind="text: postalAddress")
-					.span4(data-bind="visible: isMonographyParticipant")
+						//- p(data-bind="text: postalAddress")
+						p
+							input.input-block-level(type="text", data-bind="value: postalAddress")
+					//- .span4(data-bind="visible: isMonographyParticipant")
+					.span4
 						h4 Участие в монографии
-						p(data-bind="text: z_monographyTitle")
-					.span4(data-bind="visible: isStayDemand")
-						h4 Есть потребность в проживании
+						//- p(data-bind="text: z_monographyTitle")
+						br
 						p
-							em c&nbsp;
-							span(data-bind="text: z_stayStart")
+							label.checkbox
+								input(data-bind='checked: monographyParticipant', type='checkbox')
+								| Учавствует в монографии
+						br
+						em(data-bind="visible: monographyParticipant") Название раздела монографии
+						p(data-bind="visible: monographyParticipant")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.monographyTitles, attr: {data: monographyTitle()}, value: monographyTitle")
+					.span4
+						h4 Проживание
+						br
 						p
-							em по&nbsp;
-							span(data-bind="text: z_stayEnd")
+							label.checkbox
+								input(data-bind='checked: stayDemand', type='checkbox')
+								| Есть потребность в проживании
+						br
+						div(data-bind="visible: stayDemand")
+							em c
+							p
+								input.input-block-level(type="text", data-bind="datepicker: stayStart, value: stayStart")
+							em по
+							p
+								input.input-block-level(type="text", data-bind="datepicker: stayEnd, value: stayEnd")
 					.span4
 						h4 Основные данные
 						em Тип участия
-						p(data-bind="text: z_participantType")
+						//- p(data-bind="text: z_participantType")
+						p
+							input.input-block-level(type="text")
 						em Название доклада
-						p(data-bind="text: lectureTitle")
+						//- p(data-bind="text: lectureTitle")
+						p
+							input.input-block-level(type="text", data-bind="value: lectureTitle")
 						em Номер секции
-						p(data-bind="text: sectionNumber")
+						//- p(data-bind="text: sectionNumber")
+						p
+							input.input-block-level(type="text", data-bind="value: sectionNumber")
 						em Прикрипленные файлы
 						p
 							a(data-bind="attr: {href: downloadLink}") Скачать архив
 					.span4
 						h4 Научные данные
-						em Работа
-						p(data-bind="text: fullJob")
+						//- em Работа
+						//- p(data-bind="text: fullJob")
 						em Научная степень
-						p(data-bind="text: academicDegree")
+						//- p(data-bind="text: academicDegree")
+						p
+							//- input.input-block-level(type="text", data-bind="value: academicDegree")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.academicDegrees, attr: {data: academicDegree()}, value: academicDegree")
 						em Ученое звание
-						p(data-bind="text: academicTitle")
+						//- p(data-bind="text: academicTitle")
+						p
+							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.academicTitles, attr: {data: academicTitle()}, value: academicTitle")
+					.span4
+						h4 Работа
+						em Должность
+						p
+							input.input-block-level(type="text", data-bind="value: jobPosition")
+						em Место работы
+						p
+							input.input-block-level(type="text", data-bind="value: jobPlace")
+						em Город
+						p
+							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.cities, attr: {data: city()}, value: city")
+						em Страна
+						p
+							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.countries, attr: {data: country()}, value: country")
 		.container.cpanel-navigation-page#user_page
 			.row
 				.span9
@@ -250,11 +309,17 @@ html
 
 		script(src="../assets/js/libs/lodash.min.js")
 		//- script(src="../assets/js/libs/bootstrap.min.js")
-		//- script(src="../assets/js/libs/bootstrap-datepicker.js")
+		script(src="../assets/js/libs/bootstrap-datepicker.js")
 		script(src="../assets/js/libs/knockout-2.2.1.js")
 		script(src="../assets/js/libs/knockout.mapping.js")
 		script(src="../assets/js/libs/knockout.validation.js")
 		script(src="../assets/js/customBindings/checkboxGroup.js")
+		script(src="../assets/js/libs/select2.js")
+		script(src="../assets/js/customBindings/datePicker.js")
+		script(src="../assets/js/customBindings/select2.js")
+		script(src="../assets/js/configureValidation.js")
+
+		script(src="../assets/js/searchData.js")
 
 		//- script(src="../assets/js/viewModels/UserViewModel.js")
 		//- script(src="../assets/js/viewModels/AdminViewModel.js")

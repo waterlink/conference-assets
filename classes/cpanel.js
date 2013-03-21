@@ -265,7 +265,7 @@
       this.adminViewModel.initialOffset = $("#user_page").offset();
       $("#user_page").addClass("cpanel-navigation-goaway-left");
       return setTimeout(function() {
-        var user_card;
+        var $selects, user_card;
 
         user_card = $(".user-pages .container[user_id=\"" + id + "\"]");
         user_card.css({
@@ -275,6 +275,13 @@
         });
         user_card.removeClass("cpanel-navigation-goaway-right");
         _this.active_page = user_card;
+        $selects = user_card.find("select.for-select2");
+        $selects.each(function() {
+          var $e;
+
+          $e = $(this);
+          return $e.select2("val", $e.attr("data"));
+        });
         return setTimeout(function() {
           return user_card.attr("style", "");
         }, 500);

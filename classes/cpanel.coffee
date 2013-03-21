@@ -159,6 +159,10 @@ class Cpanel
 			user_card.css position: "fixed", left: @adminViewModel.initialOffset.left, top: @adminViewModel.initialOffset.top
 			user_card.removeClass "cpanel-navigation-goaway-right"
 			@active_page = user_card
+			$selects = user_card.find "select.for-select2"
+			$selects.each -> 
+				$e = $ @
+				$e.select2 "val", $e.attr "data"
 			setTimeout ->
 				user_card.attr "style", ""
 			, 500
