@@ -120,6 +120,9 @@ html
 						p(data-bind="text: lectureTitle")
 						em Номер секции
 						p(data-bind="text: sectionNumber")
+						em Прикрипленные файлы
+						p
+							a(data-bind="attr: {href: downloadLink}") Скачать архив
 					.span4
 						h4 Научные данные
 						em Работа

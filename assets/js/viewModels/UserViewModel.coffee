@@ -35,6 +35,8 @@ class window.UserViewModel
         @z_participantType = ko.computed =>
             @participantType or ""
 
+        @downloadLink = ko.computed => "/uploads/download/#{@id}"
+
 
     details: -> cpanel.userDetails @id
 

@@ -42,6 +42,9 @@
       this.z_participantType = ko.computed(function() {
         return _this.participantType || "";
       });
+      this.downloadLink = ko.computed(function() {
+        return "/uploads/download/" + _this.id;
+      });
     }
 
     UserViewModel.prototype.details = function() {
