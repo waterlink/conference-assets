@@ -3,6 +3,12 @@ conference-assets
 
 Conference project. Assets git submodule.
 
+### Help
+
+Для того, чтобы открывать без веб-сервера и нормально работать (используя бекэндом testint окружение на dotcloud):
+
+запусти chrome(ium) с параметром --allow-file-access-from-files
+
 ### TODO
 
 - [ __DONE__ ]  make User model through TDD (jasmine) without backend:
