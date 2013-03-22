@@ -12,4 +12,15 @@
     }
   };
 
+  ko.bindingHandlers.select2Default = {
+    init: function(element, valueAccessor) {
+      return setTimeout(function() {
+        var $element;
+
+        $element = $(element);
+        return $element.select2("val", valueAccessor());
+      }, 50);
+    }
+  };
+
 }).call(this);

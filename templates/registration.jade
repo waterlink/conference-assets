@@ -41,7 +41,7 @@ html
                     input.span7.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Ваш адрес')
                     input.span7.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
                     input.span7.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
-                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Вид участия', query: selectQuery('participantTypes', false) }, value: user.participantType")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия', query: selectQuery('participantTypes', false) }, value: user.participantType")
                     input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Номер секции', query: selectQuery('sectionNumbers', false) }, value: user.sectionNumber")
                     .clearfix

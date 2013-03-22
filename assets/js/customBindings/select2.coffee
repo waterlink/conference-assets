@@ -7,3 +7,10 @@ ko.bindingHandlers.select2 =
 
     update: (element) ->
         $(element).trigger 'change'
+
+ko.bindingHandlers.select2Default =
+	init: (element, valueAccessor) ->
+		setTimeout ->
+			$element = $ element
+			$element.select2 "val", valueAccessor()
+		, 50

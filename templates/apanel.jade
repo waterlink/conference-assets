@@ -148,10 +148,10 @@ html
 								input.input-block-level(type="text", data-bind="datepicker: stayEnd, value: stayEnd")
 					.span4
 						h4 Основные данные
-						em Тип участия
+						em Форма участия
 						//- p(data-bind="text: z_participantType")
 						p
-							input.input-block-level(type="text")
+							input.input-block-level(type="text", data-bind="value: participantType")
 						em Название доклада
 						//- p(data-bind="text: lectureTitle")
 						p
