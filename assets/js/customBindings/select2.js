@@ -17,7 +17,6 @@
       return setTimeout(function() {
         var $element;
 
-        console.log("setting default value: ", valueAccessor());
         $element = $(element);
         return $element.select2("val", valueAccessor());
       }, 50);
