@@ -27,28 +27,30 @@ html
                     input.span7.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
                     input.span7.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
                     input.span7.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
-                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
+                    //- select.span7.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Научная степень', query: selectQuery('academicDegrees') }, value: user.academicDegree")
                     .clearfix
-                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Ученое звание' }, options: searchData.academicTitles, value: user.academicTitle")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Ученое звание', query: selectQuery('academicTitles') }, value: user.academicTitle")
                     .clearfix
                     input.span7.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
                     input.span7.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
-                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Город' }, options: searchData.cities, value: user.city")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Город', query: selectQuery('cities') }, value: user.city")
                     .clearfix
-                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Страна' }, options: searchData.countries, value: user.country")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Страна', query: selectQuery('countries') }, value: user.country")
                     .clearfix
                     input.span7.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Ваш адрес')
                     input.span7.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
                     input.span7.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Вид участия', query: selectQuery('participantTypes', false) }, value: user.participantType")
                     input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
-                    select.span7.input-block-level(data-bind="select2: { placeholder: 'Номер секции' }, options: searchData.sectionNumbers, value: user.sectionNumber")
+                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Номер секции', query: selectQuery('sectionNumbers', false) }, value: user.sectionNumber")
                     .clearfix
                     label.checkbox
                         input(data-bind='checked: user.monographyParticipant', type='checkbox')
                         | Участвуете в монографии?
 
                     div(data-bind="visible: user.monographyParticipant")
-                        select.span7.input-block-level(data-bind="select2: { placeholder: 'Название раздела монографии' }, options: searchData.monographyTitles, value: user.monographyTitle")
+                        input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Название раздела монографии', query: selectQuery('monographyTitles', false) }, value: user.monographyTitle")
                     .clearfix
                     label.checkbox
                         input(data-bind='checked: user.stayDemand', type='checkbox')

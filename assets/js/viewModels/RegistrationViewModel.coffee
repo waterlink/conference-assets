@@ -21,7 +21,7 @@ class window.RegistrationViewModel
             email                 : ko.observable ""
             phone                 : ko.observable ""
             # тут мы еще вообще не понимаем? и кстати, где поле ? =)
-            # participantType       : ko.observable ""
+            participantType       : ko.observable ""
             lectureTitle          : ko.observable ""
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no
@@ -43,6 +43,17 @@ class window.RegistrationViewModel
         # p.error (err) =>
         #     console.log err
         #     alert err
+
+        @anotherWrapper = (what) => "Другое (#{what})"
+
+        @selectQuery = (searchData, anotherAllowed = yes) => (query) =>
+            data = @searchData[searchData].filter (x) -> x.toLowerCase().match query.term.toLowerCase()
+            data.push @anotherWrapper query.term if anotherAllowed
+            query.callback 
+                results: $.map data, (x) ->
+                    obj =
+                        id: x
+                        text: x
 
     doRegister: ->
         @addValidation() unless @hasValidation
@@ -99,5 +110,3 @@ class window.RegistrationViewModel
 
         @user.monographyParticipant.subscribe (value) =>
             ko.validation.validateObservable @user.monographyTitle
-
-

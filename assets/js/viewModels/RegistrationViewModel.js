@@ -6,7 +6,10 @@
 
   window.RegistrationViewModel = (function() {
     function RegistrationViewModel() {
-      this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);      this.start = new Date;
+      this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);
+      var _this = this;
+
+      this.start = new Date;
       this.end = new Date;
       this.start.setDate(this.start.getDate() - 7);
       this.end.setDate(this.end.getDate() + 7);
@@ -23,6 +26,7 @@
         postalAddress: ko.observable(""),
         email: ko.observable(""),
         phone: ko.observable(""),
+        participantType: ko.observable(""),
         lectureTitle: ko.observable(""),
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
@@ -36,6 +40,34 @@
       this.errors = ko.validation.group(this.user);
       this.errorAlert = new Alert("#needFixErrors");
       this.rest = new Restfull("");
+      this.anotherWrapper = function(what) {
+        return "Другое (" + what + ")";
+      };
+      this.selectQuery = function(searchData, anotherAllowed) {
+        if (anotherAllowed == null) {
+          anotherAllowed = true;
+        }
+        return function(query) {
+          var data;
+
+          data = _this.searchData[searchData].filter(function(x) {
+            return x.toLowerCase().match(query.term.toLowerCase());
+          });
+          if (anotherAllowed) {
+            data.push(_this.anotherWrapper(query.term));
+          }
+          return query.callback({
+            results: $.map(data, function(x) {
+              var obj;
+
+              return obj = {
+                id: x,
+                text: x
+              };
+            })
+          });
+        };
+      };
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
