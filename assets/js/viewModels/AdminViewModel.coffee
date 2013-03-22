@@ -38,6 +38,19 @@ class window.AdminViewModel
         @backToUsersLeftIsHidden = ko.observable yes
         @backToUsersRightIsHidden = ko.observable yes
 
+        @activeUser = ko.observable no
+
+        @searchData = global.searchData
+        @anotherWrapper = (what) => "Другое (#{what})"
+        @selectQuery = (searchData, anotherAllowed = yes) => (query) =>
+            data = @searchData[searchData].filter (x) -> x.toLowerCase().match query.term.toLowerCase()
+            data.push @anotherWrapper query.term if anotherAllowed
+            query.callback 
+                results: $.map data, (x) ->
+                    obj =
+                        id: x
+                        text: x
+
 
     doSignOut: ->
         window.location.href = "registration.html"
@@ -163,6 +176,8 @@ class window.AdminViewModel
         , 500
 
         @backToUsersLeftIsHidden yes
+
+    isActive: (id) => @activeUser() is id
 
 module.exports = window.AdminViewModel
 

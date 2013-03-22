@@ -9,6 +9,7 @@
 
   window.AdminViewModel = (function() {
     function AdminViewModel() {
+      this.isActive = __bind(this.isActive, this);
       this.doBackToUsersLeft = __bind(this.doBackToUsersLeft, this);
       this.doBackToUsersRight = __bind(this.doBackToUsersRight, this);
       this.cancelAddOperator = __bind(this.cancelAddOperator, this);
@@ -63,6 +64,36 @@
       this.operatorConfirmPassword = ko.observable("");
       this.backToUsersLeftIsHidden = ko.observable(true);
       this.backToUsersRightIsHidden = ko.observable(true);
+      this.activeUser = ko.observable(false);
+      this.searchData = global.searchData;
+      this.anotherWrapper = function(what) {
+        return "Другое (" + what + ")";
+      };
+      this.selectQuery = function(searchData, anotherAllowed) {
+        if (anotherAllowed == null) {
+          anotherAllowed = true;
+        }
+        return function(query) {
+          var data;
+
+          data = _this.searchData[searchData].filter(function(x) {
+            return x.toLowerCase().match(query.term.toLowerCase());
+          });
+          if (anotherAllowed) {
+            data.push(_this.anotherWrapper(query.term));
+          }
+          return query.callback({
+            results: $.map(data, function(x) {
+              var obj;
+
+              return obj = {
+                id: x,
+                text: x
+              };
+            })
+          });
+        };
+      };
     }
 
     AdminViewModel.prototype.doSignOut = function() {
@@ -233,6 +264,10 @@
         return $("#user_page").attr("style", "");
       }, 500);
       return this.backToUsersLeftIsHidden(true);
+    };
+
+    AdminViewModel.prototype.isActive = function(id) {
+      return this.activeUser() === id;
     };
 
     return AdminViewModel;

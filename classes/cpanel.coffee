@@ -150,6 +150,7 @@ class Cpanel
 		userMarkup
 
 	userDetails: (id) ->
+		@adminViewModel.activeUser id
 		@adminViewModel.backToUsersLeftIsHidden no
 		@adminViewModel.initialOffset = $("#user_page").offset()
 		$("#user_page").addClass "cpanel-navigation-goaway-left"
@@ -159,10 +160,10 @@ class Cpanel
 			user_card.css position: "fixed", left: @adminViewModel.initialOffset.left, top: @adminViewModel.initialOffset.top
 			user_card.removeClass "cpanel-navigation-goaway-right"
 			@active_page = user_card
-			$selects = user_card.find "select.for-select2"
-			$selects.each -> 
-				$e = $ @
-				$e.select2 "val", $e.attr "data"
+			# $selects = user_card.find "select.for-select2"
+			# $selects.each -> 
+			# 	$e = $ @
+			# 	$e.select2 "val", $e.attr "data"
 			setTimeout ->
 				user_card.attr "style", ""
 			, 500

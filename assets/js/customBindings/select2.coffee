@@ -11,6 +11,7 @@ ko.bindingHandlers.select2 =
 ko.bindingHandlers.select2Default =
 	init: (element, valueAccessor) ->
 		setTimeout ->
+			console.log "setting default value: ", valueAccessor()
 			$element = $ element
 			$element.select2 "val", valueAccessor()
 		, 50
