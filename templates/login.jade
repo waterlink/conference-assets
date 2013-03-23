@@ -69,8 +69,8 @@ html
                                     alert data.error
                                 else
                                     if data.whois is login
-                                        hashIndex = global.location.href.indexOf "#"
-                                        redirectTo = if hashIndex < 0 then "apanel.html" else global.location.href.substr hashIndex + 1
-                                        global.location.href = redirectTo
+                                        hash = global.location.hash.replace "#", ""
+                                        redirectTo = hash or "apanel.html"
+                                        global.location = redirectTo
                     else
                         errors.show()

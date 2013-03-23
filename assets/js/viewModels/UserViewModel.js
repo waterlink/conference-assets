@@ -71,6 +71,23 @@
       this.stayPeriod = ko.computed(function() {
         return "" + (_this.stayStart()) + " - " + (_this.stayEnd());
       });
+      this.z_thesisPay = ko.computed(function() {
+        return "" + searchData.thesisCost + searchData.costCurrency;
+      });
+      this.z_organizationPay = ko.computed(function() {
+        if (_this.participantType() === "Очная") {
+          return "" + searchData.organizationCost + searchData.costCurrency;
+        } else {
+          return 0;
+        }
+      });
+      this.z_monographyPay = ko.computed(function() {
+        if (_this.monographyParticipant && _this.monographyPay) {
+          return "" + _this.monographyPay + searchData.costCurrency;
+        } else {
+          return 0;
+        }
+      });
     }
 
     return UserViewModel;

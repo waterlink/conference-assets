@@ -8,6 +8,7 @@
 
   window.PrintViewModel = (function() {
     function PrintViewModel() {
+      this.toExcel = __bind(this.toExcel, this);
       this.redirectToLogin = __bind(this.redirectToLogin, this);
       this.loadData = __bind(this.loadData, this);      this.rest = new Restfull;
       this.auth = new Auth(this.rest);
@@ -16,6 +17,8 @@
         fail: this.redirectToLogin
       });
       this.users = ko.observableArray();
+      this.exported = ko.observable(false);
+      this.exportHref = ko.observable("");
     }
 
     PrintViewModel.prototype.loadData = function() {
@@ -27,7 +30,7 @@
         var sortBy, user, _i, _len, _ref, _results;
 
         sortBy = function(a, b) {
-          return a.id > b.id;
+          return a.id - b.id;
         };
         _ref = users.sort(sortBy);
         _results = [];
@@ -41,6 +44,83 @@
 
     PrintViewModel.prototype.redirectToLogin = function() {
       return global.location = "login.html#print.html";
+    };
+
+    PrintViewModel.prototype.toExcel = function() {
+      var $table, colcount, data, rowcount, table, worksheet, xml, xmldata, xmltable;
+
+      $table = $("#toprint");
+      colcount = $table.find("th").length;
+      rowcount = $table.find("tr").length;
+      table = $table[0];
+      xmldata = $("<p>");
+      xml = $("<ss:Workbook>");
+      xml.attr("xmlns:ss", "urn:schemas-microsoft-com:office:spreadsheet");
+      worksheet = $("<ss:Worksheet ss:Name=\"Sheet1\">");
+      worksheet.appendTo(xml);
+      xmltable = $("<ss:Table>");
+      xmltable.appendTo(worksheet);
+      $table.find("tr").each(function() {
+        var $row, row;
+
+        $row = $(this);
+        row = $("<ss:Row>");
+        $row.find("th").each(function() {
+          var $th, cell, ch, data, i, th, _i, _len;
+
+          $th = $(this);
+          th = $th.text();
+          data = "";
+          i = 0;
+          for (_i = 0, _len = th.length; _i < _len; _i++) {
+            ch = th[_i];
+            ++i;
+            data = data + ch;
+            if (i % 10 === 0) {
+              data = data + "\n";
+            }
+          }
+          cell = $('<ss:Cell>');
+          data = $("<ss:Data ss:Type=\"String\">" + data + "</ss:Data>");
+          data.appendTo(cell);
+          return cell.appendTo(row);
+        });
+        $row.find("td").each(function() {
+          var $th, cell, ch, data, i, th, _i, _len;
+
+          $th = $(this);
+          th = $th.text();
+          data = "";
+          i = 0;
+          for (_i = 0, _len = th.length; _i < _len; _i++) {
+            ch = th[_i];
+            ++i;
+            data = data + ch;
+            if (i % 25 === 0) {
+              data = data + "\n";
+            }
+          }
+          cell = $('<ss:Cell>');
+          data = $("<ss:Data ss:Type=\"String\">" + data + "</ss:Data>");
+          data.appendTo(cell);
+          return cell.appendTo(row);
+        });
+        return row.appendTo(xmltable);
+      });
+      xmldata.append(xml);
+      data = xmldata.html();
+      data = data.replace(/ss:workbook/g, "ss:Workbook");
+      data = data.replace(/ss:worksheet/g, "ss:Worksheet");
+      data = data.replace(/ss:table/g, "ss:Table");
+      data = data.replace(/ss:row/g, "ss:Row");
+      data = data.replace(/ss:cell/g, "ss:Cell");
+      data = data.replace(/ss:data/g, "ss:Data");
+      data = data.replace(/ss:name/g, "ss:Name");
+      data = data.replace(/ss:type/g, "ss:Type");
+      data = encodeURIComponent("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + data);
+      this.exportHref("data:application/vnd.ms-excel;charset=utf-8," + data);
+      this.exported(true);
+      return console.log(this.exportHref());
     };
 
     return PrintViewModel;

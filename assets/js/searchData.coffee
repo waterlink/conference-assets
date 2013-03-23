@@ -95,6 +95,9 @@ window.searchData =
         "Очная": 350
         "Заочная": 120
 
+    organizationCost: 230
+    thesisCost: 120
+
     costByMonographyPage: 25
 
     costCurrency: " грн"

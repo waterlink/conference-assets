@@ -49,16 +49,16 @@
           return console.log(arguments);
         });
         return p.done(function(data) {
-          var hashIndex, redirectTo;
+          var hash, redirectTo;
 
           if (data) {
             if (data.error) {
               return alert(data.error);
             } else {
               if (data.whois === login) {
-                hashIndex = global.location.href.indexOf("#");
-                redirectTo = hashIndex < 0 ? "apanel.html" : global.location.href.substr(hashIndex + 1);
-                return global.location.href = redirectTo;
+                hash = global.location.hash.replace("#", "");
+                redirectTo = hash || "apanel.html";
+                return global.location = redirectTo;
               }
             }
           }

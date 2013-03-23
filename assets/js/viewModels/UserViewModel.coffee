@@ -46,5 +46,14 @@ class window.UserViewModel
 
         @stayPeriod = ko.computed => "#{@stayStart()} - #{@stayEnd()}"
 
+        @z_thesisPay = ko.computed =>
+            "#{searchData.thesisCost}#{searchData.costCurrency}"
+
+        @z_organizationPay = ko.computed =>
+            if @participantType() is "Очная" then "#{searchData.organizationCost}#{searchData.costCurrency}" else 0
+
+        @z_monographyPay = ko.computed =>
+            if @monographyParticipant and @monographyPay then "#{@monographyPay}#{searchData.costCurrency}" else 0
+
 
 module.exports = window.UserViewModel

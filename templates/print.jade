@@ -13,64 +13,94 @@ html
 		link(rel='stylesheet', href='../assets/css/datepicker.css')
 		link(rel='stylesheet', href='../assets/css/select2.css')
 		link(rel='stylesheet', href='../assets/css/custom.css')
+		link(rel='stylesheet', href='../assets/css/print.css')
 		style
 			body { padding-top: 0px }
 
 
 	body
-		table.table.table-striped
+		.btn-group
+			a.btn.btn-primary(href="#", data-bind="click: toExcel") Экспорт в Excel
+			// ko if: exported
+			a.btn(data-bind="attr: {href: exportHref}", download="print.xls") Скачать
+			// /ko
+		table.table.table-striped#toprint
 			thead
 				tr
-					td Номер
-					td ФИО
-					td Научная степень
-					td Ученое звание
-					td Должность
-					td Место работы
-					td Город
-					td Страна
-					td Почтовый адрес
-					td Электронный адрес
-					td Телефон
-					td Форма участия в конференции
-					td Название доклада
-					td Номер секции
-					td Участие в монографии
-					td Название раздела монографии
-					td Потребность в проживании
-					td Оплата тезисов безнал
-					td Оплата тезисов наличные
-					td Сумма к оплате монографии
-					td Оплата монографии безнал
-					td Оплата монографии наличные
-					td Оргвзнос (очное)
-					td Отметка об отправке материалов
+					th Номер
+					th ФИО
+					th Научная степень
+					th Ученое звание
+					th Должность
+					th Место работы
+					th Город
+					th Страна
+					th Почтовый адрес
+					th Электронный адрес
+					th Телефон
+					th Форма участия в конференции
+					th Название доклада
+					th Номер секции
+					th Участие в монографии
+					th Название раздела монографии
+					th Потребность в проживании
+					th Оплата тезисов безнал
+					th Оплата тезисов наличные
+					th Сумма к оплате монографии
+					th Оплата монографии безнал
+					th Оплата монографии наличные
+					th Оргвзнос (очное)
+					th Отметка об отправке материалов
 			tbody(data-bind="foreach: users")
 				tr
-					td(data-bind="text: id")
-					td(data-bind="text: fullName")
-					td(data-bind="text: academicDegree")
-					td(data-bind="text: academicTitle")
-					td(data-bind="text: jobPosition")
-					td(data-bind="text: jobPlace")
-					td(data-bind="text: city")
-					td(data-bind="text: country")
-					td(data-bind="text: postalAddress")
-					td(data-bind="text: email")
-					td(data-bind="text: phone")
-					td(data-bind="text: participantType")
-					td(data-bind="text: lectureTitle")
-					td(data-bind="text: sectionNumber")
-					td(data-bind="text: monographyParticipant")
-					td(data-bind="text: monographyTitle")
-					td(data-bind="text: stayPeriod")
-					td STUB
-					td STUB
-					td STUB
-					td STUB
-					td STUB
-					td STUB
-					td(data-bind="checkbox: sent")
+					td
+						div(data-bind="text: id")
+					td
+						div(data-bind="text: fullName")
+					td
+						div(data-bind="text: academicDegree")
+					td
+						div(data-bind="text: academicTitle")
+					td
+						div(data-bind="text: jobPosition")
+					td
+						div(data-bind="text: jobPlace")
+					td
+						div(data-bind="text: city")
+					td
+						div(data-bind="text: country")
+					td
+						div(data-bind="text: postalAddress")
+					td
+						div(data-bind="text: email")
+					td
+						div(data-bind="text: phone")
+					td
+						div(data-bind="text: participantType")
+					td
+						div(data-bind="text: lectureTitle")
+					td
+						div(data-bind="text: sectionNumber")
+					td
+						div(data-bind="text: monographyParticipant")
+					td
+						div(data-bind="text: monographyTitle")
+					td
+						div(data-bind="text: stayPeriod")
+					td 
+						div(data-bind="text: z_thesisPay")
+					td 
+						div 0
+					td 
+						div(data-bind="text: z_monographyPay")
+					td 
+						div 0
+					td 
+						div(data-bind="text: z_organizationPay")
+					td 
+						div STUB
+					td
+						div(data-bind="checkbox: sent")
 
 		script(src="../assets/js/libs/jquery-1.9.1.min.js")
 		script(src="../classes/require.js")
