@@ -20,7 +20,7 @@
       this.newpassword = ko.observable("");
       this.confirmpassword = ko.observable("");
       this.notami = ko.computed(function() {
-        return _this.login !== cpanel.whois && !_this.resettingPassword();
+        return _this.login !== cpanel.auth.whois && !_this.resettingPassword();
       });
       this.hasSessions = ko.computed(function() {
         return !_this.resettingPassword();

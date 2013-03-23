@@ -24,7 +24,7 @@ class window.AdminViewModel
             return "btn disabled" if @userCount() < global.cpanelPageLimit
             return "btn"
 
-        @isAdmin = ko.computed => "admin" in cpanel.group
+        @isAdmin = ko.computed => "admin" in cpanel.auth.group
 
         @operators = ko.observableArray []
         if @isAdmin()

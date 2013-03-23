@@ -8,7 +8,7 @@ class OperatorViewModel
 		@confirmpassword = ko.observable ""
 
 		@notami = ko.computed =>
-			return @login isnt cpanel.whois and not @resettingPassword()
+			return @login isnt cpanel.auth.whois and not @resettingPassword()
 
 		@hasSessions = ko.computed =>
 			return not @resettingPassword()

@@ -1,4 +1,5 @@
 global.Restfull = require "../classes/restfull"
+global.Auth = require "../classes/auth"
 global.User = require "../classes/user"
 global.AdminViewModel = require "../assets/js/viewModels/AdminViewModel"
 
@@ -20,27 +21,19 @@ global.cpanelPageLimit = 10
 class Cpanel
 	constructor: ->
 		@rest = new Restfull
-		@authenticated
-			ok: => @showOperatorLogin()
-			fail: => @redirectToLogin()
-	ready: ->
+		@auth = new Auth @rest
+		@auth.login
+			ok: @ready
+			fail: @redirectToLogin
+	ready: =>
+		@showOperatorLogin()
 		@adminViewModel = new AdminViewModel
 		ko.applyBindings @adminViewModel
 		@setup()
 		@loadUsers()
-	authenticated: (callbacks) ->
-		p = @rest.get "index"
-		p.error callbacks.fail
-		p.done (data) =>
-			if data and data.whois
-				@whois = data.whois
-				@group = data.group
-				callbacks.ok()
-				$(document).ready () => @ready()
-			else
-				callbacks.fail()
-	redirectToLogin: -> global.location = "login.html"
-	showOperatorLogin: -> $('#operator_login_content').text "@#{@whois}"
+	redirectToLogin: =>
+		global.location = "login.html#apanel.html"
+	showOperatorLogin: => $('#operator_login_content').text "@#{@auth.whois}"
 	logoff: ->
 		p = @rest.delete "index"
 		p.done () => @redirectToLogin()

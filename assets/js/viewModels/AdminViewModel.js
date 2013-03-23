@@ -63,7 +63,7 @@
         return "btn";
       });
       this.isAdmin = ko.computed(function() {
-        return __indexOf.call(cpanel.group, "admin") >= 0;
+        return __indexOf.call(cpanel.auth.group, "admin") >= 0;
       });
       this.operators = ko.observableArray([]);
       if (this.isAdmin()) {

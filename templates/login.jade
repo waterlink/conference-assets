@@ -21,11 +21,11 @@ html
                                 input.input-block-level(name='login',type='text',placeholder='логин оператора')
                             div.control-group
                                 input.input-block-level(name='password',type='password',placeholder='пароль')
-                            a.btn.btn-success.btn-large.input-block-level(href='#', submit='#loginform')
+                            a.btn.btn-success.btn-large.input-block-level(href='javascript:;', submit='#loginform')
                                 | Войти
                     #needFixErrors.alert.alert-error.fade.in.hide
                         button(type="button", class="close") ×
-                        p 
+                        p
                             | Неверный логин или пароль :(
                 div.span4
 
@@ -69,6 +69,8 @@ html
                                     alert data.error
                                 else
                                     if data.whois is login
-                                        global.location = "apanel.html"
+                                        hashIndex = global.location.href.indexOf "#"
+                                        redirectTo = if hashIndex < 0 then "apanel.html" else global.location.href.substr hashIndex + 1
+                                        global.location.href = redirectTo
                     else
                         errors.show()
