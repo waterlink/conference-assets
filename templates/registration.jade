@@ -34,9 +34,9 @@ html
                     .clearfix
                     input.span7.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
                     input.span7.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
-                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Город', query: selectQuery('cities') }, value: user.city")
+                    input.span7.input-block-level#city(type="hidden", data-bind="select2: { placeholder: 'Город', query: selectQuery('cities'), initSelection: defaultInitSelection }, value: user.city")
                     .clearfix
-                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Страна', query: selectQuery('countries') }, value: user.country")
+                    input.span7.input-block-level#country(type="hidden", data-bind="select2: { placeholder: 'Страна', query: selectQuery('countries'), initSelection: defaultInitSelection }, value: user.country")
                     .clearfix
                     input.span7.input-block-level(data-bind='value: user.postalAddress, tooltip: { original_title: "Пример: 83025, ул. Артема, 54, кв. 77", placement: "right", trigger: "focus" }', type='text', placeholder='Ваш адрес')
                     input.span7.input-block-level(data-bind='value: user.email, tooltip: { original_title: "Пример: example@example.com", placement: "right", trigger: "focus" }', type='email', placeholder='Электронный адрес')

@@ -1,4 +1,5 @@
 require "../classes/restfull"
+global.Geoip = require "../classes/geoip"
 
 class window.RegistrationViewModel
     constructor: ->
@@ -55,14 +56,60 @@ class window.RegistrationViewModel
                         id: x
                         text: x
 
+        @detected = ko.observable {}
+        @geoipWrapper = (v) -> 
+            console.log "Определено (#{v})"
+            return "Определено (#{v})"
+        @geoip = new Geoip (detected) =>
+            setTimeout =>
+                # console.log detected
+                detect = @detected()
+                detect.country = @geoipWrapper(detected.country)
+                detect.city = @geoipWrapper(detected.city)
+                @detected detect
+                @user.country @geoipWrapper(detected.country)
+                @user.city @geoipWrapper(detected.city)
+                $city = $ "#city"
+                $city.select2 "val", "detected_city"
+                $country = $ "#country"
+                $country.select2 "val", "detected_country"
+            , 1000
+
+        @defaultInitSelection = (element, callback) =>
+            $element = $ element
+            val = $element.val()
+            if val.match "detected_"
+                detected = val.replace "detected_", ""
+                data =
+                    id: "detected"
+                    text: @detected()[detected]
+            else
+                data =
+                    id: val
+                    text: val
+            callback data
+
+        @detectDiscarded = (key) => ko.computed =>
+            # console.log "detectDiscarded: ", @user[key](), @detected()[key]
+            return true if @user[key]()
+            return true unless @detected()[key]
+            return false
+
     doRegister: ->
-        @addValidation() unless @hasValidation
+        @addValidation() #unless @hasValidation
 
         if @errors().length is 0
-            console.log ko.mapping.toJS @user
+            # console.log ko.mapping.toJS @user
+            # return
             creating = new User
             creating.fromData ko.mapping.toJS @user
             creating.uploadId = @files.uploadId()
+            unless @detectDiscarded("city")()
+                creating.city = @detected().city
+            unless @detectDiscarded("country")()
+                creating.country = @detected().country
+            # console.log creating.getData()
+            # return
             p = creating.create()
             button = $ ".form-signin .btn-primary"
             button.button "loading"
@@ -91,6 +138,7 @@ class window.RegistrationViewModel
         @hasValidation = yes
 
     makeFieldsRequired: ->
+        console.log "validation?"
         for key, value of @user when value.extend?
             isRequired = yes
 
@@ -100,8 +148,12 @@ class window.RegistrationViewModel
             if key is "monographyTitle"
                 isRequired = onlyIf: @user.monographyParticipant
 
+            if key in ["city", "country"]
+                isRequired = onlyIf: @detectDiscarded key
+
             isRequired = no if key in ["monographyParticipant", "stayDemand"]
 
+            # unless @hasValidation
             value?.extend required: isRequired
 
         @user.stayDemand.subscribe (value) =>
@@ -110,3 +162,19 @@ class window.RegistrationViewModel
 
         @user.monographyParticipant.subscribe (value) =>
             ko.validation.validateObservable @user.monographyTitle
+
+        @detected.subscribe (value) =>
+            # ko.validation.validateObservable @city
+            # ko.validation.validateObservable @country
+            @makeFieldsRequired()
+
+        @user.city.subscribe (value) =>
+            # ko.validation.validateObservable @city
+            # ko.validation.validateObservable @country
+            @makeFieldsRequired()
+
+        @user.country.subscribe (value) =>
+            # ko.validation.validateObservable @city
+            # ko.validation.validateObservable @country
+            @makeFieldsRequired()
+

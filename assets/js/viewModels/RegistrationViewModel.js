@@ -4,6 +4,8 @@
 
   require("../classes/restfull");
 
+  global.Geoip = require("../classes/geoip");
+
   window.RegistrationViewModel = (function() {
     function RegistrationViewModel() {
       this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);
@@ -68,19 +70,73 @@
           });
         };
       };
+      this.detected = ko.observable({});
+      this.geoipWrapper = function(v) {
+        console.log("Определено (" + v + ")");
+        return "Определено (" + v + ")";
+      };
+      this.geoip = new Geoip(function(detected) {
+        return setTimeout(function() {
+          var $city, $country, detect;
+
+          detect = _this.detected();
+          detect.country = _this.geoipWrapper(detected.country);
+          detect.city = _this.geoipWrapper(detected.city);
+          _this.detected(detect);
+          _this.user.country(_this.geoipWrapper(detected.country));
+          _this.user.city(_this.geoipWrapper(detected.city));
+          $city = $("#city");
+          $city.select2("val", "detected_city");
+          $country = $("#country");
+          return $country.select2("val", "detected_country");
+        }, 1000);
+      });
+      this.defaultInitSelection = function(element, callback) {
+        var $element, data, detected, val;
+
+        $element = $(element);
+        val = $element.val();
+        if (val.match("detected_")) {
+          detected = val.replace("detected_", "");
+          data = {
+            id: "detected",
+            text: _this.detected()[detected]
+          };
+        } else {
+          data = {
+            id: val,
+            text: val
+          };
+        }
+        return callback(data);
+      };
+      this.detectDiscarded = function(key) {
+        return ko.computed(function() {
+          if (_this.user[key]()) {
+            return true;
+          }
+          if (!_this.detected()[key]) {
+            return true;
+          }
+          return false;
+        });
+      };
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
       var button, creating, p;
 
-      if (!this.hasValidation) {
-        this.addValidation();
-      }
+      this.addValidation();
       if (this.errors().length === 0) {
-        console.log(ko.mapping.toJS(this.user));
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
         creating.uploadId = this.files.uploadId();
+        if (!this.detectDiscarded("city")()) {
+          creating.city = this.detected().city;
+        }
+        if (!this.detectDiscarded("country")()) {
+          creating.country = this.detected().country;
+        }
         p = creating.create();
         button = $(".form-signin .btn-primary");
         button.button("loading");
@@ -115,6 +171,7 @@
       var isRequired, key, value, _ref,
         _this = this;
 
+      console.log("validation?");
       _ref = this.user;
       for (key in _ref) {
         value = _ref[key];
@@ -132,6 +189,11 @@
             onlyIf: this.user.monographyParticipant
           };
         }
+        if (key === "city" || key === "country") {
+          isRequired = {
+            onlyIf: this.detectDiscarded(key)
+          };
+        }
         if (key === "monographyParticipant" || key === "stayDemand") {
           isRequired = false;
         }
@@ -145,8 +207,17 @@
         ko.validation.validateObservable(_this.user.stayStart);
         return ko.validation.validateObservable(_this.user.stayEnd);
       });
-      return this.user.monographyParticipant.subscribe(function(value) {
+      this.user.monographyParticipant.subscribe(function(value) {
         return ko.validation.validateObservable(_this.user.monographyTitle);
+      });
+      this.detected.subscribe(function(value) {
+        return _this.makeFieldsRequired();
+      });
+      this.user.city.subscribe(function(value) {
+        return _this.makeFieldsRequired();
+      });
+      return this.user.country.subscribe(function(value) {
+        return _this.makeFieldsRequired();
       });
     };
 
