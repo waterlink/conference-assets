@@ -100,7 +100,6 @@
         if (defaultValue == null) {
           defaultValue = false;
         }
-        console.log(searchData, defaultValue);
         data = _this.searchData[searchData];
         if (defaultValue) {
           if (__indexOf.call(data, defaultValue) < 0) {
