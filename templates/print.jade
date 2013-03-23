@@ -82,7 +82,7 @@ html
 					td
 						div(data-bind="text: sectionNumber")
 					td
-						div(data-bind="text: monographyParticipant")
+						div(data-bind="checkbox: function(){ return monographyParticipant === '1'; }")
 					td
 						div(data-bind="text: monographyTitle")
 					td
@@ -90,17 +90,17 @@ html
 					td 
 						div(data-bind="text: z_thesisPay")
 					td 
-						div 0
+						div -
 					td 
 						div(data-bind="text: z_monographyPay")
 					td 
-						div 0
+						div(data-bind="text: z_monographyPay")
+					td 
+						div -
 					td 
 						div(data-bind="text: z_organizationPay")
-					td 
-						div STUB
 					td
-						div(data-bind="checkbox: sent")
+						div(data-bind="checkbox: function(){ return true; }")
 
 		script(src="../assets/js/libs/jquery-1.9.1.min.js")
 		script(src="../classes/require.js")

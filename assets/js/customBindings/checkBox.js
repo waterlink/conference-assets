@@ -7,7 +7,7 @@
 
     value = valueAccessor();
     checkbox = "<i class='icon-ok'></i>";
-    return $(element).html(value() ? checkbox : "");
+    return $(element).html(value() ? checkbox : "-");
   };
 
   ko.bindingHandlers.checkbox = {
