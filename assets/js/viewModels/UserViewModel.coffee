@@ -44,16 +44,17 @@ class window.UserViewModel
             write: (v) => @_stayDemand v
 
         if @stayStart
-            @_stayStart = new Date
-            @_stayStart.setMonth @stayStart.split("/")[0] - 1
-            @_stayStart.setDate @stayStart.split("/")[1]
-            @_stayStart.setFullYear @stayStart.split("/")[2]
+            # console.log "stayStart: ", @stayStart.split("/"), new Date @stayStart
+            @_stayStart = new Date @stayStart
+            # @_stayStart.setMonth @stayStart.split("/")[0] - 1
+            # @_stayStart.setDate @stayStart.split("/")[1]
+            # @_stayStart.setFullYear @stayStart.split("/")[2]
 
         if @stayEnd
-            @_stayEnd = new Date
-            @_stayEnd.setMonth @stayEnd.split("/")[0] - 1
-            @_stayEnd.setDate @stayEnd.split("/")[1]
-            @_stayEnd.setFullYear @stayEnd.split("/")[2]
+            @_stayEnd = new Date @stayEnd
+            # @_stayEnd.setMonth @stayEnd.split("/")[0] - 1
+            # @_stayEnd.setDate @stayEnd.split("/")[1]
+            # @_stayEnd.setFullYear @stayEnd.split("/")[2]
 
         @_stayStart = ko.observable @_stayStart or ""
         @_stayEnd = ko.observable @_stayEnd or ""

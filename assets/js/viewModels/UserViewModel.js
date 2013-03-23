@@ -59,16 +59,10 @@
         }
       });
       if (this.stayStart) {
-        this._stayStart = new Date;
-        this._stayStart.setMonth(this.stayStart.split("/")[0] - 1);
-        this._stayStart.setDate(this.stayStart.split("/")[1]);
-        this._stayStart.setFullYear(this.stayStart.split("/")[2]);
+        this._stayStart = new Date(this.stayStart);
       }
       if (this.stayEnd) {
-        this._stayEnd = new Date;
-        this._stayEnd.setMonth(this.stayEnd.split("/")[0] - 1);
-        this._stayEnd.setDate(this.stayEnd.split("/")[1]);
-        this._stayEnd.setFullYear(this.stayEnd.split("/")[2]);
+        this._stayEnd = new Date(this.stayEnd);
       }
       this._stayStart = ko.observable(this._stayStart || "");
       this._stayEnd = ko.observable(this._stayEnd || "");
