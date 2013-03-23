@@ -4,6 +4,8 @@
 
   require("../classes/restfull");
 
+  global.Geoip = require("../classes/geoip");
+
   window.RegistrationViewModel = (function() {
     function RegistrationViewModel() {
       this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);
@@ -13,6 +15,12 @@
       this.end = new Date;
       this.start.setDate(this.start.getDate() - 7);
       this.end.setDate(this.end.getDate() + 7);
+      this.thesisPay = function() {
+        return _this.mainCost();
+      };
+      this.monographyPay = function() {
+        return _this.totalCost() - _this.mainCost();
+      };
       this.user = {
         name: ko.observable(""),
         surname: ko.observable(""),
@@ -31,9 +39,12 @@
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
+        monographyPages: ko.observable(1),
         stayDemand: ko.observable(false),
         stayStart: ko.observable(new Date(this.start)),
-        stayEnd: ko.observable(new Date(this.end))
+        stayEnd: ko.observable(new Date(this.end)),
+        thesisPay: ko.observable(0),
+        monographyPay: ko.observable(0)
       };
       this.files = new FilesViewModel;
       this.searchData = window.searchData;
@@ -68,19 +79,94 @@
           });
         };
       };
+      this.detected = ko.observable({});
+      this.geoipWrapper = function(v) {
+        console.log("Определено (" + v + ")");
+        return "Определено (" + v + ")";
+      };
+      this.geoip = new Geoip(function(detected) {
+        return setTimeout(function() {
+          var $city, $country, detect;
+
+          detect = _this.detected();
+          detect.country = _this.geoipWrapper(detected.country);
+          detect.city = _this.geoipWrapper(detected.city);
+          _this.detected(detect);
+          _this.user.country(_this.geoipWrapper(detected.country));
+          _this.user.city(_this.geoipWrapper(detected.city));
+          $city = $("#city");
+          $city.select2("val", "detected_city");
+          $country = $("#country");
+          return $country.select2("val", "detected_country");
+        }, 1000);
+      });
+      this.defaultInitSelection = function(element, callback) {
+        var $element, data, detected, val;
+
+        $element = $(element);
+        val = $element.val();
+        if (val.match("detected_")) {
+          detected = val.replace("detected_", "");
+          data = {
+            id: "detected",
+            text: _this.detected()[detected]
+          };
+        } else {
+          data = {
+            id: val,
+            text: val
+          };
+        }
+        return callback(data);
+      };
+      this.detectDiscarded = function(key) {
+        return ko.computed(function() {
+          if (_this.user[key]()) {
+            return true;
+          }
+          if (!_this.detected()[key]) {
+            return true;
+          }
+          return false;
+        });
+      };
+      this.z_participantType = ko.computed(function() {
+        if (!_this.user.participantType()) {
+          return "Очная";
+        }
+        return _this.user.participantType();
+      });
+      this.mainCost = ko.computed(function() {
+        return _this.searchData.costByParticipantType[_this.z_participantType()];
+      });
+      this.totalCost = ko.computed(function() {
+        var cost;
+
+        cost = _this.mainCost();
+        if (_this.user.monographyParticipant) {
+          return cost += _this.searchData.costByMonographyPage * _this.user.monographyPages();
+        }
+      });
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
       var button, creating, p;
 
-      if (!this.hasValidation) {
-        this.addValidation();
-      }
+      this.addValidation();
       if (this.errors().length === 0) {
-        console.log(ko.mapping.toJS(this.user));
+        this.user.thesisPay(this.thesisPay());
+        this.user.monographyPay(this.monographyPay());
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
         creating.uploadId = this.files.uploadId();
+        if (!this.detectDiscarded("city")()) {
+          creating.city = this.detected().city;
+        }
+        if (!this.detectDiscarded("country")()) {
+          creating.country = this.detected().country;
+        }
+        creating.participantType = this.z_participantType();
+        console.log(creating.getData());
         p = creating.create();
         button = $(".form-signin .btn-primary");
         button.button("loading");
@@ -115,6 +201,7 @@
       var isRequired, key, value, _ref,
         _this = this;
 
+      console.log("validation?");
       _ref = this.user;
       for (key in _ref) {
         value = _ref[key];
@@ -127,9 +214,14 @@
             onlyIf: this.user.stayDemand
           };
         }
-        if (key === "monographyTitle") {
+        if (key === "monographyTitle" || key === "monographyPages") {
           isRequired = {
             onlyIf: this.user.monographyParticipant
+          };
+        }
+        if (key === "city" || key === "country") {
+          isRequired = {
+            onlyIf: this.detectDiscarded(key)
           };
         }
         if (key === "monographyParticipant" || key === "stayDemand") {
@@ -145,8 +237,18 @@
         ko.validation.validateObservable(_this.user.stayStart);
         return ko.validation.validateObservable(_this.user.stayEnd);
       });
-      return this.user.monographyParticipant.subscribe(function(value) {
-        return ko.validation.validateObservable(_this.user.monographyTitle);
+      this.user.monographyParticipant.subscribe(function(value) {
+        ko.validation.validateObservable(_this.user.monographyTitle);
+        return ko.validation.validateObservable(_this.user.monographyPages);
+      });
+      this.detected.subscribe(function(value) {
+        return _this.makeFieldsRequired();
+      });
+      this.user.city.subscribe(function(value) {
+        return _this.makeFieldsRequired();
+      });
+      return this.user.country.subscribe(function(value) {
+        return _this.makeFieldsRequired();
       });
     };
 

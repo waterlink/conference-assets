@@ -222,7 +222,7 @@ html
 									p
 										strong
 											| ФИО
-							.span3
+							.span2
 								div
 									p
 										b
@@ -232,7 +232,7 @@ html
 									p
 										b
 											| Телефон
-							.span1
+							.span2
 								div
 									p
 										strong
@@ -253,19 +253,30 @@ html
 									span.faded-text
 									p.user-fio(data-bind="text: fullName")
 										//- | Федоров Алексей Константинович
-							.span3.user-table-too-long
+							.span2.user-table-too-long
 								div
 									span.faded-text
 									a.user-email(href='#', data-bind="text: email, attr: {href: mailto}")
 										//- | waterlink000+scientificConference@gmail.com
-							.span2
+							.span2.user-table-too-long
 								div
+									span.faded-text
 									p.user-phone(data-bind="text: phone")
 										//- | (099) 303 95 36
-							.span1
+							.span2.user-table-too-long
 								div
+									span.faded-text
 									p.user-status(data-bind="text: locStatus")
 										//- | Новый
+									//- p.user-to-pay(data-bind="visible: isNew")
+									//- 	span Тезисы:
+									//- 	br
+									//- 	strong(data-bind="text: thesisPay")
+									//- 	span(data-bind="text: $parent.searchData.costCurrency")
+									//- 	span Монография:
+									//- 	br
+									//- 	strong(data-bind="text: monographyPay")
+									//- 	span(data-bind="text: $parent.searchData.costCurrency")
 							.span2
 								.btn-group.user-actions.input-block-level
 									a.btn.input-block-level.dropdown-toggle(data-toggle='dropdown', href='#', data-loading-text="Подождите...", data-error-text="Ошибка!")

@@ -90,3 +90,11 @@ window.searchData =
         "Очная"
         "Заочная"
     ]
+
+    costByParticipantType:
+        "Очная": 350
+        "Заочная": 120
+
+    costByMonographyPage: 25
+
+    costCurrency: " грн"

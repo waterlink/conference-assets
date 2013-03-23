@@ -56,7 +56,10 @@
         this.stayStart = data.stayStart;
         this.stayEnd = data.stayEnd;
       }
-      return this.uploadId = data.uploadId;
+      this.uploadId = data.uploadId;
+      this.monographyPages = data.monographyPages;
+      this.thesisPay = data.thesisPay;
+      return this.monographyPay = data.monographyPay;
     };
 
     User.prototype.getData = function() {
@@ -82,7 +85,10 @@
         sectionNumber: this.sectionNumber,
         monographyParticipant: this.monographyParticipant,
         stayDemand: this.stayDemand,
-        uploadId: this.uploadId
+        uploadId: this.uploadId,
+        monographyPages: this.monographyPages,
+        thesisPay: this.thesisPay,
+        monographyPay: this.monographyPay
       };
       if (this.monographyParticipant) {
         res["monographyTitle"] = this.monographyTitle;

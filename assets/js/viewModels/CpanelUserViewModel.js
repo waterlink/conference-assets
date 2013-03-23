@@ -35,7 +35,13 @@
         }
       });
       this.locStatus = ko.computed(function() {
-        return statuses[_this.status()];
+        var res;
+
+        res = "" + statuses[_this.status()];
+        if (_this.status() === "new") {
+          res += " (к оплате: " + _this.thesisPay + " + " + _this.monographyPay + " " + searchData.costCurrency + ")";
+        }
+        return res;
       });
       this.mailto = ko.computed(function() {
         return "mailto:" + _this.email;
@@ -69,6 +75,9 @@
       });
       this.downloadLink = ko.computed(function() {
         return "/uploads/download/" + _this.id;
+      });
+      this.isNew = ko.computed(function() {
+        return _this.status() === "new";
       });
     }
 

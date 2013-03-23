@@ -46,6 +46,9 @@ class User
 			@stayStart = data.stayStart
 			@stayEnd = data.stayEnd
 		@uploadId = data.uploadId
+		@monographyPages = data.monographyPages
+		@thesisPay = data.thesisPay
+		@monographyPay = data.monographyPay
 
 	getData: ->
 		res =
@@ -69,6 +72,9 @@ class User
 			monographyParticipant: @monographyParticipant
 			stayDemand: @stayDemand
 			uploadId: @uploadId
+			monographyPages: @monographyPages
+			thesisPay: @thesisPay
+			monographyPay: @monographyPay
 		if @monographyParticipant
 			res["monographyTitle"] = @monographyTitle
 		if @stayDemand

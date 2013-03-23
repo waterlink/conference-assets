@@ -17,7 +17,11 @@ class window.CpanelUserViewModel extends window.UserViewModel
             read: => @_stayDemand() and @_stayDemand() isnt "0"
             write: (v) => @_stayDemand v
 
-        @locStatus = ko.computed => statuses[@status()]
+        @locStatus = ko.computed => 
+            res = "#{statuses[@status()]}"
+            if @status() is "new"
+                res += " (к оплате: #{@thesisPay} + #{@monographyPay} #{searchData.costCurrency})"
+            res
 
         @mailto = ko.computed => "mailto:#{@email}"
 
@@ -47,6 +51,7 @@ class window.CpanelUserViewModel extends window.UserViewModel
 
         @downloadLink = ko.computed => "/uploads/download/#{@id}"
 
+        @isNew = ko.computed => @status() is "new"
 
     details: -> cpanel.userDetails @id
 
