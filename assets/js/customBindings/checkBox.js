@@ -6,7 +6,7 @@
     var checkbox, value;
 
     value = valueAccessor();
-    checkbox = "<i class='icon-ok'></i>";
+    checkbox = "<i class='icon-ok'></i><span class='hide'>+</span>";
     return $(element).html(value() ? checkbox : "-");
   };
 
