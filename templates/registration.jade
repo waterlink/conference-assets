@@ -24,9 +24,9 @@ html
             .row
                 form.form-signin.span12
                     h2.form-signin-heading Регистрация
-                    input.span7.input-block-level(data-bind='value: user.name', type='text', placeholder='Имя')
-                    input.span7.input-block-level(data-bind='value: user.surname', type='text', placeholder='Фамилия')
-                    input.span7.input-block-level(data-bind='value: user.patronymic', type='text', placeholder='Отчество')
+                    input.span7.input-block-level(data-bind='value: user.name, tooltip: { original_title: "Пример: Иван", placement: "right", trigger: "focus" }', type='text', placeholder='Имя')
+                    input.span7.input-block-level(data-bind='value: user.surname, tooltip: { original_title: "Пример: Иванов", placement: "right", trigger: "focus" }', type='text', placeholder='Фамилия')
+                    input.span7.input-block-level(data-bind='value: user.patronymic, tooltip: { original_title: "Пример: Иванович", placement: "right", trigger: "focus" }', type='text', placeholder='Отчество')
                     //- select.span7.input-block-level(data-bind="select2: { placeholder: 'Научная степень' }, options: searchData.academicDegrees, value: user.academicDegree")
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Научная степень', query: selectQuery('academicDegrees') }, value: user.academicDegree")
                     .clearfix
@@ -38,9 +38,9 @@ html
                     .clearfix
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Страна', query: selectQuery('countries') }, value: user.country")
                     .clearfix
-                    input.span7.input-block-level(data-bind='value: user.postalAddress', type='text', placeholder='Ваш адрес')
-                    input.span7.input-block-level(data-bind='value: user.email', type='email', placeholder='Электронный адрес')
-                    input.span7.input-block-level(data-bind='value: user.phone', type='text', placeholder='Телефон')
+                    input.span7.input-block-level(data-bind='value: user.postalAddress, tooltip: { original_title: "Пример: 83025, ул. Артема, 54, кв. 77", placement: "right", trigger: "focus" }', type='text', placeholder='Ваш адрес')
+                    input.span7.input-block-level(data-bind='value: user.email, tooltip: { original_title: "Пример: example@example.com", placement: "right", trigger: "focus" }', type='email', placeholder='Электронный адрес')
+                    input.span7.input-block-level(data-bind='value: user.phone, tooltip: { original_title: "Пример: +38 (050) 123-45-67", placement: "right", trigger: "focus" }', type='text', placeholder='Телефон')
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия', query: selectQuery('participantTypes', false) }, value: user.participantType")
                     input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Номер секции', query: selectQuery('sectionNumbers', false) }, value: user.sectionNumber")
@@ -131,6 +131,7 @@ html
 
         :coffeescript
             global.application = require "../main"
+            require "../assets/js/customBindings/tooltip"
             application.run()
 
         :coffeescript
