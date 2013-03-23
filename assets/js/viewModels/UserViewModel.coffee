@@ -74,7 +74,11 @@ class window.UserViewModel
             write: (v) => 
                 @_stayEnd v
 
-        @locStatus = ko.computed => statuses[@status()]
+        @locStatus = ko.computed => 
+            res = "#{statuses[@status()]}"
+            if @status() is "new"
+                res += " (к оплате: #{@thesisPay} + #{@monographyPay} #{searchData.costCurrency})"
+            res
 
         @mailto = ko.computed => "mailto:#{@email}"
 
@@ -104,6 +108,7 @@ class window.UserViewModel
 
         @downloadLink = ko.computed => "/uploads/download/#{@id}"
 
+        @isNew = ko.computed => @status() is "new"
 
     details: -> cpanel.userDetails @id
 

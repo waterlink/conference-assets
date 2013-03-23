@@ -8,6 +8,9 @@ class window.RegistrationViewModel
         @start.setDate @start.getDate() - 7
         @end.setDate   @end.getDate()   + 7
 
+        @thesisPay = => return @mainCost()
+        @monographyPay = => return @totalCost() - @mainCost()
+
         @user =
             name                  : ko.observable ""
             surname               : ko.observable ""
@@ -27,9 +30,12 @@ class window.RegistrationViewModel
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no
             monographyTitle       : ko.observable ""
+            monographyPages       : ko.observable 1
             stayDemand            : ko.observable no
             stayStart             : ko.observable new Date @start
             stayEnd               : ko.observable new Date @end
+            thesisPay             : ko.observable 0
+            monographyPay         : ko.observable 0
 
         @files = new FilesViewModel
         # @files = ko.observable false
@@ -95,12 +101,27 @@ class window.RegistrationViewModel
             return true unless @detected()[key]
             return false
 
+        @z_participantType = ko.computed =>
+            unless @user.participantType()
+                return "Очная"
+            return @user.participantType()
+
+        @mainCost = ko.computed =>
+            return @searchData.costByParticipantType[@z_participantType()]
+
+        @totalCost = ko.computed =>
+            cost = @mainCost()
+            if @user.monographyParticipant
+                cost += @searchData.costByMonographyPage * @user.monographyPages()
+
     doRegister: ->
         @addValidation() #unless @hasValidation
 
         if @errors().length is 0
             # console.log ko.mapping.toJS @user
             # return
+            @user.thesisPay @thesisPay()
+            @user.monographyPay @monographyPay()
             creating = new User
             creating.fromData ko.mapping.toJS @user
             creating.uploadId = @files.uploadId()
@@ -108,7 +129,8 @@ class window.RegistrationViewModel
                 creating.city = @detected().city
             unless @detectDiscarded("country")()
                 creating.country = @detected().country
-            # console.log creating.getData()
+            creating.participantType = @z_participantType()
+            console.log creating.getData()
             # return
             p = creating.create()
             button = $ ".form-signin .btn-primary"
@@ -145,7 +167,7 @@ class window.RegistrationViewModel
             if key in ["stayStart", "stayEnd"]
                 isRequired = onlyIf: @user.stayDemand
 
-            if key is "monographyTitle"
+            if key in ["monographyTitle", "monographyPages"]
                 isRequired = onlyIf: @user.monographyParticipant
 
             if key in ["city", "country"]
@@ -162,6 +184,7 @@ class window.RegistrationViewModel
 
         @user.monographyParticipant.subscribe (value) =>
             ko.validation.validateObservable @user.monographyTitle
+            ko.validation.validateObservable @user.monographyPages
 
         @detected.subscribe (value) =>
             # ko.validation.validateObservable @city

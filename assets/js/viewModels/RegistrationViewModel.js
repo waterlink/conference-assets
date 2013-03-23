@@ -15,6 +15,12 @@
       this.end = new Date;
       this.start.setDate(this.start.getDate() - 7);
       this.end.setDate(this.end.getDate() + 7);
+      this.thesisPay = function() {
+        return _this.mainCost();
+      };
+      this.monographyPay = function() {
+        return _this.totalCost() - _this.mainCost();
+      };
       this.user = {
         name: ko.observable(""),
         surname: ko.observable(""),
@@ -33,9 +39,12 @@
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
+        monographyPages: ko.observable(1),
         stayDemand: ko.observable(false),
         stayStart: ko.observable(new Date(this.start)),
-        stayEnd: ko.observable(new Date(this.end))
+        stayEnd: ko.observable(new Date(this.end)),
+        thesisPay: ko.observable(0),
+        monographyPay: ko.observable(0)
       };
       this.files = new FilesViewModel;
       this.searchData = window.searchData;
@@ -121,6 +130,23 @@
           return false;
         });
       };
+      this.z_participantType = ko.computed(function() {
+        if (!_this.user.participantType()) {
+          return "Очная";
+        }
+        return _this.user.participantType();
+      });
+      this.mainCost = ko.computed(function() {
+        return _this.searchData.costByParticipantType[_this.z_participantType()];
+      });
+      this.totalCost = ko.computed(function() {
+        var cost;
+
+        cost = _this.mainCost();
+        if (_this.user.monographyParticipant) {
+          return cost += _this.searchData.costByMonographyPage * _this.user.monographyPages();
+        }
+      });
     }
 
     RegistrationViewModel.prototype.doRegister = function() {
@@ -128,6 +154,8 @@
 
       this.addValidation();
       if (this.errors().length === 0) {
+        this.user.thesisPay(this.thesisPay());
+        this.user.monographyPay(this.monographyPay());
         creating = new User;
         creating.fromData(ko.mapping.toJS(this.user));
         creating.uploadId = this.files.uploadId();
@@ -137,6 +165,8 @@
         if (!this.detectDiscarded("country")()) {
           creating.country = this.detected().country;
         }
+        creating.participantType = this.z_participantType();
+        console.log(creating.getData());
         p = creating.create();
         button = $(".form-signin .btn-primary");
         button.button("loading");
@@ -184,7 +214,7 @@
             onlyIf: this.user.stayDemand
           };
         }
-        if (key === "monographyTitle") {
+        if (key === "monographyTitle" || key === "monographyPages") {
           isRequired = {
             onlyIf: this.user.monographyParticipant
           };
@@ -208,7 +238,8 @@
         return ko.validation.validateObservable(_this.user.stayEnd);
       });
       this.user.monographyParticipant.subscribe(function(value) {
-        return ko.validation.validateObservable(_this.user.monographyTitle);
+        ko.validation.validateObservable(_this.user.monographyTitle);
+        return ko.validation.validateObservable(_this.user.monographyPages);
       });
       this.detected.subscribe(function(value) {
         return _this.makeFieldsRequired();

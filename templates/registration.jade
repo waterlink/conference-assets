@@ -41,7 +41,7 @@ html
                     input.span7.input-block-level(data-bind='value: user.postalAddress, tooltip: { original_title: "Пример: 83025, ул. Артема, 54, кв. 77", placement: "right", trigger: "focus" }', type='text', placeholder='Ваш адрес')
                     input.span7.input-block-level(data-bind='value: user.email, tooltip: { original_title: "Пример: example@example.com", placement: "right", trigger: "focus" }', type='email', placeholder='Электронный адрес')
                     input.span7.input-block-level(data-bind='value: user.phone, tooltip: { original_title: "Пример: +38 (050) 123-45-67", placement: "right", trigger: "focus" }', type='text', placeholder='Телефон')
-                    input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия', query: selectQuery('participantTypes', false) }, value: user.participantType")
+                    select.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия' }, options: searchData.participantTypes, value: user.participantType, select2Default: 'Очная'")
                     input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Номер секции', query: selectQuery('sectionNumbers', false) }, value: user.sectionNumber")
                     .clearfix
@@ -78,7 +78,26 @@ html
 
                     button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
 
-
+        .to-pay
+            h4 К оплате:
+            span(data-bind="text: z_participantType")
+            span :&nbsp;
+            strong(data-bind="text: mainCost")
+            span(data-bind="text: searchData.costCurrency")
+            div(data-bind="visible: user.monographyParticipant")
+                br
+                span Монография:
+                br
+                input.input-mir(type="number", min=1, step=1, data-bind="value: user.monographyPages")
+                span &nbsp;стр. м-фии
+                strong &nbsp;x
+                strong(data-bind="text: searchData.costByMonographyPage")
+                span(data-bind="text: searchData.costCurrency")
+                br
+                br
+                span Всего:&nbsp;
+                strong(data-bind="text: totalCost")
+                span(data-bind="text: searchData.costCurrency")
 
         script(id="filesTable", type="text/html")
             {{each $data}}
