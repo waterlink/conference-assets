@@ -132,7 +132,7 @@ html
 						br
 						em(data-bind="visible: monographyParticipant") Название раздела монографии
 						p(data-bind="visible: monographyParticipant")
-							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.monographyTitles, attr: {data: monographyTitle()}, value: monographyTitle, select2Default: monographyTitle()")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('monographyTitles', monographyTitle()), attr: {data: monographyTitle()}, value: monographyTitle, select2Default: monographyTitle()")
 					.span4
 						h4 Проживание
 						br
@@ -153,7 +153,8 @@ html
 						em Форма участия
 						//- p(data-bind="text: z_participantType")
 						p
-							input.input-block-level(type="text", data-bind="value: participantType")
+							//- input.input-block-level(type="text", data-bind="value: participantType")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('participantTypes', participantType()), attr: {data: participantType()}, value: participantType, select2Default: participantType()")
 						em Название доклада
 						//- p(data-bind="text: lectureTitle")
 						p
@@ -161,7 +162,8 @@ html
 						em Номер секции
 						//- p(data-bind="text: sectionNumber")
 						p
-							input.input-block-level(type="text", data-bind="value: sectionNumber")
+							//- input.input-block-level(type="text", data-bind="value: sectionNumber")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('sectionNumbers', sectionNumber()), attr: {data: sectionNumber()}, value: sectionNumber, select2Default: sectionNumber()")
 						em Прикрипленные файлы
 						p
 							a(data-bind="attr: {href: downloadLink}") Скачать архив
@@ -173,11 +175,11 @@ html
 						//- p(data-bind="text: academicDegree")
 						p
 							//- input.input-block-level(type="text", data-bind="value: academicDegree")
-							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.academicDegrees, attr: {data: academicDegree()}, value: academicDegree, select2Default: academicDegree()")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('academicDegrees', academicDegree()), attr: {data: academicDegree()}, value: academicDegree, select2Default: academicDegree()")
 						em Ученое звание
 						//- p(data-bind="text: academicTitle")
 						p
-							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.academicTitles, attr: {data: academicTitle()}, value: academicTitle, select2Default: academicTitle()")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('academicTitles', academicTitle()), attr: {data: academicTitle()}, value: academicTitle, select2Default: academicTitle()")
 					.span4
 						h4 Работа
 						em Должность
@@ -188,10 +190,10 @@ html
 							input.input-block-level(type="text", data-bind="value: jobPlace")
 						em Город
 						p
-							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.cities, attr: {data: city()}, value: city, select2Default: city()")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('cities', city()), attr: {data: city()}, value: city, select2Default: city()")
 						em Страна
 						p
-							select.input-block-level.for-select2(data-bind="select2: {}, options: searchData.countries, attr: {data: country()}, value: country, select2Default: country()")
+							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('countries', country()), attr: {data: country()}, value: country, select2Default: country()")
 			// /ko
 		// /ko
 		.container.cpanel-navigation-page#user_page

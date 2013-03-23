@@ -50,6 +50,13 @@ class window.AdminViewModel
                     obj =
                         id: x
                         text: x
+        @selectOptions = (searchData, defaultValue = no) =>
+            console.log searchData, defaultValue
+            data = @searchData[searchData]
+            if defaultValue
+                unless defaultValue in data
+                    data.push defaultValue
+            data
 
 
     doSignOut: ->

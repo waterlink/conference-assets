@@ -94,6 +94,21 @@
           });
         };
       };
+      this.selectOptions = function(searchData, defaultValue) {
+        var data;
+
+        if (defaultValue == null) {
+          defaultValue = false;
+        }
+        console.log(searchData, defaultValue);
+        data = _this.searchData[searchData];
+        if (defaultValue) {
+          if (__indexOf.call(data, defaultValue) < 0) {
+            data.push(defaultValue);
+          }
+        }
+        return data;
+      };
     }
 
     AdminViewModel.prototype.doSignOut = function() {
