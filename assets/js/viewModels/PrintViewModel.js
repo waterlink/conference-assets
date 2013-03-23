@@ -22,17 +22,19 @@
     }
 
     PrintViewModel.prototype.loadData = function() {
-      var p,
+      var data, p, status,
         _this = this;
 
-      p = this.rest.get("user");
+      status = global.location.hash.replace("#", "");
+      data = {};
+      if (status) {
+        data["status"] = status;
+      }
+      p = this.rest.get("user", data);
       return p.done(function(users) {
-        var sortBy, user, _i, _len, _ref, _results;
+        var user, _i, _len, _ref, _results;
 
-        sortBy = function(a, b) {
-          return a.id - b.id;
-        };
-        _ref = users.sort(sortBy);
+        _ref = users.reverse();
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           user = _ref[_i];

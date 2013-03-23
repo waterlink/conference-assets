@@ -20,6 +20,10 @@ html
 
 	body
 		.btn-group
+			a.btn(href="apanel.html") 
+				i.icon-arrow-left
+				| &nbsp;
+				| Назад
 			a.btn.btn-primary(href="#", data-bind="click: toExcel") Экспорт в Excel
 			// ko if: exported
 			a.btn(data-bind="attr: {href: exportHref}", download="print.xls") Скачать

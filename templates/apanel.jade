@@ -16,8 +16,10 @@ html
 		link(rel='stylesheet', href='../assets/css/select2.css')
 		link(rel='stylesheet', href='../assets/css/custom.css')
 		script(src="../assets/js/libs/jquery-1.9.1.min.js")
-		script(src="../classes/require.js")
+		script(src="../assets/js/libs/lodash.min.js")
 		script(src="../assets/js/libs/knockout-2.2.1.js")
+		script(src="../assets/js/searchData.js")
+		script(src="../classes/require.js")
 
 		:coffeescript
 			global.Cpanel = require "../classes/cpanel"
@@ -33,6 +35,14 @@ html
 						li#operators_li
 							a(href='#', data-bind="click: goOperatorPage")
 								| Операторы
+						li#print_li.dropdown
+							a.dropdown-toggle(href="#", data-toggle='dropdown')
+								span Печать
+								b.caret
+							ul.dropdown-menu
+								li
+									a(href="print.html") Все
+									a(href="print.html#paid") Оплаченные
 					ul.nav.pull-right
 						li
 							a(href='#', data-toggle="tooltip", data-original-title="Поиск по ФИО или по Номеру", data-placement="bottom")
@@ -325,7 +335,7 @@ html
 
 		script(src="../assets/js/libs/bootstrap.min.js")
 
-		script(src="../assets/js/libs/lodash.min.js")
+		//- script(src="../assets/js/libs/lodash.min.js")
 		//- script(src="../assets/js/libs/bootstrap.min.js")
 		script(src="../assets/js/libs/bootstrap-datepicker.js")
 		//- script(src="../assets/js/libs/knockout-2.2.1.js")
@@ -337,7 +347,7 @@ html
 		script(src="../assets/js/customBindings/select2.js")
 		script(src="../assets/js/configureValidation.js")
 
-		script(src="../assets/js/searchData.js")
+		//- script(src="../assets/js/searchData.js")
 
 		//- script(src="../assets/js/viewModels/UserViewModel.js")
 		//- script(src="../assets/js/viewModels/AdminViewModel.js")

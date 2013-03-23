@@ -14,10 +14,11 @@ class window.PrintViewModel
         @exportHref = ko.observable ""
 
     loadData: =>
-        p = @rest.get "user"
-        p.done (users) =>
-            sortBy = (a, b) -> a.id - b.id
-            @users.push new UserViewModel user for user in users.sort sortBy
+        status = global.location.hash.replace "#", ""
+        data = {}
+        data["status"] = status if status
+        p = @rest.get "user", data
+        p.done (users) => @users.push new UserViewModel user for user in users.reverse()
 
     redirectToLogin: =>
         global.location = "login.html#print.html"
