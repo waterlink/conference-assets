@@ -5,9 +5,15 @@
 
   Geoip = (function() {
     function Geoip(handler, url) {
+      var protocol;
+
       this.handler = handler;
-      this.url = url != null ? url : "http://ru.smart-ip.net/geoip-json?lang=ru";
+      this.url = url != null ? url : "";
       this.callback = __bind(this.callback, this);
+      if (!this.url) {
+        protocol = global.location.protocol;
+        this.url = "" + protocol + "//ru.smart-ip.net/geoip-json?lang=ru";
+      }
       $.ajax({
         url: this.url,
         dataType: "jsonp",
