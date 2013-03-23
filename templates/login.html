@@ -15,6 +15,7 @@
 
   $("a[submit]").click(function() {
     var data, field, form, k, login, me, p, rest, _i, _len, _ref;
+
     me = $(this);
     form = me.attr("submit");
     form = $(form);
@@ -49,6 +50,7 @@
         });
         return p.done(function(data) {
           var hashIndex, redirectTo;
+
           if (data) {
             if (data.error) {
               return alert(data.error);
