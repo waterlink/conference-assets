@@ -1,4 +1,4 @@
-global.UserViewModel = require "../assets/js/viewModels/UserViewModel"
+global.CpanelUserViewModel = require "../assets/js/viewModels/CpanelUserViewModel"
 global.OperatorViewModel = require "../assets/js/viewModels/OperatorViewModel"
 
 class window.AdminViewModel
@@ -45,7 +45,7 @@ class window.AdminViewModel
         @selectQuery = (searchData, anotherAllowed = yes) => (query) =>
             data = @searchData[searchData].filter (x) -> x.toLowerCase().match query.term.toLowerCase()
             data.push @anotherWrapper query.term if anotherAllowed
-            query.callback 
+            query.callback
                 results: $.map data, (x) ->
                     obj =
                         id: x

@@ -1,0 +1,96 @@
+!!! 5
+html
+	head
+		meta(charset="utf-8")
+		title Панель оператора (ВЕРСИЯ ДЛЯ ПЕЧАТИ) — Конференция
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(href="../assets/css/bootstrap.min.css", rel="stylesheet")
+		link(href="../assets/css/bootstrap-responsive.css", rel="stylesheet")
+		// Le HTML5 shim, for IE6-8 support of HTML5 elements
+		// [if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]
+		link(rel="shortcut icon", href="assets/favicon.ico")
+		link(href="../assets/css/apanel.css", rel="stylesheet")
+		link(rel='stylesheet', href='../assets/css/datepicker.css')
+		link(rel='stylesheet', href='../assets/css/select2.css')
+		link(rel='stylesheet', href='../assets/css/custom.css')
+		style
+			body { padding-top: 0px }
+
+
+	body
+		table.table.table-striped
+			thead
+				tr
+					td Номер
+					td ФИО
+					td Научная степень
+					td Ученое звание
+					td Должность
+					td Место работы
+					td Город
+					td Страна
+					td Почтовый адрес
+					td Электронный адрес
+					td Телефон
+					td Форма участия в конференции
+					td Название доклада
+					td Номер секции
+					td Участие в монографии
+					td Название раздела монографии
+					td Потребность в проживании
+					td Оплата тезисов безнал
+					td Оплата тезисов наличные
+					td Сумма к оплате монографии
+					td Оплата монографии безнал
+					td Оплата монографии наличные
+					td Оргвзнос (очное)
+					td Отметка об отправке материалов
+			tbody(data-bind="foreach: users")
+				tr
+					td(data-bind="text: id")
+					td(data-bind="text: fullName")
+					td(data-bind="text: academicDegree")
+					td(data-bind="text: academicTitle")
+					td(data-bind="text: jobPosition")
+					td(data-bind="text: jobPlace")
+					td(data-bind="text: city")
+					td(data-bind="text: country")
+					td(data-bind="text: postalAddress")
+					td(data-bind="text: email")
+					td(data-bind="text: phone")
+					td(data-bind="text: participantType")
+					td(data-bind="text: lectureTitle")
+					td(data-bind="text: sectionNumber")
+					td(data-bind="text: monographyParticipant")
+					td(data-bind="text: monographyTitle")
+					td(data-bind="text: stayPeriod")
+					td Yes
+					td No
+					td $100
+					td Yes
+					td No
+					td Yes
+					td(data-bind="checkbox: sent")
+
+		script(src="../assets/js/libs/jquery-1.9.1.min.js")
+		script(src="../classes/require.js")
+		script(src="../assets/js/libs/bootstrap.min.js")
+		script(src="../assets/js/libs/lodash.min.js")
+		script(src="../assets/js/libs/bootstrap-datepicker.js")
+		script(src="../assets/js/libs/knockout-2.2.1.js")
+		script(src="../assets/js/libs/knockout.mapping.js")
+		script(src="../assets/js/libs/knockout.validation.js")
+		script(src="../assets/js/customBindings/checkBox.js")
+		script(src="../assets/js/libs/select2.js")
+		script(src="../assets/js/customBindings/datePicker.js")
+		script(src="../assets/js/customBindings/select2.js")
+		script(src="../assets/js/configureValidation.js")
+
+		script(src="../assets/js/searchData.js")
+
+		script(src="../assets/js/viewModels/UserViewModel.js")
+		script(src="../assets/js/viewModels/PrintViewModel.js")
+
+		:coffeescript
+			ko.applyBindings new PrintViewModel
+

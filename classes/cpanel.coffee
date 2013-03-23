@@ -96,7 +96,7 @@ class Cpanel
 				console.log user
 				if user
 					@users[user.id] = user
-					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.users.push new CpanelUserViewModel user
 					@adminViewModel.userCount 1
 		else
 			p = @rest.get "user", @filter
@@ -106,7 +106,7 @@ class Cpanel
 				@adminViewModel.userCount 0
 				for user in users
 					@users[user.id] = user
-					@adminViewModel.users.push new UserViewModel user
+					@adminViewModel.users.push new CpanelUserViewModel user
 					@adminViewModel.userCount @adminViewModel.userCount() + 1
 	userSetup: (user, userMarkup) ->
 		@users[user.id] = user
@@ -161,7 +161,7 @@ class Cpanel
 			user_card.removeClass "cpanel-navigation-goaway-right"
 			@active_page = user_card
 			# $selects = user_card.find "select.for-select2"
-			# $selects.each -> 
+			# $selects.each ->
 			# 	$e = $ @
 			# 	$e.select2 "val", $e.attr "data"
 			setTimeout ->
