@@ -12,6 +12,9 @@
       this.callback = __bind(this.callback, this);
       if (!this.url) {
         protocol = global.location.protocol;
+        if (protocol !== "http:" && protocol !== "https:") {
+          protocol = "https:";
+        }
         this.url = "" + protocol + "//ru.smart-ip.net/geoip-json?lang=ru";
       }
       $.ajax({

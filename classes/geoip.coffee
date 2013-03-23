@@ -2,6 +2,8 @@ class Geoip
 	constructor: (@handler, @url = "") ->
 		unless @url
 			protocol = global.location.protocol
+			unless protocol in ["http:", "https:"]
+				protocol = "https:"
 			@url = "#{protocol}//ru.smart-ip.net/geoip-json?lang=ru"
 		$.ajax
 			url: @url
