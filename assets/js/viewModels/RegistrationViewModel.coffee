@@ -25,7 +25,7 @@ class window.RegistrationViewModel
             email                 : ko.observable ""
             phone                 : ko.observable ""
             # тут мы еще вообще не понимаем? и кстати, где поле ? =)
-            participantType       : ko.observable ""
+            participantType       : ko.observable "Очная"
             lectureTitle          : ko.observable ""
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no

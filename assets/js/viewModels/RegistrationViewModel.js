@@ -34,7 +34,7 @@
         postalAddress: ko.observable(""),
         email: ko.observable(""),
         phone: ko.observable(""),
-        participantType: ko.observable(""),
+        participantType: ko.observable("Очная"),
         lectureTitle: ko.observable(""),
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
