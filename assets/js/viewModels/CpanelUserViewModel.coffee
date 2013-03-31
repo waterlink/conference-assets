@@ -20,7 +20,11 @@ class window.CpanelUserViewModel extends window.UserViewModel
         @locStatus = ko.computed => 
             res = "#{statuses[@status()]}"
             if @status() is "new"
-                res += " (к оплате: #{@thesisPay} + #{@monographyPay} #{searchData.costCurrency})"
+                res += " (к оплате: #{@thesisPay}"
+                # console.log @monographyParticipant
+                if @monographyParticipant()
+                    res += " + #{@monographyPay}"
+                res += " #{searchData.costCurrency})"
             res
 
         @mailto = ko.computed => "mailto:#{@email}"

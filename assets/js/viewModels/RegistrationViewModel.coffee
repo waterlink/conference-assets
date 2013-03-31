@@ -173,7 +173,7 @@ class window.RegistrationViewModel
             if key in ["city", "country"]
                 isRequired = onlyIf: @detectDiscarded key
 
-            isRequired = no if key in ["monographyParticipant", "stayDemand"]
+            isRequired = no if key in ["monographyParticipant", "stayDemand", "participantType"]
 
             # unless @hasValidation
             value?.extend required: isRequired

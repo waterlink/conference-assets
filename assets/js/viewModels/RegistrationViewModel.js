@@ -224,7 +224,7 @@
             onlyIf: this.detectDiscarded(key)
           };
         }
-        if (key === "monographyParticipant" || key === "stayDemand") {
+        if (key === "monographyParticipant" || key === "stayDemand" || key === "participantType") {
           isRequired = false;
         }
         if (value != null) {

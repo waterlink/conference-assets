@@ -55,8 +55,8 @@ html
                     label.checkbox
                         input(data-bind='checked: user.stayDemand', type='checkbox')
                         | Есть потребность в проживании?
-                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {start: start, end: end}', type='text', placeholder='От')
-                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd, datepickerOptions: {start: start, end: end}', type='text', placeholder='До')
+                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayStart, datepickerOptions: {}', type='text', placeholder='От')
+                    input.span7.input-block-level(data-bind='visible: user.stayDemand, datepicker: user.stayEnd, datepickerOptions: {}', type='text', placeholder='До')
                     .clearfix
                     br
                     div(data-bind="if: files")

@@ -39,7 +39,11 @@
 
         res = "" + statuses[_this.status()];
         if (_this.status() === "new") {
-          res += " (к оплате: " + _this.thesisPay + " + " + _this.monographyPay + " " + searchData.costCurrency + ")";
+          res += " (к оплате: " + _this.thesisPay;
+          if (_this.monographyParticipant()) {
+            res += " + " + _this.monographyPay;
+          }
+          res += " " + searchData.costCurrency + ")";
         }
         return res;
       });
