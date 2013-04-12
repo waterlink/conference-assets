@@ -5,6 +5,8 @@
 
   OperatorViewModel = (function() {
     function OperatorViewModel(operator) {
+      this.confirmEmailEditing = __bind(this.confirmEmailEditing, this);
+      this.startEmailEditing = __bind(this.startEmailEditing, this);
       this.cancelResetPassword = __bind(this.cancelResetPassword, this);
       this.confirmResetPassword = __bind(this.confirmResetPassword, this);
       this.resetSessions = __bind(this.resetSessions, this);
@@ -21,6 +23,11 @@
       this.hasSessions = ko.computed(function() {
         return !_this.resettingPassword();
       });
+      this.editingEmail = ko.observable(false);
+      if (!this.email) {
+        this.email = "no-email :(";
+      }
+      this.email = ko.observable(this.email);
     }
 
     OperatorViewModel.prototype.resetPassword = function(data, e) {
@@ -68,6 +75,27 @@
 
     OperatorViewModel.prototype.cancelResetPassword = function() {
       return this.resettingPassword(false);
+    };
+
+    OperatorViewModel.prototype.startEmailEditing = function(d, e) {
+      return this.editingEmail(true);
+    };
+
+    OperatorViewModel.prototype.confirmEmailEditing = function(d, e) {
+      var p,
+        _this = this;
+
+      $(e.target).button("loading");
+      p = cpanel.rest.put(["operator", this.login], {
+        email: this.email()
+      });
+      return p.done(function(data) {
+        $(e.target).button("reset");
+        _this.editingEmail(false);
+        if (data && data.error) {
+          return alert(data.error);
+        }
+      });
     };
 
     return OperatorViewModel;

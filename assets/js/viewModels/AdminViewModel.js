@@ -59,6 +59,7 @@
         cpanel.loadOperators();
       }
       this.addingOperator = ko.observable(false);
+      this.operatorEmail = ko.observable("");
       this.operatorLogin = ko.observable("");
       this.operatorPassword = ko.observable("");
       this.operatorConfirmPassword = ko.observable("");
@@ -223,7 +224,8 @@
       $(e.target).button("loading");
       p = cpanel.rest.post("index", {
         login: this.operatorLogin(),
-        password: this.operatorPassword()
+        password: this.operatorPassword(),
+        email: this.operatorEmail()
       });
       return p.done(function(data) {
         $(e.target).button("reset");

@@ -31,6 +31,7 @@ class window.AdminViewModel
             cpanel.loadOperators()
 
         @addingOperator = ko.observable false
+        @operatorEmail = ko.observable ""
         @operatorLogin = ko.observable ""
         @operatorPassword = ko.observable ""
         @operatorConfirmPassword = ko.observable ""
@@ -138,6 +139,7 @@ class window.AdminViewModel
         p = cpanel.rest.post "index",
             login: @operatorLogin()
             password: @operatorPassword()
+            email: @operatorEmail()
         p.done (data) =>
             $(e.target).button "reset"
             @cancelAddOperator()

@@ -60,48 +60,64 @@ html
 				h3 Перечень пользователей
 				div(data-bind="foreach: operators")
 					.row-fluid.row-operator
-						.span3
+						.span4
 							span(data-bind="text: login")
+							| &nbsp;
+							| (
+							a(href="#", data-bind="text: email, click: startEmailEditing")
+							| )
 							| &nbsp;
 							span.badge.badge-success(data-bind="if: admin") admin
 						div(data-bind="ifnot: resettingPassword")
-							.span3
+							.span2
 								a.btn.input-block-level(data-bind="click: resetPassword", data-loading-text="Сбрасываю...") Сбросить пароль
 						div(data-bind="if: resettingPassword")
-							.span3
+							.span2
 								input.input-block-level(type="password", data-bind="value: newpassword", placeholder="Новый пароль")
 						div(data-bind="if: hasSessions")
-							.span3
+							.span2
 								a.btn.input-block-level(data-bind="click: resetSessions, ifnot: resettingPassword", data-loading-text="Сбрасываю...") Сбросить сессии
 						div(data-bind="if: resettingPassword")
-							.span3
+							.span2
 								input.input-block-level(type="password", data-bind="value: confirmpassword", placeholder="Подтвердите пароль")
 						div(data-bind="if: notami")
-							.span3
+							.span2
 								a.btn.btn-danger.input-block-level(data-bind="click: remove, ifnot: resettingPassword", data-loading-text="Удаляю...") Удалить
 						div(data-bind="if: resettingPassword")
-							.span3
+							.span2
 								.btn-group.input-block-level
 									a.btn.btn-danger(data-bind="click: confirmResetPassword", data-loading-text="Сбрасываю...") Сбросить
 									a.btn(data-bind="click: cancelResetPassword", data-loading-text="Отменяю...") Отменить
+					// ko if: editingEmail
+					.row-fluid.row-operator
+						.span3 &nbsp;
+						div
+							.span3
+								input.input-block-level(type="text", data-bind="value: email", placeholder="Email")
+						div
+							.span3
+								a.input-block-level.btn(data-bind="click: confirmEmailEditing", data-loading-text="Сохраняю...") Сохранить
+					// /ko
 				.row-fluid.row-operator-add
 					div(data-bind="ifnot: addingOperator")
 						.span3
 							a.btn.input-block-level(data-bind="click: newOperator", data-loading-text="Добавляю...") Добавить оператора
 					div(data-bind="if: addingOperator")
-						.span3
+						.span2
 							input.input-block-level(type="text", data-bind="value: operatorLogin", placeholder="Логин")
-					div(data-bind="if: addingOperator")
-						.span3
+						.span2
+							input.input-block-level(type="text", data-bind="value: operatorEmail", placeholder="Email")
+						.span2
 							input.input-block-level(type="password", data-bind="value: operatorPassword", placeholder="Пароль")
-					div(data-bind="if: addingOperator")
-						.span3
+						.span2
 							input.input-block-level(type="password", data-bind="value: operatorConfirmPassword", placeholder="Подтвердите пароль")
-					div(data-bind="if: addingOperator")
-						.span3
+						.span2
 							.btn-group.input-block-level
 								a.btn.btn-danger(data-bind="click: confirmAddOperator", data-loading-text="Создаю...") Создать
 								a.btn(data-bind="click: cancelAddOperator", data-loading-text="Отменяю...") Отменить
+					//- div(data-bind="if: addingOperator")
+					//- div(data-bind="if: addingOperator")
+					//- div(data-bind="if: addingOperator")
 		// ko if: activeUser
 		.user-pages(data-bind="foreach: users")
 			// ko if: $parent.isActive(id)
