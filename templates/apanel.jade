@@ -31,8 +31,8 @@ html
 				.container
 					a.brand(href='#')
 						| Панель оператора
-					ul.nav(data-bind="if: isAdmin")
-						li#operators_li
+					ul.nav
+						li#operators_li(data-bind="if: isAdmin")
 							a(href='#', data-bind="click: goOperatorPage")
 								| Операторы
 						li#print_li.dropdown
