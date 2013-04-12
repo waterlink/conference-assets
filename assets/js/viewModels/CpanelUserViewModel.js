@@ -210,6 +210,25 @@
       });
     };
 
+    CpanelUserViewModel.prototype.remove = function(d, e) {
+      var $e, p, rest,
+        _this = this;
+
+      $e = $(e.target);
+      $e.button("loading");
+      rest = new Restfull;
+      p = rest["delete"](["user", "" + this.id]);
+      return p.done(function(e) {
+        if (e && e.error) {
+          alert(e.error);
+        }
+        scrollTo(0);
+        cpanel.loadUsers();
+        cpanel.adminViewModel.doBackToUsersLeft();
+        return $e.button("reset");
+      });
+    };
+
     return CpanelUserViewModel;
 
   })(window.UserViewModel);

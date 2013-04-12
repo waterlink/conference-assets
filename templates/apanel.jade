@@ -221,6 +221,12 @@ html
 						em Страна
 						p
 							select.input-block-level.for-select2(data-bind="select2: {}, options: $parent.selectOptions('countries', country()), attr: {data: country()}, value: country, select2Default: country()")
+				.row &nbsp;
+				.row &nbsp;
+				.row
+					.span5 &nbsp;
+					.span3
+						a.btn.btn-danger(href="#", data-bind="click: remove", data-loading-text="Удаляю...") Удалить!
 			// /ko
 		// /ko
 		.container.cpanel-navigation-page#user_page

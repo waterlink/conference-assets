@@ -136,4 +136,17 @@ class window.CpanelUserViewModel extends window.UserViewModel
                 alert e.error
             $e.button "reset"
 
+    remove: (d, e) ->
+        $e = $ e.target
+        $e.button "loading"
+        rest = new Restfull
+        p = rest.delete ["user", "#{@id}"]
+        p.done (e) =>
+            if e and e.error
+                alert e.error
+            scrollTo 0
+            cpanel.loadUsers()
+            cpanel.adminViewModel.doBackToUsersLeft()
+            $e.button "reset"
+
 module.exports = window.CpanelUserViewModel
