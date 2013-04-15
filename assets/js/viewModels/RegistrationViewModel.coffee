@@ -11,6 +11,13 @@ class window.RegistrationViewModel
         @thesisPay = => return @mainCost()
         @monographyPay = => return @totalCost() - @mainCost()
 
+        @conference = {}
+
+        @conference.dates = ko.observable "1-4 октября 2013 г."
+        @conference.title = ko.computed => "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ» #{@conference.dates()}"
+        @conference.registrationTitle = ko.computed => "Регистрация - #{@conference.title()}"
+        @conference.shortTitle = ko.observable "РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ #{@conference.dates()}"
+
         @user =
             name                  : ko.observable ""
             surname               : ko.observable ""
@@ -25,7 +32,7 @@ class window.RegistrationViewModel
             email                 : ko.observable ""
             phone                 : ko.observable ""
             # тут мы еще вообще не понимаем? и кстати, где поле ? =)
-            participantType       : ko.observable "Очная"
+            participantType       : ko.observable ""
             lectureTitle          : ko.observable ""
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no
@@ -63,18 +70,21 @@ class window.RegistrationViewModel
                         text: x
 
         @detected = ko.observable {}
-        @geoipWrapper = (v) -> 
-            console.log "Определено (#{v})"
-            return "Определено (#{v})"
+        @geoipWrapper = (v, t) -> 
+            # console.log "Определено (#{v})"
+            if t is "city"
+                return "Город (#{v})"
+            else
+                return "Страна (#{v})"
         @geoip = new Geoip (detected) =>
             setTimeout =>
                 # console.log detected
                 detect = @detected()
-                detect.country = @geoipWrapper(detected.country)
-                detect.city = @geoipWrapper(detected.city)
+                detect.country = @geoipWrapper(detected.country, "country")
+                detect.city = @geoipWrapper(detected.city, "city")
                 @detected detect
-                @user.country @geoipWrapper(detected.country)
-                @user.city @geoipWrapper(detected.city)
+                @user.country @geoipWrapper(detected.country, "country")
+                @user.city @geoipWrapper(detected.city, "city")
                 $city = $ "#city"
                 $city.select2 "val", "detected_city"
                 $country = $ "#country"
@@ -102,8 +112,8 @@ class window.RegistrationViewModel
             return false
 
         @z_participantType = ko.computed =>
-            unless @user.participantType()
-                return "Очная"
+            # unless @user.participantType()
+                # return "Очная"
             return @user.participantType()
 
         @mainCost = ko.computed =>
@@ -173,7 +183,7 @@ class window.RegistrationViewModel
             if key in ["city", "country"]
                 isRequired = onlyIf: @detectDiscarded key
 
-            isRequired = no if key in ["monographyParticipant", "stayDemand", "participantType"]
+            isRequired = no if key in ["monographyParticipant", "stayDemand"]
 
             # unless @hasValidation
             value?.extend required: isRequired

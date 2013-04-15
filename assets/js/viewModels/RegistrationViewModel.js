@@ -21,6 +21,15 @@
       this.monographyPay = function() {
         return _this.totalCost() - _this.mainCost();
       };
+      this.conference = {};
+      this.conference.dates = ko.observable("1-4 октября 2013 г.");
+      this.conference.title = ko.computed(function() {
+        return "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ» " + (_this.conference.dates());
+      });
+      this.conference.registrationTitle = ko.computed(function() {
+        return "Регистрация - " + (_this.conference.title());
+      });
+      this.conference.shortTitle = ko.observable("РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ " + (this.conference.dates()));
       this.user = {
         name: ko.observable(""),
         surname: ko.observable(""),
@@ -34,7 +43,7 @@
         postalAddress: ko.observable(""),
         email: ko.observable(""),
         phone: ko.observable(""),
-        participantType: ko.observable("Очная"),
+        participantType: ko.observable(""),
         lectureTitle: ko.observable(""),
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
@@ -80,20 +89,23 @@
         };
       };
       this.detected = ko.observable({});
-      this.geoipWrapper = function(v) {
-        console.log("Определено (" + v + ")");
-        return "Определено (" + v + ")";
+      this.geoipWrapper = function(v, t) {
+        if (t === "city") {
+          return "Город (" + v + ")";
+        } else {
+          return "Страна (" + v + ")";
+        }
       };
       this.geoip = new Geoip(function(detected) {
         return setTimeout(function() {
           var $city, $country, detect;
 
           detect = _this.detected();
-          detect.country = _this.geoipWrapper(detected.country);
-          detect.city = _this.geoipWrapper(detected.city);
+          detect.country = _this.geoipWrapper(detected.country, "country");
+          detect.city = _this.geoipWrapper(detected.city, "city");
           _this.detected(detect);
-          _this.user.country(_this.geoipWrapper(detected.country));
-          _this.user.city(_this.geoipWrapper(detected.city));
+          _this.user.country(_this.geoipWrapper(detected.country, "country"));
+          _this.user.city(_this.geoipWrapper(detected.city, "city"));
           $city = $("#city");
           $city.select2("val", "detected_city");
           $country = $("#country");
@@ -131,9 +143,6 @@
         });
       };
       this.z_participantType = ko.computed(function() {
-        if (!_this.user.participantType()) {
-          return "Очная";
-        }
         return _this.user.participantType();
       });
       this.mainCost = ko.computed(function() {
@@ -224,7 +233,7 @@
             onlyIf: this.detectDiscarded(key)
           };
         }
-        if (key === "monographyParticipant" || key === "stayDemand" || key === "participantType") {
+        if (key === "monographyParticipant" || key === "stayDemand") {
           isRequired = false;
         }
         if (value != null) {

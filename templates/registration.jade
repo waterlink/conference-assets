@@ -2,7 +2,6 @@
 html
     head
         meta(charset='utf-8')
-        title Регистрация - Научная конференция 2013
         link(rel='stylesheet', href='../assets/css/bootstrap.css')
         link(rel='stylesheet', href='../assets/css/bootstrap-responsive.css')
         link(rel='stylesheet', href='../assets/css/datepicker.css')
@@ -10,10 +9,11 @@ html
         link(rel='stylesheet', href='../assets/css/jquery.fileupload-ui.css')
         link(rel='stylesheet', href='../assets/css/custom.css')
     body
+        title(data-bind="text: conference.registrationTitle") Регистрация - Научная конференция 2013
         .navbar.navbar-inverse.navbar-fixed-top
             .navbar-inner
                 .container
-                    a.brand(href='javascript:;') Научная конференция 2013
+                    a.brand(href='javascript:;', data-bind="text: conference.shortTitle") Научная конференция 2013
 
         .container
             #needFixErrors.span7.alert.alert-error.fade.in.hide
@@ -33,7 +33,7 @@ html
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Ученое звание', query: selectQuery('academicTitles') }, value: user.academicTitle")
                     .clearfix
                     input.span7.input-block-level(data-bind='value: user.jobPosition', type='text', placeholder='Должность')
-                    input.span7.input-block-level(data-bind='value: user.jobPlace', type='text', placeholder='Место работы')
+                    input.span7.input-block-level(data-bind='value: user.jobPlace, tooltip: { original_title: "Пример: Институт Экономики и Промышленности", placement: "right", trigger: "focus" }', type='text', placeholder='Место работы')
                     input.span7.input-block-level#city(type="hidden", data-bind="select2: { placeholder: 'Город', query: selectQuery('cities'), initSelection: defaultInitSelection }, value: user.city")
                     .clearfix
                     input.span7.input-block-level#country(type="hidden", data-bind="select2: { placeholder: 'Страна', query: selectQuery('countries'), initSelection: defaultInitSelection }, value: user.country")
@@ -41,7 +41,7 @@ html
                     input.span7.input-block-level(data-bind='value: user.postalAddress, tooltip: { original_title: "Пример: 83025, ул. Артема, 54, кв. 77", placement: "right", trigger: "focus" }', type='text', placeholder='Ваш адрес')
                     input.span7.input-block-level(data-bind='value: user.email, tooltip: { original_title: "Пример: example@example.com", placement: "right", trigger: "focus" }', type='email', placeholder='Электронный адрес')
                     input.span7.input-block-level(data-bind='value: user.phone, tooltip: { original_title: "Пример: +38 (050) 123-45-67", placement: "right", trigger: "focus" }', type='text', placeholder='Телефон')
-                    select.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия' }, options: searchData.participantTypes, value: user.participantType, select2Default: 'Очная'")
+                    select.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Форма участия' }, options: searchData.participantTypes, value: user.participantType")
                     input.span7.input-block-level(data-bind='value: user.lectureTitle', type='text', placeholder='Название доклада')
                     input.span7.input-block-level(type="hidden", data-bind="select2: { placeholder: 'Номер секции', query: selectQuery('sectionNumbers', false) }, value: user.sectionNumber")
                     .clearfix
@@ -63,7 +63,7 @@ html
                         // ko with: files
                         span.btn.btn-success.fileinput-button
                             i.icon-plus.icon-white
-                            | &nbsp; Добавить документы
+                            | &nbsp; Добавить тезисы и квитанцию об оплате
                             input(data-bind='fileUpload: { files: data, options: _.extend(window.validation, { dropZone: $("#dropzone"), autoUpload: true }) }', type="file", name="files[]", multiple)
 
                         .clearfix
@@ -71,14 +71,14 @@ html
                         .span7(data-bind="visible: data().length > 0")
                             table.table.table-striped
                                 tbody(data-bind="template: { name: 'filesTable', data: data() }")
-                        #dropzone.span7(data-bind="visible: data().length <= 0") Или просто перетащите мышкой файлы в эту область
+                        #dropzone.span7(data-bind="visible: data().length <= 0") Или переместите мышкой файлы тезисов и отсканированной копии квитанции об оплате в эту область
                         // /ko
                     .clearfix
                     br
 
                     button.btn.btn-large.btn-primary(data-bind='click: doRegister', type='submit') Готово
 
-        .to-pay
+        .to-pay(data-bind="if: z_participantType")
             h4 К оплате:
             span(data-bind="text: z_participantType")
             span :&nbsp;
