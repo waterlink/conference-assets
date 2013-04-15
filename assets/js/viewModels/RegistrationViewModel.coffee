@@ -14,10 +14,29 @@ class window.RegistrationViewModel
         @conference = {}
 
         @conference.dates = ko.observable "1-4 октября 2013 г."
-        @conference.title = ko.computed => "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ» #{@conference.dates()}"
+        @conference.fullTitle = ko.observable "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ»"
+        @conference.title = ko.computed => "#{@conference.fullTitle()} #{@conference.dates()}"
         @conference.registrationTitle = ko.computed => "Регистрация - #{@conference.title()}"
-        @conference.shortTitle = ko.observable "РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ #{@conference.dates()}"
+        @conference.shortTitleSource = ko.observable "РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ"
+        @conference.shortTitle = ko.computed => "#{@conference.shortTitleSource()} #{@conference.dates()}"
+        @conference.monographyMin = ko.observable 10
+        @conference.monographyMax = ko.observable 15
+        @conference.costByMonographyPage = ko.observable 25
 
+        rest = new Restfull
+        p = rest.get "settings"
+        p.done (data) =>
+            if data and data.error
+                alert data.error
+            else if data
+                @conference.dates data.dates
+                @conference.fullTitle data.fullTitle
+                @conference.shortTitleSource data.shortTitleSource
+                @conference.monographyMin data.monographyMin
+                @conference.monographyMax data.monographyMax
+                @conference.costByMonographyPage data.costByMonographyPage
+
+        @monographyPages = ko.observable @conference.monographyMin()
         @user =
             name                  : ko.observable ""
             surname               : ko.observable ""
@@ -31,13 +50,13 @@ class window.RegistrationViewModel
             postalAddress         : ko.observable ""
             email                 : ko.observable ""
             phone                 : ko.observable ""
-            # тут мы еще вообще не понимаем? и кстати, где поле ? =)
             participantType       : ko.observable ""
             lectureTitle          : ko.observable ""
             sectionNumber         : ko.observable ""
             monographyParticipant : ko.observable no
             monographyTitle       : ko.observable ""
-            monographyPages       : ko.observable 1
+            # monographyPages       : ko.observable @conference.monographyMin()
+            monographyPages       : ko.computed => parseInt @monographyPages()
             stayDemand            : ko.observable no
             stayStart             : ko.observable new Date @start
             stayEnd               : ko.observable new Date @end
@@ -121,8 +140,8 @@ class window.RegistrationViewModel
 
         @totalCost = ko.computed =>
             cost = @mainCost()
-            if @user.monographyParticipant
-                cost += @searchData.costByMonographyPage * @user.monographyPages()
+            if @user.monographyParticipant()
+                cost += @conference.costByMonographyPage() * @user.monographyPages()
 
     doRegister: ->
         @addValidation() #unless @hasValidation
@@ -183,10 +202,13 @@ class window.RegistrationViewModel
             if key in ["city", "country"]
                 isRequired = onlyIf: @detectDiscarded key
 
-            isRequired = no if key in ["monographyParticipant", "stayDemand"]
+            isRequired = no if key in ["monographyParticipant", "stayDemand", "monographyPages"]
 
             # unless @hasValidation
             value?.extend required: isRequired
+
+            # if key is "monographyPages"
+                # value?.extend required: no
 
         @user.stayDemand.subscribe (value) =>
             ko.validation.validateObservable @user.stayStart
@@ -194,7 +216,7 @@ class window.RegistrationViewModel
 
         @user.monographyParticipant.subscribe (value) =>
             ko.validation.validateObservable @user.monographyTitle
-            ko.validation.validateObservable @user.monographyPages
+            # ko.validation.validateObservable @user.monographyPages
 
         @detected.subscribe (value) =>
             # ko.validation.validateObservable @city

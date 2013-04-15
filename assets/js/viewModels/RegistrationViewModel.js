@@ -9,7 +9,8 @@
   window.RegistrationViewModel = (function() {
     function RegistrationViewModel() {
       this.isAvailableDateToStay = __bind(this.isAvailableDateToStay, this);
-      var _this = this;
+      var p, rest,
+        _this = this;
 
       this.start = new Date;
       this.end = new Date;
@@ -23,13 +24,35 @@
       };
       this.conference = {};
       this.conference.dates = ko.observable("1-4 октября 2013 г.");
+      this.conference.fullTitle = ko.observable("ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ»");
       this.conference.title = ko.computed(function() {
-        return "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ» " + (_this.conference.dates());
+        return "" + (_this.conference.fullTitle()) + " " + (_this.conference.dates());
       });
       this.conference.registrationTitle = ko.computed(function() {
         return "Регистрация - " + (_this.conference.title());
       });
-      this.conference.shortTitle = ko.observable("РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ " + (this.conference.dates()));
+      this.conference.shortTitleSource = ko.observable("РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ");
+      this.conference.shortTitle = ko.computed(function() {
+        return "" + (_this.conference.shortTitleSource()) + " " + (_this.conference.dates());
+      });
+      this.conference.monographyMin = ko.observable(10);
+      this.conference.monographyMax = ko.observable(15);
+      this.conference.costByMonographyPage = ko.observable(25);
+      rest = new Restfull;
+      p = rest.get("settings");
+      p.done(function(data) {
+        if (data && data.error) {
+          return alert(data.error);
+        } else if (data) {
+          _this.conference.dates(data.dates);
+          _this.conference.fullTitle(data.fullTitle);
+          _this.conference.shortTitleSource(data.shortTitleSource);
+          _this.conference.monographyMin(data.monographyMin);
+          _this.conference.monographyMax(data.monographyMax);
+          return _this.conference.costByMonographyPage(data.costByMonographyPage);
+        }
+      });
+      this.monographyPages = ko.observable(this.conference.monographyMin());
       this.user = {
         name: ko.observable(""),
         surname: ko.observable(""),
@@ -48,7 +71,9 @@
         sectionNumber: ko.observable(""),
         monographyParticipant: ko.observable(false),
         monographyTitle: ko.observable(""),
-        monographyPages: ko.observable(1),
+        monographyPages: ko.computed(function() {
+          return parseInt(_this.monographyPages());
+        }),
         stayDemand: ko.observable(false),
         stayStart: ko.observable(new Date(this.start)),
         stayEnd: ko.observable(new Date(this.end)),
@@ -152,8 +177,8 @@
         var cost;
 
         cost = _this.mainCost();
-        if (_this.user.monographyParticipant) {
-          return cost += _this.searchData.costByMonographyPage * _this.user.monographyPages();
+        if (_this.user.monographyParticipant()) {
+          return cost += _this.conference.costByMonographyPage() * _this.user.monographyPages();
         }
       });
     }
@@ -233,7 +258,7 @@
             onlyIf: this.detectDiscarded(key)
           };
         }
-        if (key === "monographyParticipant" || key === "stayDemand") {
+        if (key === "monographyParticipant" || key === "stayDemand" || key === "monographyPages") {
           isRequired = false;
         }
         if (value != null) {
@@ -247,8 +272,7 @@
         return ko.validation.validateObservable(_this.user.stayEnd);
       });
       this.user.monographyParticipant.subscribe(function(value) {
-        ko.validation.validateObservable(_this.user.monographyTitle);
-        return ko.validation.validateObservable(_this.user.monographyPages);
+        return ko.validation.validateObservable(_this.user.monographyTitle);
       });
       this.detected.subscribe(function(value) {
         return _this.makeFieldsRequired();

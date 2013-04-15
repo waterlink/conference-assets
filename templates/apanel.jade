@@ -32,9 +32,11 @@ html
 					a.brand(href='#')
 						| Панель оператора
 					ul.nav
-						li#operators_li(data-bind="if: isAdmin")
+						// ko if: isAdmin
+						li#operators_li
 							a(href='#', data-bind="click: goOperatorPage")
-								| Операторы
+								| Операторы и настройка
+						// /ko
 						li#print_li.dropdown
 							a.dropdown-toggle(href="#", data-toggle='dropdown')
 								span Печать
@@ -57,7 +59,33 @@ html
 											| Выход
 		.operator-page(data-bind="if: isAdmin")
 			.container.cpanel-navigation-page.cpanel-navigation-goaway-left
-				h3 Перечень пользователей
+				span.pull-right
+					a.btn.btn-success(data-bind="click: saveSettings", data-loading-text="Сохраняю...") Сохранить
+				h3 Настройки конференции
+				div
+					.row-fluid.row-operator
+						.span4 Даты проведения
+						.span6
+							input.input-block-level(type="text", data-bind="value: conference.dates", placeholder="1-4 октября 2013 г.")
+					.row-fluid.row-operator
+						.span4 Название конференции
+						.span6
+							input.input-block-level(type="text", data-bind="value: conference.fullTitle", placeholder="Научная конференция 2013")
+					.row-fluid.row-operator
+						.span4 Короткое название
+						.span6
+							input.input-block-level(type="text", data-bind="value: conference.shortTitleSource", placeholder="Конференция")
+					.row-fluid.row-operator
+						.span4 Кол-во страниц монографии (мин, макс)
+						.span3
+							input.input-block-level(type="text", data-bind="value: conference.monographyMin", placeholder="10")
+						.span3
+							input.input-block-level(type="text", data-bind="value: conference.monographyMax", placeholder="15")
+					.row-fluid.row-operator
+						.span4 Стоимость страницы монографии (грн)
+						.span6
+							input.input-block-level(type="text", data-bind="value: conference.costByMonographyPage", placeholder="25")
+				h3 Перечень операторов
 				div(data-bind="foreach: operators")
 					.row-fluid.row-operator
 						.span4

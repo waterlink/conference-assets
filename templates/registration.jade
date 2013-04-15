@@ -9,11 +9,13 @@ html
         link(rel='stylesheet', href='../assets/css/jquery.fileupload-ui.css')
         link(rel='stylesheet', href='../assets/css/custom.css')
     body
-        title(data-bind="text: conference.registrationTitle") Регистрация - Научная конференция 2013
+        title(data-bind="text: conference.registrationTitle") 
+        //- Регистрация - Научная конференция 2013
         .navbar.navbar-inverse.navbar-fixed-top
             .navbar-inner
                 .container
-                    a.brand(href='javascript:;', data-bind="text: conference.shortTitle") Научная конференция 2013
+                    a.brand(href='javascript:;', data-bind="text: conference.shortTitle") 
+                    //- Научная конференция 2013
 
         .container
             #needFixErrors.span7.alert.alert-error.fade.in.hide
@@ -71,7 +73,9 @@ html
                         .span7(data-bind="visible: data().length > 0")
                             table.table.table-striped
                                 tbody(data-bind="template: { name: 'filesTable', data: data() }")
-                        #dropzone.span7(data-bind="visible: data().length <= 0") Или переместите мышкой файлы тезисов и отсканированной копии квитанции об оплате в эту область
+                        #dropzone.span7(data-bind="visible: data().length <= 0") 
+                            p Или переместите мышкой файлы тезисов и отсканированной 
+                            p копии квитанции об оплате в эту область
                         // /ko
                     .clearfix
                     br
@@ -88,10 +92,10 @@ html
                 br
                 span Монография:
                 br
-                input.input-mir(type="number", min=1, step=1, data-bind="value: user.monographyPages")
+                input.input-mir(type="number", step=1, data-bind="value: monographyPages, attr: {min: conference.monographyMin, max: conference.monographyMax}")
                 span &nbsp;стр. м-фии
                 strong &nbsp;x
-                strong(data-bind="text: searchData.costByMonographyPage")
+                strong(data-bind="text: conference.costByMonographyPage")
                 span(data-bind="text: searchData.costCurrency")
                 br
                 br
@@ -151,6 +155,7 @@ html
         :coffeescript
             global.application = require "../main"
             require "../assets/js/customBindings/tooltip"
+            require "../assets/js/customBindings/numAttr"
             application.run()
 
         :coffeescript

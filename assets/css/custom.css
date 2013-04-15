@@ -36,7 +36,7 @@ html, body {
   margin-left: 20px; }
 
 #dropzone {
-  line-height: 100px;
+  padding-top: 50px;
   border: 2px dashed black;
   height: 100px;
   text-align: center;

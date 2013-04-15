@@ -9,6 +9,7 @@
 
   window.AdminViewModel = (function() {
     function AdminViewModel() {
+      this.saveSettings = __bind(this.saveSettings, this);
       this.isActive = __bind(this.isActive, this);
       this.doBackToUsersLeft = __bind(this.doBackToUsersLeft, this);
       this.doBackToUsersRight = __bind(this.doBackToUsersRight, this);
@@ -20,7 +21,8 @@
       this.nextPage = __bind(this.nextPage, this);
       this.doSearch = __bind(this.doSearch, this);
       this.readableStatus = __bind(this.readableStatus, this);
-      var _this = this;
+      var p, rest,
+        _this = this;
 
       this.name = "Петя";
       this.statuses = ko.observableArray([
@@ -39,6 +41,36 @@
       this.userCount = ko.observable(0);
       this.users = ko.observableArray([]);
       this.search = ko.observable("");
+      this.conference = {};
+      this.conference.dates = ko.observable("1-4 октября 2013 г.");
+      this.conference.fullTitle = ko.observable("ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ»");
+      this.conference.title = ko.computed(function() {
+        return "" + (_this.conference.fullTitle()) + " " + (_this.conference.dates());
+      });
+      this.conference.registrationTitle = ko.computed(function() {
+        return "Регистрация - " + (_this.conference.title());
+      });
+      this.conference.shortTitleSource = ko.observable("РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ");
+      this.conference.shortTitle = ko.computed(function() {
+        return "" + (_this.conference.shortTitleSource()) + " " + (_this.conference.dates());
+      });
+      this.conference.monographyMin = ko.observable(10);
+      this.conference.monographyMax = ko.observable(15);
+      this.conference.costByMonographyPage = ko.observable(25);
+      rest = new Restfull;
+      p = rest.get("settings");
+      p.done(function(data) {
+        if (data && data.error) {
+          return alert(data.error);
+        } else if (data) {
+          _this.conference.dates(data.dates);
+          _this.conference.fullTitle(data.fullTitle);
+          _this.conference.shortTitleSource(data.shortTitleSource);
+          _this.conference.monographyMin(data.monographyMin);
+          _this.conference.monographyMax(data.monographyMax);
+          return _this.conference.costByMonographyPage(data.costByMonographyPage);
+        }
+      });
       this.prevPageClass = ko.computed(function() {
         if (_this.page() === 0) {
           return "btn disabled";
@@ -284,6 +316,30 @@
 
     AdminViewModel.prototype.isActive = function(id) {
       return this.activeUser() === id;
+    };
+
+    AdminViewModel.prototype.saveSettings = function(d, e) {
+      var $target, obj, p, rest,
+        _this = this;
+
+      $target = $(e.target);
+      $target.button("loading");
+      rest = new Restfull;
+      obj = {
+        dates: this.conference.dates(),
+        fullTitle: this.conference.fullTitle(),
+        shortTitleSource: this.conference.shortTitleSource(),
+        monographyMin: parseInt(this.conference.monographyMin()),
+        monographyMax: parseInt(this.conference.monographyMax()),
+        costByMonographyPage: parseInt(this.conference.costByMonographyPage())
+      };
+      p = rest.put("settings", obj);
+      return p.done(function(e) {
+        if (e && e.error) {
+          alert(e.error);
+        }
+        return $target.button("reset");
+      });
     };
 
     return AdminViewModel;

@@ -1,5 +1,5 @@
 window.validation =
-    acceptFileTypes:  /(rtf|docx?)$/i
+    acceptFileTypes:  /(jpg|jpeg|png|bmp|gif|tif|pdf|rtf|doc|docx?)$/i
     maxNumberOfFiles: undefined
     maxFileSize:      undefined
     minFileSize:      undefined

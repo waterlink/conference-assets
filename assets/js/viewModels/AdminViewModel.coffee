@@ -16,6 +16,31 @@ class window.AdminViewModel
         @users = ko.observableArray []
         @search = ko.observable ""
 
+        @conference = {}
+
+        @conference.dates = ko.observable "1-4 октября 2013 г."
+        @conference.fullTitle = ko.observable "ІV Международная научно-практическая конференция «РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ»"
+        @conference.title = ko.computed => "#{@conference.fullTitle()} #{@conference.dates()}"
+        @conference.registrationTitle = ko.computed => "Регистрация - #{@conference.title()}"
+        @conference.shortTitleSource = ko.observable "РЕФЛЕКСИВНЫЕ ПРОЦЕССЫ И УПРАВЛЕНИЕ В ЭКОНОМИКЕ"
+        @conference.shortTitle = ko.computed => "#{@conference.shortTitleSource()} #{@conference.dates()}"
+        @conference.monographyMin = ko.observable 10
+        @conference.monographyMax = ko.observable 15
+        @conference.costByMonographyPage = ko.observable 25
+
+        rest = new Restfull
+        p = rest.get "settings"
+        p.done (data) =>
+            if data and data.error
+                alert data.error
+            else if data
+                @conference.dates data.dates
+                @conference.fullTitle data.fullTitle
+                @conference.shortTitleSource data.shortTitleSource
+                @conference.monographyMin data.monographyMin
+                @conference.monographyMax data.monographyMax
+                @conference.costByMonographyPage data.costByMonographyPage
+
         @prevPageClass = ko.computed =>
             return "btn disabled" if @page() is 0
             return "btn"
@@ -186,6 +211,23 @@ class window.AdminViewModel
         @backToUsersLeftIsHidden yes
 
     isActive: (id) => @activeUser() is id
+
+    saveSettings: (d, e) =>
+        $target = $ e.target
+        $target.button "loading"
+        rest = new Restfull
+        obj = 
+            dates: @conference.dates()
+            fullTitle: @conference.fullTitle()
+            shortTitleSource: @conference.shortTitleSource()
+            monographyMin: parseInt @conference.monographyMin()
+            monographyMax: parseInt @conference.monographyMax()
+            costByMonographyPage: parseInt @conference.costByMonographyPage()
+        p = rest.put "settings", obj
+        p.done (e) =>
+            if e and e.error
+                alert e.error
+            $target.button "reset"
 
 module.exports = window.AdminViewModel
 
